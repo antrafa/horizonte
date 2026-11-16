@@ -1,0 +1,22 @@
+{
+  "name": "horizonte-cardgame",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "deploy": "npm run build && touch dist/.nojekyll && git -C dist init -b gh-pages && git -C dist add -A && git -C dist commit -m 'deploy: atualiza GitHub Pages' && git -C dist push -f $(git remote get-url origin) gh-pages:gh-pages && rm -rf dist/.git"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10",
+    "vitest": "^2.1.4"
+  },
+  "dependencies": {
+    "peerjs": "^1.5.5",
+    "qrcode-generator": "2.0.4"
+  }
+}
