@@ -87,7 +87,7 @@ export const THEME_VISUALS: Record<string, ThemeVisualSpec> = {
   vampires: {
     id: 'vampires',
     nomeTema: 'Sangue & Néon',
-    estetica: 'Gothic vampire nocturnal cathedral, blood moon glow, velvet crimson shadows and brass filigree, dark romanticism illustration',
+    estetica: 'Brazilian contemporary horror in São Paulo after a night when almost everyone fell asleep: sodium streetlights, flickering neon of 24h gas stations, overpasses jammed with stopped cars, hospitals, country chapels and highways; gritty realistic illustration, ordinary Brazilian people and feral vampires in street clothes, no gothic castles, capes or aristocratic counts',
     skyTop: '#16050c',
     skyMid: '#4c0519',
     skyBot: '#9f1239',

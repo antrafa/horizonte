@@ -77,7 +77,7 @@ A **última Figura** do Horizonte (a 12ª, sempre um Rei) é o chefe do tema. Al
 | Zona de Quarentena | O Paciente Zero | **Levanta de Novo** | Ao cair pela 1ª vez, volta com metade da Vida; só então pode ser recrutado. |
 | Neon e Silício | A Corporação | **Firewall** | Golpes de 8 ou menos de dano não passam. |
 | O Último Eclipse | O Devorador do Sol | **Fome Crescente** | Ganha +2 de Ataque no fim de cada turno. |
-| Sangue & Néon | O Antediluviano | **Sede** | Recupera 2× o dano que te causa depois do bloqueio. |
+| Sangue & Néon | O Primeiro a Acordar | **Sede** | Recupera 2× o dano que te causa depois do bloqueio. |
 | Expedição ao Desconhecido | O Coração da Selva | **A Trilha Se Fecha** | Recupera 3 PV no fim de cada turno (soma com o traço ♥). |
 | Noir de Cidade Chuvosa | O Homem que Não Aparece nas Fotos | **Sem Retrato** | Golpe de dano ímpar não acerta: só dano par passa. |
 | Estação Orbital | A Inteligência da Nave | **Portas Seladas** | Só dá para bloquear com 1 carta por ataque (o Escudo de Aliado vale). |
@@ -341,19 +341,19 @@ As regras são as mesmas em todos os temas; cada um muda o que é o Horizonte, q
   - **`♦` Ouros (Tecnologia & Combustível):** Fenda & Bússola
   - **`♣` Paus (Sucata & Armadilha):** Presságio & Estrela Negra
 
-### 10.5. Sangue & Néon (`vampires`) — *Vampiros — Crônica da Noite Eterna*
+### 10.5. Sangue & Néon (`vampires`) — *Vampiros — A Noite do Sono*
 
-- **Premissa:** *Sob os letreiros de néon, pactos antigos cobram seu preço em sangue e segredos.*
-- **Tom da Narrativa:** horror urbano, gótico
-- **O que é o Horizonte neste mundo:** As cortes imortais sob os letreiros da metrópole. Cada Figura é um ancião, caçador, relíquia de sangue ou pacto noturno.
-- **Dinâmica Tática dos Naipes:** Cace rivais da noite com ♠/♣ ou negocie alianças e favores de sangue com ♥/♦ no jogo político do PvP.
-- **Chefe Supremo (Clímax da 3ª Onda):** **O Antediluviano** — *O ancião desperto que bebe cidades inteiras numa única noite.*
+- **Premissa:** *Numa sexta-feira de agosto, o país inteiro adormeceu e não acordou. Quem ficou de olhos abertos descobriu de quem é a cidade depois que o sol se põe.*
+- **Tom da Narrativa:** horror brasileiro, urbano e de estrada
+- **O que é o Horizonte neste mundo:** São Paulo e as estradas do interior depois da Noite do Sono: ruas cheias de dormentes e abrigos em igrejas, escolas e hospitais. Cada Figura é um vampiro que agora caça às claras, do bando recém-transformado ao barão que esperou um século.
+- **Dinâmica Tática dos Naipes:** ♠ Facão & Chumbo enfrenta os bandos de frente; ♣ Barricada & Alho fecha ruas e janelas; ♦ Sol & Gerador mantém a luz acesa e a estrada aberta; ♥ Fé & Abrigo cuida dos acordados e dos dormentes.
+- **Chefe Supremo (Clímax da 3ª Onda):** **O Primeiro a Acordar** — *Dormia sob o altar de uma capela mineira desde o tempo do ouro. Dizem que foi ele quem fez o país inteiro dormir, para ser o único a acordar com fome.*
 - **Regra do chefe:** **Sede** — Recupera 2× o dano que te causa depois do bloqueio.
 - **As 4 Facções / Pilares no Tema:**
-  - **`♠` Espadas (Chumbo & Lâmina):** Lâmina & Inquisição
-  - **`♥` Copas (Suprimento & Carisma):** Sedução & Elísio
-  - **`♦` Ouros (Tecnologia & Combustível):** Pactos & Vitae
-  - **`♣` Paus (Sucata & Armadilha):** Abismo & Nosferatu
+  - **`♠` Espadas (Chumbo & Lâmina):** Facão & Chumbo
+  - **`♥` Copas (Suprimento & Carisma):** Fé & Abrigo
+  - **`♦` Ouros (Tecnologia & Combustível):** Sol & Gerador
+  - **`♣` Paus (Sucata & Armadilha):** Barricada & Alho
 
 ### 10.6. Expedição ao Desconhecido (`expedicao`) — *Aventura — Diário da Selva sem Mapa*
 

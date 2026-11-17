@@ -44,11 +44,11 @@ export const NUANCES_DO_TEMA: Record<ThemeId, NuanceDoTema> = {
   },
   vampires: {
     oQueEOHorizonte:
-      'As cortes imortais sob os letreiros da metrópole. Cada Figura é um ancião, caçador, relíquia de sangue ou pacto noturno.',
+      'São Paulo e as estradas do interior depois da Noite do Sono: ruas cheias de dormentes e abrigos em igrejas, escolas e hospitais. Cada Figura é um vampiro que agora caça às claras, do bando recém-transformado ao barão que esperou um século.',
     dinamicaDeCombate:
-      'Cace rivais da noite com ♠/♣ ou negocie alianças e favores de sangue com ♥/♦ no jogo político do PvP.',
+      '♠ Facão & Chumbo enfrenta os bandos de frente; ♣ Barricada & Alho fecha ruas e janelas; ♦ Sol & Gerador mantém a luz acesa e a estrada aberta; ♥ Fé & Abrigo cuida dos acordados e dos dormentes.',
     chefeFinal:
-      'A quarta onda desperta os senhores de O Antediluviano.',
+      'Os 4 Reis (o Carniceiro da Dutra, a Dona do Casarão, o Barão do Café e o Velho do Túnel) abrem caminho para O Primeiro a Acordar.',
   },
   expedicao: {
     oQueEOHorizonte:
