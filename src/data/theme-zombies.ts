@@ -49,30 +49,24 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'O Batedor de Cinzas',
         artGlyph: '🗡️',
         artSubtitle: 'Vigia das Ruas Mortas',
-        passive:
-          'Passiva na Vida Real: Sempre que entrar num cômodo ou local público hoje, identifique duas rotas de saída antes de se sentar.',
-        synergy:
-          'Sinergia (♠): Ao sacar uma carta de Espadas, você ignora penalidades de ruído e pode proteger a Dama (Q) do parceiro.',
+        passive: 'Como Ameaça (♠ · 26 PV / 11 Atq · Feroz): Vigia das Ruas Mortas. Ao Abater, vale 25 pts e compra 2 cartas.',
+        synergy: 'Recrutado (♥/♦/Coringa · 3 usos): Dispara golpe pesado (+6 de dano na Ameaça ou rival por uso).',
         flavorText: 'Quem olha para o chão encontra cápsulas vazias; quem olha para os telhados encontra o amanhã.',
       },
       queen: {
         title: 'Rádio de Curto Alcance',
         artGlyph: '📻',
         artSubtitle: 'Frequência Militar Criptografada',
-        tapEffect:
-          'Virar (⟳ Tap): Cancele imediatamente uma emboscada ou falha de comunicação. Você avisa o parceiro segundos antes do impacto.',
-        rechargeRule:
-          'Recarga (Untap): Desvire ao cumprir qualquer carta do naipe de ♦ Ouros (A♦ a 10♦) ou ao encontrar o parceiro pessoalmente.',
+        tapEffect: 'Como Ameaça (♠ · 18 PV / 8 Atq · Feroz): Frequência Militar Criptografada. Ao Abater, vale 15 pts e compra 2 cartas.',
+        rechargeRule: 'Recrutada (♥/♦/Coringa · 2 usos): Golpe rápido de flanco (+4 de dano na Ameaça ou rival por uso).',
         flavorText: 'Chiado estático, três cliques no botão de transmissão: o código para "ainda estou respirando".',
       },
       jack: {
         title: 'Mordida Oculta',
         artGlyph: '🩸',
         artSubtitle: 'Manga Abotoada Até o Pulso',
-        entryTrigger:
-          'Gatilho de Entrada: Revele quando falhar num confronto de ♠ ou recusar pagar o custo de um Eco.',
-        realLifeTaboo:
-          'Tabu na Vida Real: Você não pode reclamar de cansaço, dor ou fome, nem usar as palavras "ajuda" ou "medo" nas mensagens.',
+        entryTrigger: 'Como Ameaça (♠ · 12 PV / 5 Atq · Feroz): Manga Abotoada Até o Pulso. Ao Abater, vale 10 pts e compra 1 carta.',
+        realLifeTaboo: 'Recrutado (♥/♦/Coringa · 2 usos): Ataque curto de apoio (+2 de dano direto por uso).',
         flavorText: 'As veias escuras sobem pelo antebraço, mas ninguém no abrigo pode saber antes do amanhecer.',
       },
     },
@@ -81,30 +75,24 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'A Médica de Trincheira',
         artGlyph: '🩺',
         artSubtitle: 'Guardiã do Último Antisséptico',
-        passive:
-          'Passiva na Vida Real: Pergunte genuinamente como o outro está se sentindo antes de responder a qualquer assunto prático.',
-        synergy:
-          'Sinergia (♥): Ao sacar uma carta de Copas, você pode acalmar um Valete (J) ativo por um turno ou restaurar a confiança da dupla.',
+        passive: 'Como Ameaça (♥ · 26 PV / 8 Atq · Regenera): Guardiã do Último Antisséptico. Ao Abater, vale 25 pts e compra 2 cartas.',
+        synergy: 'Recrutado (♥/♦/Coringa · 3 usos): Restaura fôlego vital (+6 PV por uso).',
         flavorText: 'Costurar a carne é fácil; difícil é impedir que o sobrevivente desista de acordar.',
       },
       queen: {
         title: 'Soro Experimental',
         artGlyph: '💉',
         artSubtitle: 'Ampola Refrigerada Nível 4',
-        tapEffect:
-          'Virar (⟳ Tap): Reverta a ativação de um Valete (J) de qualquer jogador ou converta um sacrifício em sucesso pleno.',
-        rechargeRule:
-          'Recarga (Untap): Desvire ao cumprir qualquer carta do naipe de ♦ Ouros (A♦ a 10♦) ou quando dividirem uma refeição ou bebida real.',
+        tapEffect: 'Como Ameaça (♥ · 18 PV / 6 Atq · Regenera): Ampola Refrigerada Nível 4. Ao Abater, vale 15 pts e compra 2 cartas.',
+        rechargeRule: 'Recrutada (♥/♦/Coringa · 2 usos): Cura tática de emergência (+4 PV por uso).',
         flavorText: 'Líquido âmbar que queima como gelo nas veias e compra mais vinte e quatro horas de humanidade.',
       },
       jack: {
         title: 'Febre de Contato',
         artGlyph: '🌡️',
         artSubtitle: 'Suor Frio e Pupilas Dilatadas',
-        entryTrigger:
-          'Gatilho de Entrada: Revele ao falhar em proteger um inocente ou hesitar num Eco de ♥ Copas.',
-        realLifeTaboo:
-          'Tabu na Vida Real: Suas mensagens ou falas no jogo devem começar com uma pergunta ou confirmação de que o parceiro ainda está lá.',
+        entryTrigger: 'Como Ameaça (♥ · 12 PV / 4 Atq · Regenera): Suor Frio e Pupilas Dilatadas. Ao Abater, vale 10 pts e compra 1 carta.',
+        realLifeTaboo: 'Recrutado (♥/♦/Coringa · 2 usos): Recuperação rápida (+2 PV por uso).',
         flavorText: 'O termômetro quebrou nos 40 graus, e as vozes no corredor parecem chamar seu nome de infância.',
       },
     },
@@ -113,30 +101,24 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'O Saqueador de Telhados',
         artGlyph: '🧗',
         artSubtitle: 'Mestre das Pontes Improvisadas',
-        passive:
-          'Passiva na Vida Real: Carregue um objeto pequeno inesperado no bolso hoje (moeda, clipe, chave antiga) como amuleto de troca.',
-        synergy:
-          'Sinergia (♦): Ao sacar uma carta de Ouros, você desvira sua Dama (Q) automaticamente mesmo sem custo adicional.',
+        passive: 'Como Ameaça (♦ · 26 PV / 8 Atq · Blindada): Mestre das Pontes Improvisadas. Ao Abater, vale 25 pts e compra 2 cartas.',
+        synergy: 'Recrutado (♥/♦/Coringa · 3 usos): Abre recursos táticos (+3 cartas compradas por uso).',
         flavorText: 'Para quem sabe ler marquises e tubulações, a cidade trancada ainda é um armazém aberto.',
       },
       queen: {
         title: 'Chave-Mestra',
         artGlyph: '🗝️',
         artSubtitle: 'Gazua de Titânio e Pé-de-Cabra',
-        tapEffect:
-          'Virar (⟳ Tap): Ignore o requisito de ambiente de qualquer carta de Jornada e substitua por um objeto que esteja ao alcance da sua mão.',
-        rechargeRule:
-          'Recarga (Untap): Desvire ao cumprir qualquer carta do naipe de ♦ Ouros (A♦ a 10♦), abrir uma porta trancada ou reencontrar o parceiro.',
+        tapEffect: 'Como Ameaça (♦ · 18 PV / 6 Atq · Blindada): Gazua de Titânio e Pé-de-Cabra. Ao Abater, vale 15 pts e compra 2 cartas.',
+        rechargeRule: 'Recrutada (♥/♦/Coringa · 2 usos): Vasculha o baralho (+2 cartas compradas por uso).',
         flavorText: 'Nenhuma grade do exército resiste a três minutos de alavanca silenciosa.',
       },
       jack: {
         title: 'Mochila Rasgada',
         artGlyph: '🎒',
         artSubtitle: 'Rastro de Suprimentos Perdidos',
-        entryTrigger:
-          'Gatilho de Entrada: Revele quando perder um prazo de resposta ou falhar num teste de recurso (♦).',
-        realLifeTaboo:
-          'Tabu na Vida Real: Você só pode enviar respostas curtas de no máximo duas frases ou áudios de até 12 segundos.',
+        entryTrigger: 'Como Ameaça (♦ · 12 PV / 4 Atq · Blindada): Rastro de Suprimentos Perdidos. Ao Abater, vale 10 pts e compra 1 carta.',
+        realLifeTaboo: 'Recrutado (♥/♦/Coringa · 2 usos): Compra extra de suprimento (+1 carta comprada por uso).',
         flavorText: 'A costura cedeu no meio da escada de incêndio; metade das munições ficou para os mortos.',
       },
     },
@@ -145,30 +127,24 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'O Paciente Zero Latente',
         artGlyph: '🧬',
         artSubtitle: 'Sangue Híbrido Imune',
-        passive:
-          'Passiva na Vida Real: Observe pessoas distraídas ao seu redor como se você pudesse ouvir o batimento cardíaco delas à distância.',
-        synergy:
-          'Sinergia (♣): Ao sacar uma carta de Paus, você pressente a horda e pode escolher resolver o Eco sem sofrer risco de Cicatriz.',
+        passive: 'Como Ameaça (♣ · 26 PV / 8 Atq · Imune a armadilhas): Sangue Híbrido Imune. Ao Abater, vale 25 pts e compra 2 cartas.',
+        synergy: 'Recrutado (♥/♦/Coringa · 3 usos): Trava a ofensiva inimiga (-6 no ataque da Ameaça no turno por uso).',
         flavorText: 'Eles passam por mim sem atacar. O que me assusta é que cada dia entendo melhor o que eles murmuram.',
       },
       queen: {
         title: 'Sentido da Horda',
         artGlyph: '👁️',
         artSubtitle: 'Ressonância Neural com os Infectados',
-        tapEffect:
-          'Virar (⟳ Tap): Espie a próxima carta do Topo ou do Fundo do baralho antes de decidir quem assumirá o turno, ou anule um pânico de ♣.',
-        rechargeRule:
-          'Recarga (Untap): Desvire ao cumprir qualquer carta do naipe de ♦ Ouros (A♦ a 10♦) ou permanecer em silêncio absoluto com o parceiro por um minuto.',
+        tapEffect: 'Como Ameaça (♣ · 18 PV / 6 Atq · Imune a armadilhas): Ressonância Neural com os Infectados. Ao Abater, vale 15 pts e compra 2 cartas.',
+        rechargeRule: 'Recrutada (♥/♦/Coringa · 2 usos): Cortina de contenção (-4 no ataque da Ameaça no turno por uso).',
         flavorText: 'Feche os olhos e sinta a vibração no asfalto: trezentos passos arrastados dobrando a esquina.',
       },
       jack: {
         title: 'Fome Incontrolável',
         artGlyph: '🦷',
         artSubtitle: 'Instinto Predatório Desperto',
-        entryTrigger:
-          'Gatilho de Entrada: Revele ao falhar numa carta de ♣ Paus ou ao tirar o Coringa Escuro sem proteção.',
-        realLifeTaboo:
-          'Tabu na Vida Real: Em toda interação, você deve mencionar algo sensorial (um cheiro, um som de respiração, a temperatura ou a luz).',
+        entryTrigger: 'Como Ameaça (♣ · 12 PV / 4 Atq · Imune a armadilhas): Instinto Predatório Desperto. Ao Abater, vale 10 pts e compra 1 carta.',
+        realLifeTaboo: 'Recrutado (♥/♦/Coringa · 2 usos): Armadilha leve (-2 no ataque da Ameaça no turno por uso).',
         flavorText: 'A ração enlatada tem gosto de cinza; o pulso quente no pescoço ao lado brilha como um farol.',
       },
     },
@@ -180,15 +156,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Sirene do Bloqueio Militar',
         artGlyph: '🚨',
         artSubtitle: 'Barricada Norte Rompida',
-        topWatcherTrigger:
-          'Ao ouvir qualquer sirene, buzina prolongada ou alarme de carro/celular no seu dia.',
-        topWatcherEvent:
-          'O perímetro do exército caiu a três quadras daqui. Corredores infectados avançam em disparada pelo viaduto.',
-        bottomEchoPrompt:
-          'Descreva, sem revelar onde você está, um abrigo fictício que protegeria você do perigo.',
-        bottomEchoEffect:
-          'Sucesso se responder em menos de 10 minutos (ou se seu Rei for ♠). Caso contrário, vire sua Dama (Q ⟳) para conter o avanço.',
-        dailyIdea: 'Pode ser o despertador, um alarme de prazo ou uma notificação urgente do trabalho.',
+        topWatcherTrigger: 'Sozinho vale 5. Com outra carta numérica, soma +4 a ela.',
+        topWatcherEvent: 'O perímetro do exército caiu a três quadras daqui. Corredores infectados avançam em disparada pelo viaduto.',
+        bottomEchoPrompt: 'Naipe ♠ Espadas: +2 de dano extra em cada jogada.',
+        bottomEchoEffect: 'Carta-chave para finalizar Chefes ou romper a guarda do rival no PvP.',
+        dailyIdea: 'Combina com qualquer carta numérica da mão para formar um Combo de Comando.',
         flavorText: 'Quando a sirene para de tocar, não significa que o perigo passou — significa que o operador morreu.',
       },
       {
@@ -196,15 +168,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Vidro Estilhaçado no Corredor',
         artGlyph: '🪟',
         artSubtitle: 'Armadilha Sonora no Térreo',
-        topWatcherTrigger:
-          'Ao pisar em uma superfície barulhenta ou ver uma janela/porta de vidro perto de você.',
-        topWatcherEvent:
-          'Alguém quebrou a vitrine da farmácia abaixo do esconderijo. Dois estaladores farejam o chão coberto de cacos.',
-        bottomEchoPrompt:
-          'Escreva uma instrução tática curta, como se sussurrasse o caminho para sair em silêncio.',
-        bottomEchoEffect:
-          'Se o áudio tiver ruído alto ou hesitação, revele seu Valete (J). Se seu Rei for ♠ ou ♣, você passa invisível.',
-        dailyIdea: 'Pode ser um copo quebrado, um barulho no prédio ou um imprevisto logo cedo.',
+        topWatcherTrigger: '2 de valor + 2 de bônus ♠ = 4 de dano.',
+        topWatcherEvent: 'Alguém quebrou a vitrine da farmácia abaixo do esconderijo. Dois estaladores farejam o chão coberto de cacos.',
+        bottomEchoPrompt: 'Ideal para finalizar uma Ameaça com 2 a 4 de Vida restante.',
+        bottomEchoEffect: 'Também serve como bloqueio leve para economizar cartas maiores.',
+        dailyIdea: 'Junte duas cartas de valor 2 para somar poder dobrado no mesmo turno.',
         flavorText: 'Um único fragmento de cristal sob a bota vale mais que um tiro de escopeta no silêncio.',
       },
       {
@@ -212,15 +180,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Ronda no Estacionamento Subterrâneo',
         artGlyph: '🔦',
         artSubtitle: 'Faróis Piscando no Escuro',
-        topWatcherTrigger:
-          'Ao passar perto de carros estacionados, garagem ou rua com pouca iluminação.',
-        topWatcherEvent:
-          'O alarme de uma caminhonete abandonada dispara sozinho, atraindo silhuetas trôpegas entre as colunas de concreto.',
-        bottomEchoPrompt:
-          'Descreva um obstáculo fictício que serviria de cobertura nesta cena.',
-        bottomEchoEffect:
-          'Vire sua Dama (Q ⟳) para neutralizar o perigo sem ser visto (se seu Rei for ♠ Espadas, você resolve sem precisar virar a Dama).',
-        dailyIdea: 'Pode ser achar vaga, uma garagem mal iluminada ou a volta pelo estacionamento do mercado.',
+        topWatcherTrigger: '3 de valor + 2 de bônus ♠ = 5 de dano.',
+        topWatcherEvent: 'O alarme de uma caminhonete abandonada dispara sozinho, atraindo silhuetas trôpegas entre as colunas de concreto.',
+        bottomEchoPrompt: 'Quebra o impasse no início da onda de Valetes.',
+        bottomEchoEffect: 'Se o golpe zerar a Vida da Figura, ela vira seu Troféu.',
+        dailyIdea: 'Excelente carta de abertura para pressionar o Horizonte sem gastar cartas altas.',
         flavorText: 'Nunca entre num carro sem antes olhar o banco de trás.',
       },
       {
@@ -228,15 +192,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Atirador no Terraço Vizinho',
         artGlyph: '🎯',
         artSubtitle: 'Reflexo de Luneta ao Entardecer',
-        topWatcherTrigger:
-          'Ao ver o topo de um prédio alto, janela no andar superior ou poste de câmera.',
-        topWatcherEvent:
-          'Um sobrevivente hostil controla o cruzamento com um rifle de caça e exige pedágio de quem quiser passar.',
-        bottomEchoPrompt:
-          'Aponte ou fotografe o objeto perto de você que jogaria longe como isca para distrair a ameaça.',
-        bottomEchoEffect:
-          'Se seu Rei for de ♠ ou ♦, a distração funciona sem custo. Outros naipes precisam virar a Dama (Q ⟳) ou revelar o Valete (J).',
-        dailyIdea: 'Pode ser uma avaliação, uma revisão do seu trabalho ou um prazo que vigia você de longe.',
+        topWatcherTrigger: '4 de valor + 2 de bônus ♠ = 6 de dano.',
+        topWatcherEvent: 'Um sobrevivente hostil controla o cruzamento com um rifle de caça e exige pedágio de quem quiser passar.',
+        bottomEchoPrompt: 'Total de 6 de dano bruto contra Ameaça ou rival.',
+        bottomEchoEffect: 'Se tiver afinidade ♠ na classe, chega a 7 de impacto imediato.',
+        dailyIdea: 'Forte opção para punir um oponente no modo Competitivo PvP.',
         flavorText: 'Os vivos aprenderam a ser piores que os mortos na segunda semana do surto.',
       },
       {
@@ -244,15 +204,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Portão de Grade Enferrujada',
         artGlyph: '⛓️',
         artSubtitle: 'Dezenas de Mãos Entre as Barras',
-        topWatcherTrigger:
-          'Ao ver qualquer portão de ferro, cerca, catraca ou grade de segurança.',
-        topWatcherEvent:
-          'O peso de vinte infectados está entortando o cadeado principal do refúgio. Os parafusos estão cedendo.',
-        bottomEchoPrompt:
-          'Diga qual móvel pesado perto de você usaria como barricada contra o perigo.',
-        bottomEchoEffect:
-          'Se responder rápido, a barricada segura a cena. Se demorar ou recusar, vire sua Dama (Q ⟳) ou revele seu Valete (J).',
-        dailyIdea: 'Pode ser a porta de um lugar lotado, a catraca do metrô ou a fila do caixa.',
+        topWatcherTrigger: '5 de valor + 2 de bônus ♠ = 7 de dano.',
+        topWatcherEvent: 'O peso de vinte infectados está entortando o cadeado principal do refúgio. Os parafusos estão cedendo.',
+        bottomEchoPrompt: 'Entrega 7 de dano direto no alvo.',
+        bottomEchoEffect: 'Bloqueia 5 de dano se usada na defesa.',
+        dailyIdea: 'Pode ser jogada com um Ás para somar 9 + 2 de bônus ♠ (11 de dano).',
         flavorText: 'Eles não sentem dor nos dedos quebrados; só empurram até o ferro chorar.',
       },
       {
@@ -260,15 +216,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Faca Cravada no Mapa',
         artGlyph: '🗺️',
         artSubtitle: 'Rota de Evacuação Riscada a Sangue',
-        topWatcherTrigger:
-          'Ao olhar para uma placa de rua, tela de GPS, mapa ou letreiro de direção.',
-        topWatcherEvent:
-          'O posto avançado que era o destino da caminhada foi marcado com o símbolo de "Bio-Perigo Total — Fogo Artilheiro".',
-        bottomEchoPrompt:
-          'Escolha uma direção nova, Norte, Sul, Leste ou Oeste, para contornar o perigo e diga-a em voz alta ou por escrito.',
-        bottomEchoEffect:
-          'Muda a rota com segurança. Se o Eco estiver com o Valete (J) aberto, o esforço extra exige virar a Dama (Q ⟳).',
-        dailyIdea: 'Pode ser um plano que mudou, um desvio no caminho ou uma agenda que precisa ser refeita.',
+        topWatcherTrigger: '6 de valor + 2 de bônus ♠ = 8 de dano.',
+        topWatcherEvent: 'O posto avançado que era o destino da caminhada foi marcado com o símbolo de "Bio-Perigo Total — Fogo Artilheiro".',
+        bottomEchoPrompt: '8 de dano total num único golpe de ♠.',
+        bottomEchoEffect: 'Com um Ás, chega a 12 de dano (6 + 4 + 2).',
+        dailyIdea: 'Use como bloco principal ou guarde para impedir um bloqueio fácil do rival.',
         flavorText: 'A ponte segura de ontem é o abatedouro de hoje.',
       },
       {
@@ -276,15 +228,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Cachorro Latindo para o Vazio',
         artGlyph: '🐕',
         artSubtitle: 'Alerta Instintivo na Esquina',
-        topWatcherTrigger:
-          'Ao ver ou ouvir um animal (cão, pássaro, gato) na rua, janela ou vizinhança.',
-        topWatcherEvent:
-          'Um cão magro rosna fixamente para a porta do porão. Há algo rastejando no duto de ventilação.',
-        bottomEchoPrompt:
-          'Decida em uma frase curta: você parte para o confronto direto ou tranca a passagem para ganhar tempo?',
-        bottomEchoEffect:
-          'Se confrontar: Rei de ♠ vence sem custo; outros naipes viram a Dama (Q ⟳). Se isolar e recuar: escapam agora, mas na próxima falha você vira a Dama (Q ⟳) e o Valete (J).',
-        dailyIdea: 'Pode ser o cachorro do vizinho, um barulho de obra ou um aviso que você quase ignora.',
+        topWatcherTrigger: '7 de valor + 2 de bônus ♠ = 9 de dano.',
+        topWatcherEvent: 'Um cão magro rosna fixamente para a porta do porão. Há algo rastejando no duto de ventilação.',
+        bottomEchoPrompt: '9 de dano letal em uma única carta.',
+        bottomEchoEffect: 'Tira três quartos da vida de um Valete num golpe solitário.',
+        dailyIdea: 'Combine com outro 7 para explodir 16 de dano e deixar uma Dama por um fio.',
         flavorText: 'Os animais sabem distinguir quem ainda tem alma a cinquenta metros de distância.',
       },
       {
@@ -292,15 +240,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Ponte Elevadiça Travada',
         artGlyph: '🌉',
         artSubtitle: 'Manivela Manual Sob Fogo',
-        topWatcherTrigger:
-          'Ao subir ou descer uma escada, rampa, elevador ou passarela.',
-        topWatcherEvent:
-          'A passarela metálica emperrou a meio caminho enquanto a maré de infectados sobe pela rampa inferior.',
-        bottomEchoPrompt:
-          'Segure algo firme por alguns segundos onde estiver e diga: "Segurei a passagem".',
-        bottomEchoEffect:
-          'Libera a fuga da dupla! Se o seu Rei for de ♠ Espadas, você também pode desvirar a Dama (Q) do seu parceiro.',
-        dailyIdea: 'Pode ser um portão que não abre, uma porta emperrada ou um elevador que demora.',
+        topWatcherTrigger: '8 de valor + 2 de bônus ♠ = 10 de dano.',
+        topWatcherEvent: 'A passarela metálica emperrou a meio caminho enquanto a maré de infectados sobe pela rampa inferior.',
+        bottomEchoPrompt: '10 de dano imediato — deixa um Valete intacto por um fio.',
+        bottomEchoEffect: 'Carta de alto valor tanto para ataque quanto para absorver 8 de bloqueio.',
+        dailyIdea: 'No PvP, tira 10 PV de um rival, que não pode bloquear.',
         flavorText: 'Engrenagens cobertas de ferrugem e graxa exigem músculos que a fome já consumiu.',
       },
       {
@@ -308,15 +252,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Patrulha de Extermínio ("Os Limpadores")',
         artGlyph: '🔥',
         artSubtitle: 'Lança-Chamas no Nevoeiro',
-        topWatcherTrigger:
-          'Ao sentir cheiro de fumaça, café torrado, escapamento ou ver alguém de uniforme/colete.',
-        topWatcherEvent:
-          'Soldados renegados em trajes hazmat estão queimando quarteirões inteiros sem checar se há sobreviventes saudáveis.',
-        bottomEchoPrompt:
-          'Fotografe ou aponte um canto escondido onde você caberia agachado até o perigo passar.',
-        bottomEchoEffect:
-          'Exige discrição: se você estiver com o Valete (J) aberto, precisa virar sua Dama (Q ⟳) para não denunciar o esconderijo.',
-        dailyIdea: 'Pode ser uma faxina geral, uma revisão rigorosa ou uma reunião de cobrança.',
+        topWatcherTrigger: '9 de valor + 2 de bônus ♠ = 11 de dano.',
+        topWatcherEvent: 'Soldados renegados em trajes hazmat estão queimando quarteirões inteiros sem checar se há sobreviventes saudáveis.',
+        bottomEchoPrompt: '11 de dano direto de Espadas.',
+        bottomEchoEffect: 'Garante limpeza rápida na onda das Damas e dos Reis.',
+        dailyIdea: 'Combine com um Ás para um bombardeio devastador de 15 de dano.',
         flavorText: 'Para o protocolo Cinza, qualquer um fora da muralha já consta como baixa biológica.',
       },
       {
@@ -324,15 +264,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Cerco na Torre de Transmissão',
         artGlyph: '📡',
         artSubtitle: 'Última Munição no Pente',
-        topWatcherTrigger:
-          'Ao ver uma antena, torre, poste de alta tensão ou o ponto mais alto do horizonte.',
-        topWatcherEvent:
-          'Centenas de infectados cercam a base da antena enquanto o sinal de resgate tenta chegar ao helicóptero.',
-        bottomEchoPrompt:
-          'Diga ou escreva, em dez segundos, a transmissão de rádio que coordena o resgate.',
-        bottomEchoEffect:
-          'Clímax de ♠: Vire sua Dama (Q ⟳) (ou use a sinergia do Rei de ♠) para garantir extração limpa; senão, revele seu Valete (J).',
-        dailyIdea: 'Pode ser um dia sem sinal, a última ligação antes de a bateria acabar ou a entrega final.',
+        topWatcherTrigger: '10 de valor + 2 de bônus ♠ = 12 de dano.',
+        topWatcherEvent: 'Centenas de infectados cercam a base da antena enquanto o sinal de resgate tenta chegar ao helicóptero.',
+        bottomEchoPrompt: '12 de dano puro com uma só carta.',
+        bottomEchoEffect: 'O maior impacto individual do baralho convencional.',
+        dailyIdea: 'Segure para o Rei final ou para decidir o duelo no modo Competitivo.',
         flavorText: 'Suba mais um degrau. Se cairmos, que seja vendo o sol acima da fumaça.',
       },
     ],
@@ -342,15 +278,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Teste de Sangue na Luz da Lanterna',
         artGlyph: '🔬',
         artSubtitle: 'Três Segundos para o Resultado',
-        topWatcherTrigger:
-          'Ao lavar as mãos, olhar no espelho ou ver um foco de luz direta.',
-        topWatcherEvent:
-          'O arranhão no ombro parece inflamado. É preciso conferir se o vírus entrou na corrente sanguínea.',
-        bottomEchoPrompt:
-          'Olhe a palma da mão ou sinta a pulsação no pulso e descreva-a, provando que você ainda está limpo.',
-        bottomEchoEffect:
-          'Se o Eco tiver um Valete (J) ativo, um jogador de ♥ Copas pode limpá-lo agora virando sua Dama (Q ⟳).',
-        dailyIdea: 'Pode ser um exame de rotina, a espera de um resultado ou uma consulta marcada.',
+        topWatcherTrigger: '5 de força (ou +4 em combo), cura +3 PV. Pode recrutar.',
+        topWatcherEvent: 'O arranhão no ombro parece inflamado. É preciso conferir se o vírus entrou na corrente sanguínea.',
+        bottomEchoPrompt: 'Naipe ♥ Copas: cura PV e permite Recrutar a Figura no golpe final.',
+        bottomEchoEffect: 'Excelente com cartas altas de ♠ ou ♣ para derrubar e ainda recrutar o chefe.',
+        dailyIdea: 'Combo clássico: 9♠ + A♥ para bater forte e ainda trazer a Figura para o seu lado.',
         flavorText: 'Olhe nos meus olhos sob a lanterna. Se a pupila contrair, eu não aperto o gatilho.',
       },
       {
@@ -358,15 +290,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Fogueira em Lata de Óleo',
         artGlyph: '🔥',
         artSubtitle: 'Cinco Minutos de Trégua no Frio',
-        topWatcherTrigger:
-          'Ao segurar uma xícara quente, acender uma luz morna ou sentar para descansar.',
-        topWatcherEvent:
-          'A chuva ácida lá fora dá uma trégua. Pela primeira vez em três dias as botas secam em segurança.',
-        bottomEchoPrompt:
-          'Diga ou escreva uma lembrança boa de antes da "quarentena" que mantém seu personagem lutando.',
-        bottomEchoEffect:
-          'Restaura a esperança: se algum dos dois estava com Valete (J) ativo, o fardo do tabu é suspenso pelo próximo turno.',
-        dailyIdea: 'Pode ser um café quentinho com alguém, uma pausa no trabalho ou um papo rápido no corredor.',
+        topWatcherTrigger: '2 de força, cura +1 PV. Pode recrutar.',
+        topWatcherEvent: 'A chuva ácida lá fora dá uma trégua. Pela primeira vez em três dias as botas secam em segurança.',
+        bottomEchoPrompt: 'Use como acabamento vermelho para recrutar uma Ameaça quase derrotada.',
+        bottomEchoEffect: 'Mantém a vida estável nos primeiros turnos.',
+        dailyIdea: 'Barata e versátil para fechar recrutamentos sem desperdiçar cartas grandes.',
         flavorText: 'Não é o calor do fogo que impede o congelamento, é ter alguém para dividir a lata de pêssego.',
       },
       {
@@ -374,15 +302,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Criança Perdida no Supermercado',
         artGlyph: '🧸',
         artSubtitle: 'Choro Baixo Atrás das Prateleiras',
-        topWatcherTrigger:
-          'Ao ver um brinquedo, desenho, escola ou ouvir vozes jovens ao longe.',
-        topWatcherEvent:
-          'Uma sobrevivente mirim está encurralada no depósito de alimentos, mas resgatá-la vai atrasar a fuga.',
-        bottomEchoPrompt:
-          'Diga o que você entregaria das suas mãos ou da mesa para acalmar alguém em pânico sem fazer barulho.',
-        bottomEchoEffect:
-          'Se ajudar (Rei de ♥ resolve sem custo), outros naipes viram a Dama (Q ⟳); se recusar ajudar, revele seu Valete (J) imediatamente.',
-        dailyIdea: 'Pode ser uma ida ao mercado, ajudar alguém a achar algo ou a ligação de quem precisa de você.',
+        topWatcherTrigger: '3 de força, cura +2 PV. Pode recrutar.',
+        topWatcherEvent: 'Uma sobrevivente mirim está encurralada no depósito de alimentos, mas resgatá-la vai atrasar a fuga.',
+        bottomEchoPrompt: 'Cura 2 PV enquanto avança o dano no Horizonte.',
+        bottomEchoEffect: 'No Coop, cura o jogador mais ferido da equipe.',
+        dailyIdea: 'Combine duas cartas de valor 3 para recuperar fôlego no meio da onda de Damas.',
         flavorText: 'Salvar uma vida custa munição; abandonar uma vida custa quem você era.',
       },
       {
@@ -390,15 +314,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Bandagem Improvisada com Camisa',
         artGlyph: '🩹',
         artSubtitle: 'Estancando a Hemorragia',
-        topWatcherTrigger:
-          'Ao tocar em tecido, roupa dobrada, guarda-chuva ou bolsa.',
-        topWatcherEvent:
-          'Estilhaços da última corrida cortaram um braço. O cheiro de sangue fresco viaja rápido pelo vento.',
-        bottomEchoPrompt:
-          'Descreva a cor da roupa que você está usando e que rasgaria para improvisar um curativo.',
-        bottomEchoEffect:
-          'Protege a dupla! Se o seu Rei for de ♥ Copas, você também desvira sua Dama (Q).',
-        dailyIdea: 'Pode ser um curativo, cuidar de alguém doente ou uma palavra de apoio a quem precisa.',
+        topWatcherTrigger: '4 de força, cura +2 PV. Pode recrutar.',
+        topWatcherEvent: 'Estilhaços da última corrida cortaram um braço. O cheiro de sangue fresco viaja rápido pelo vento.',
+        bottomEchoPrompt: 'Sustenta a equipe e prepara recrutamentos médios.',
+        bottomEchoEffect: 'Boa carta de bloqueio (4) quando a mão vem sem armadilhas.',
+        dailyIdea: 'Equilíbrio sólido entre avanço tático e recuperação.',
         flavorText: 'Aperte o nó até doer. Se está doendo, é porque o coração ainda bate.',
       },
       {
@@ -406,15 +326,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Carta Não Enviada no Correio Morto',
         artGlyph: '✉️',
         artSubtitle: 'Palavras de Despedida no Balcão',
-        topWatcherTrigger:
-          'Ao ver papel impresso, caderno, livro, recibo ou envelope.',
-        topWatcherEvent:
-          'Uma mala postal caída guarda dezenas de cartas escritas no dia em que os telefones pararam.',
-        bottomEchoPrompt:
-          'Escreva duas linhas que seu personagem deixaria gravadas no balcão, para quem passar depois.',
-        bottomEchoEffect:
-          'Fortalece o vínculo da dupla: desvira a Dama (Q) de um dos jogadores.',
-        dailyIdea: 'Pode ser uma mensagem que você não mandou, um e-mail de despedida ou um cartão para alguém.',
+        topWatcherTrigger: '5 de força, cura +3 PV. Pode recrutar.',
+        topWatcherEvent: 'Uma mala postal caída guarda dezenas de cartas escritas no dia em que os telefones pararam.',
+        bottomEchoPrompt: 'Cura 3 PV e converte a Ameaça em Aliado se zerar a Vida.',
+        bottomEchoEffect: 'Fundamental para montar mesa forte no PvP.',
+        dailyIdea: 'Com um Ás, soma 9 de persuasão e 5 de cura no mesmo turno.',
         flavorText: 'Prometemos nos encontrar na praça da matriz quando tudo acabar. A praça não existe mais.',
       },
       {
@@ -422,15 +338,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Dividindo a Última Garrafa de Água',
         artGlyph: '💧',
         artSubtitle: 'Dois Goles para Cada Um',
-        topWatcherTrigger:
-          'Ao beber água, café, suco ou ver uma garrafa/copo na sua frente.',
-        topWatcherEvent:
-          'O filtro portátil quebrou e o cantil tem apenas quatro dedos de água potável para atravessar a zona industrial.',
-        bottomEchoPrompt:
-          'Beba um gole de água agora e descreva como você raciona o suprimento que resta.',
-        bottomEchoEffect:
-          'Se beber água e confirmar, qualquer Valete (J) aberto tem seu Tabu suspenso durante esta rodada.',
-        dailyIdea: 'Pode ser dividir um lanche, um almoço com colegas ou a última fatia do bolo.',
+        topWatcherTrigger: '6 de força, cura +3 PV. Pode recrutar.',
+        topWatcherEvent: 'O filtro portátil quebrou e o cantil tem apenas quatro dedos de água potável para atravessar a zona industrial.',
+        bottomEchoPrompt: 'Recupera 3 PV e causa 6 de impacto.',
+        bottomEchoEffect: 'Excelente resposta após sofrer dano do Coringa Escuro.',
+        dailyIdea: 'Segura o ritmo contra a onda intermediária sem recuar.',
         flavorText: 'A sede transforma amigos em estranhos, ou estranhos em irmãos de sangue.',
       },
       {
@@ -438,15 +350,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Delírio da Noite em Claro',
         artGlyph: '🌙',
         artSubtitle: 'Sombras que Parecem Rostos Conhecidos',
-        topWatcherTrigger:
-          'Ao sentir sono, bocejar ou olhar para uma janela quando a luz muda.',
-        topWatcherEvent:
-          'A privação de sono faz jurar ter visto um antigo amigo caminhando no meio da horda lá embaixo.',
-        bottomEchoPrompt:
-          'Diga seu próprio nome e responda, em voz alta ou por escrito: "Onde estou agora?".',
-        bottomEchoEffect:
-          'Ancora a mente e resolve a cena. Se demorar ou falhar, revele seu Valete (J).',
-        dailyIdea: 'Pode ser uma noite mal dormida, um plantão ou conversar com alguém que também está acordado.',
+        topWatcherTrigger: '7 de força, cura +4 PV. Pode recrutar.',
+        topWatcherEvent: 'A privação de sono faz jurar ter visto um antigo amigo caminhando no meio da horda lá embaixo.',
+        bottomEchoPrompt: 'Cura 4 PV e entrega 7 de poder para recrutar.',
+        bottomEchoEffect: 'Bloqueia 7 de dano se usada defensivamente.',
+        dailyIdea: 'Vira o jogo quando você caiu abaixo da metade da Vida.',
         flavorText: 'Não olhe para os rostos deles. A pessoa que você conhecia já saiu daquele corpo há semanas.',
       },
       {
@@ -454,15 +362,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Velório Silencioso no Jardim',
         artGlyph: '🪦',
         artSubtitle: 'Crachá Pendurado na Cruz de Madeira',
-        topWatcherTrigger:
-          'Ao ver uma planta, árvore, jardim, vaso de flor ou praça.',
-        topWatcherEvent:
-          'No jardim está o túmulo improvisado do antigo líder do abrigo, junto com o caderno de anotações médicas dele.',
-        bottomEchoPrompt:
-          'Olhe ou fotografe uma folha, planta ou objeto calmo perto de você e respire fundo uma vez.',
-        bottomEchoEffect:
-          'Se seu Rei for de ♥ Copas, desvire sua Dama (Q); outros naipes resolvem a cena sem custo.',
-        dailyIdea: 'Pode ser lembrar de alguém que se foi, uma despedida no trabalho ou uma mudança de casa.',
+        topWatcherTrigger: '8 de força, cura +4 PV. Pode recrutar.',
+        topWatcherEvent: 'No jardim está o túmulo improvisado do antigo líder do abrigo, junto com o caderno de anotações médicas dele.',
+        bottomEchoPrompt: '8 de poder + 4 de cura — fecha o recrutamento de um Valete já ferido.',
+        bottomEchoEffect: 'No Coop, pode salvar um aliado à beira do colapso.',
+        dailyIdea: 'Par de oitos (8+8) explode 16 de poder e muita cura simultânea.',
         flavorText: 'Onde as flores nascem sobre o concreto, a terra ainda lembra como curar.',
       },
       {
@@ -470,15 +374,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Pacto do Último Cartucho',
         artGlyph: '🤝',
         artSubtitle: 'Juramento Contra a Transformação',
-        topWatcherTrigger:
-          'Ao olhar para o relógio, pulseira, anel ou para as próprias mãos.',
-        topWatcherEvent:
-          'Encurralados no vagão de metrô, os sobreviventes renovam a promessa mais dura do apocalipse: não deixar ninguém virar um deles.',
-        bottomEchoPrompt:
-          'Invente a senha secreta que provaria que você ainda é você.',
-        bottomEchoEffect:
-          'Cria um escudo emocional: permite virar um Valete (J) aberto de volta para baixo (curado) se você virar sua Dama (Q ⟳).',
-        dailyIdea: 'Pode ser uma promessa a alguém, um combinado em casa ou um compromisso que você renova.',
+        topWatcherTrigger: '9 de força, cura +5 PV. Pode recrutar.',
+        topWatcherEvent: 'Encurralados no vagão de metrô, os sobreviventes renovam a promessa mais dura do apocalipse: não deixar ninguém virar um deles.',
+        bottomEchoPrompt: '9 de poder e cura 5 PV imediatamente.',
+        bottomEchoEffect: 'Fecha o recrutamento de uma Dama que já perdeu metade da vida.',
+        dailyIdea: 'No modo Competitivo, vira o placar de Vida enquanto constrói exército.',
         flavorText: 'Se eu esquecer a música que cantávamos na chuva, não hesite.',
       },
       {
@@ -486,15 +386,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Hospital de Campanha Abandonado',
         artGlyph: '🏥',
         artSubtitle: 'Gerador de Emergência Ligado',
-        topWatcherTrigger:
-          'Ao ver uma farmácia, consultório, caixa de remédios ou corredor branco.',
-        topWatcherEvent:
-          'O centro cirúrgico da Cruz Vermelha está intacto, mas as portas magnéticas vão travar em três minutos.',
-        bottomEchoPrompt:
-          'Diga qual recurso vital você pega primeiro (antibióticos, plasma ou prontuário) e por quê.',
-        bottomEchoEffect:
-          'Clímax de ♥: Vira para baixo (cura) o Valete (J) de ambos os jogadores se cumprirem a cena!',
-        dailyIdea: 'Pode ser visitar alguém doente, uma farmácia de plantão ou um dia cuidando de quem precisa.',
+        topWatcherTrigger: '10 de força, cura +5 PV. Pode recrutar.',
+        topWatcherEvent: 'O centro cirúrgico da Cruz Vermelha está intacto, mas as portas magnéticas vão travar em três minutos.',
+        bottomEchoPrompt: '10 de poder + 5 de cura + Recrutamento garantido ao finalizar.',
+        bottomEchoEffect: 'A carta de maior sustentação e diplomacia do baralho.',
+        dailyIdea: 'Combine com um Ás para alcançar 14 de poder e 7 de cura num único turno.',
         flavorText: 'Entre macas reviradas, uma única geladeira ainda zumbe com a esperança de um continente.',
       },
     ],
@@ -504,15 +400,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Cofre do Depósito Farmacêutico',
         artGlyph: '🔐',
         artSubtitle: 'Combinação de Três Dígitos',
-        topWatcherTrigger:
-          'Ao ver um teclado numérico, fechadura, senha ou código de barras.',
-        topWatcherEvent:
-          'Atrás do balcão blindado há uma caixa lacrada de suprimentos táticos e baterias de lítio.',
-        bottomEchoPrompt:
-          'Diga os três últimos dígitos do horário ou da bateria do seu celular: é a combinação do cofre.',
-        bottomEchoEffect:
-          'Sucesso de ♦ Ouros! Ambos os jogadores podem desvirar suas Damas (Q) imediatamente.',
-        dailyIdea: 'Pode ser comprar um remédio, lembrar uma senha ou organizar a caixa de medicamentos.',
+        topWatcherTrigger: '5 de força (ou +4 em combo), compra +1 carta. Pode recrutar.',
+        topWatcherEvent: 'Atrás do balcão blindado há uma caixa lacrada de suprimentos táticos e baterias de lítio.',
+        bottomEchoPrompt: 'Naipe ♦ Ouros: compra cartas extras e permite Recrutar a Figura no golpe final.',
+        bottomEchoEffect: 'Mantém a mão cheia para os combos decisivos do fim da partida.',
+        dailyIdea: 'Combine com qualquer carta alta para não perder ritmo após o ataque.',
         flavorText: 'O gerente levou a senha para o túmulo, mas deixou a data de aniversário no calendário de parede.',
       },
       {
@@ -520,15 +412,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Gerador a Diesel Engasgado',
         artGlyph: '⛽',
         artSubtitle: 'Fumaça Preta e Correia Frouxa',
-        topWatcherTrigger:
-          'Ao ouvir o barulho de um motor, ar-condicionado, geladeira ou ventilador.',
-        topWatcherEvent:
-          'A energia do abrigo está caindo no meio da noite. Sem luz nos holofotes, os sensores de perímetro apagam.',
-        bottomEchoPrompt:
-          'Aponte ou fotografe um cabo, carregador ou interruptor perto de você para improvisar energia.',
-        bottomEchoEffect:
-          'Desvira a sua Dama (Q)! Se falhar ou ignorar, você precisa virar sua Dama (Q ⟳) ou revelar o Valete (J).',
-        dailyIdea: 'Pode ser um eletrodoméstico com defeito, um carro que não pega ou uma impressora teimosa.',
+        topWatcherTrigger: '2 de força, compra +1 carta. Pode recrutar.',
+        topWatcherEvent: 'A energia do abrigo está caindo no meio da noite. Sem luz nos holofotes, os sensores de perímetro apagam.',
+        bottomEchoPrompt: 'Gira o baralho rápido sem custo de mão.',
+        bottomEchoEffect: 'Ótima para completar o recrutamento de máquinas ou humanos.',
+        dailyIdea: 'Nunca desperdice um 2♦ — ele se paga comprando uma carta nova.',
         flavorText: 'Duas voltas de fita isolante e uma prece mecânica mantêm os monstros do lado de fora.',
       },
       {
@@ -536,15 +424,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Mochila Militar Presa na Árvore',
         artGlyph: '🎒',
         artSubtitle: 'Paraquedas Rasgado no Segundo Andar',
-        topWatcherTrigger:
-          'Ao olhar para cima e ver fios elétricos, galhos, marquises ou lâmpadas.',
-        topWatcherEvent:
-          'Um pacote de suprimentos lançado por drone ficou preso a quatro metros do chão, bem sobre uma poça de óleo.',
-        bottomEchoPrompt:
-          'Diga qual objeto longo do seu ambiente você usaria para alcançar a mochila à distância, sem se expor.',
-        bottomEchoEffect:
-          'Resolve a cena e desvira sua Dama (Q)!',
-        dailyIdea: 'Pode ser algo guardado num lugar alto, uma encomenda atrasada ou arrumar a mochila.',
+        topWatcherTrigger: '3 de força, compra +1 carta. Pode recrutar.',
+        topWatcherEvent: 'Um pacote de suprimentos lançado por drone ficou preso a quatro metros do chão, bem sobre uma poça de óleo.',
+        bottomEchoPrompt: '3 de poder + compra 1 carta nova.',
+        bottomEchoEffect: 'Acelera a busca por combos e cartas pretas/vermelhas.',
+        dailyIdea: 'Use quando precisar cavar o baralho atrás de um bloqueio ou golpe final.',
         flavorText: 'O paraquedista não teve sorte, mas as rações MRE dele vão nos manter vivos até domingo.',
       },
       {
@@ -552,15 +436,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Atalho pelos Dutos de Ventilação',
         artGlyph: '🔩',
         artSubtitle: 'Grade Desparafusada com Moeda',
-        topWatcherTrigger:
-          'Ao ver uma saída de ar, janela estreita, corredor apertado ou fresta.',
-        topWatcherEvent:
-          'A rua principal está tomada por centenas de vagantes. A única saída é rastejar pelo sistema de ar do shopping.',
-        bottomEchoPrompt:
-          'Descreva, em uma frase, a passagem lateral que você abre pelos dutos.',
-        bottomEchoEffect:
-          'Evita qualquer dano neste turno e desvira sua Dama (Q)!',
-        dailyIdea: 'Pode ser um atalho no caminho, um parafuso solto para apertar ou um jeito mais rápido de fazer a tarefa.',
+        topWatcherTrigger: '4 de força, compra +1 carta. Pode recrutar.',
+        topWatcherEvent: 'A rua principal está tomada por centenas de vagantes. A única saída é rastejar pelo sistema de ar do shopping.',
+        bottomEchoPrompt: '4 de impacto + compra 1 carta.',
+        bottomEchoEffect: 'Mantém o motor tático rodando sem secar a mão.',
+        dailyIdea: 'Par de quatros gera 8 de poder e compra de 2 cartas.',
         flavorText: 'Não olhe para baixo pelas grelhas; eles sentem o calor da nossa pele.',
       },
       {
@@ -568,15 +448,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Escambo com o Mercador da Van Blindada',
         artGlyph: '🚐',
         artSubtitle: 'Troca Justa na Zona Neutra',
-        topWatcherTrigger:
-          'Ao ver uma moeda, carteira, cartão, nota fiscal ou vitrine de loja.',
-        topWatcherEvent:
-          'Um contrabandista solitário abre a janela gradeada da van: ele tem munição e antibióticos, mas quer algo útil da velha era.',
-        bottomEchoPrompt:
-          'Fotografe ou descreva o objeto mais curioso da sua mesa ou bolso e diga como o usaria na troca.',
-        bottomEchoEffect:
-          'O improviso funciona: desvire a Dama (Q) de qualquer um dos dois jogadores!',
-        dailyIdea: 'Pode ser uma troca com um vizinho, a venda de algo usado ou um favor trocado por outro.',
+        topWatcherTrigger: '5 de força, compra +1 carta. Pode recrutar.',
+        topWatcherEvent: 'Um contrabandista solitário abre a janela gradeada da van: ele tem munição e antibióticos, mas quer algo útil da velha era.',
+        bottomEchoPrompt: '5 de poder + compra 1 carta + Recruta.',
+        bottomEchoEffect: 'Excelente para recrutar Ameaças de ♦ (Saque & Engenho) no golpe final.',
+        dailyIdea: 'Use como carta de fechamento para converter sentinelas caras.',
         flavorText: 'Dinheiro de papel só serve para acender fogueira; pilhas alcalinas valem ouro puro.',
       },
       {
@@ -584,15 +460,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Ponte de Tábuas Entre Dois Prédios',
         artGlyph: '🪜',
         artSubtitle: 'Vinte Metros Acima do Asfalto Infectado',
-        topWatcherTrigger:
-          'Ao atravessar uma porta, corredor, faixa de pedestres ou mudar de cômodo.',
-        topWatcherEvent:
-          'Os saqueadores instalaram pranchas de andaime ligando dois telhados. O vento balança a madeira a cada passo.',
-        bottomEchoPrompt:
-          'Dê cinco passos em linha reta onde estiver, ou imagine-os, como quem atravessa uma tábua estreita.',
-        bottomEchoEffect:
-          'A travessia recarrega (desvira) tanto a sua Dama (Q) quanto a Dama do Vigia!',
-        dailyIdea: 'Pode ser uma escada de mão, uma passarela no caminho ou dar conta de dois compromissos colados.',
+        topWatcherTrigger: '6 de força, compra +1 carta. Pode recrutar.',
+        topWatcherEvent: 'Os saqueadores instalaram pranchas de andaime ligando dois telhados. O vento balança a madeira a cada passo.',
+        bottomEchoPrompt: '6 de poder + compra 1 carta.',
+        bottomEchoEffect: 'Sustenta ciclos longos de combate no Solo e Coop.',
+        dailyIdea: 'Forte para abater Valetes danificados e já repor a mão.',
         flavorText: 'Olhe apenas para os ombros de quem vai à sua frente.',
       },
       {
@@ -600,15 +472,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Oficina de Recarga de Munição',
         artGlyph: '🔧',
         artSubtitle: 'Bancada de Pólvora e Chumbo',
-        topWatcherTrigger:
-          'Ao usar uma caneta, ferramenta, teclado ou utensílio de metal.',
-        topWatcherEvent:
-          'Uma garagem trancada por dentro guarda prensas manuais, ferramentas intactas e lanternas táticas.',
-        bottomEchoPrompt:
-          'Diga se você melhora agora a arma ou o kit médico, e com qual peça.',
-        bottomEchoEffect:
-          'Desvira a Dama (Q) de ambos os jogadores!',
-        dailyIdea: 'Pode ser carregar o celular, reabastecer a despensa ou preparar as marmitas da semana.',
+        topWatcherTrigger: '7 de força, compra +2 cartas. Pode recrutar.',
+        topWatcherEvent: 'Uma garagem trancada por dentro guarda prensas manuais, ferramentas intactas e lanternas táticas.',
+        bottomEchoPrompt: '7 de poder e compra 2 cartas de uma vez!',
+        bottomEchoEffect: 'A partir do valor 7, cartas de ♦ Ouros compram duas cartas.',
+        dailyIdea: 'Motor de compras para encher a mão até o limite de 6 cartas.',
         flavorText: 'Quem sabe consertar o que quebrou nunca fica sem aliados na quarentena.',
       },
       {
@@ -616,15 +484,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Vagão de Carga Descarrilado',
         artGlyph: '🚆',
         artSubtitle: 'Contêiner da Defesa Civil Selado',
-        topWatcherTrigger:
-          'Ao ver um caminhão, ônibus, trem, caixa grande ou armário trancado.',
-        topWatcherEvent:
-          'Um trem logístico tombou nos trilhos. O contêiner azul ainda tem o lacre de chumbo original, mas o barulho ao abrir será alto.',
-        bottomEchoPrompt:
-          'Bata duas vezes na mesa, como quem força a porta do contêiner.',
-        bottomEchoEffect:
-          'Vocês abrem caminho a tempo: desvire sua Dama (Q)!',
-        dailyIdea: 'Pode ser uma entrega que chegou errada, uma caixa para abrir ou uma encomenda presa no correio.',
+        topWatcherTrigger: '8 de força, compra +2 cartas. Pode recrutar.',
+        topWatcherEvent: 'Um trem logístico tombou nos trilhos. O contêiner azul ainda tem o lacre de chumbo original, mas o barulho ao abrir será alto.',
+        bottomEchoPrompt: '8 de impacto + compra 2 cartas.',
+        bottomEchoEffect: 'Garante recursos para o turno seguinte ou bloqueio pesado.',
+        dailyIdea: 'Excelente no PvP para atacar forte e terminar com a mão cheia.',
         flavorText: 'Dentro havia trinta caixas de filtros de água e um rádio militar na caixa original.',
       },
       {
@@ -632,15 +496,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Bateria Solar no Topo da Caixa d’Água',
         artGlyph: '☀️',
         artSubtitle: 'Energia Limpa Acima da Névoa',
-        topWatcherTrigger:
-          'Ao ver a luz do sol, uma luminária acesa ou o ícone de bateria da tela.',
-        topWatcherEvent:
-          'As placas fotovoltaicas do prédio vizinho ainda funcionam, mas os cabos foram roídos por corvos e ratos.',
-        bottomEchoPrompt:
-          'Diga em quantos por cento está a bateria do seu celular: é a carga que sobra no painel solar.',
-        bottomEchoEffect:
-          'Se a bateria estiver acima de 30% (ou Rei de ♦), desvira sua Dama (Q) e vira seu Valete (J) para baixo! Se <30%, apenas desvira a Dama (Q).',
-        dailyIdea: 'Pode ser estender roupa no sol, regar as plantas ou subir ao terraço para pegar algo.',
+        topWatcherTrigger: '9 de força, compra +2 cartas. Pode recrutar.',
+        topWatcherEvent: 'As placas fotovoltaicas do prédio vizinho ainda funcionam, mas os cabos foram roídos por corvos e ratos.',
+        bottomEchoPrompt: '9 de poder + compra 2 cartas + Recruta.',
+        bottomEchoEffect: 'Domina o ritmo da mesa nas ondas finais.',
+        dailyIdea: 'Permite montar combos de 3 ou 4 cartas na rodada seguinte.',
         flavorText: 'O sol ainda nasce igual todos os dias, indiferente às cidades apagadas.',
       },
       {
@@ -648,15 +508,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Helicóptero de Carga no Heliponto',
         artGlyph: '🚁',
         artSubtitle: 'Chave na Ignição e Tanque pela Metade',
-        topWatcherTrigger:
-          'Ao olhar para o céu aberto ou ouvir o som de avião/helicóptero/vento forte.',
-        topWatcherEvent:
-          'O plano de fuga definitivo está no topo do edifício corporativo, mas o rotor precisa de um reparo hidráulico rápido.',
-        bottomEchoPrompt:
-          'Descreva em três passos rápidos como você segura a ameaça e liga o helicóptero.',
-        bottomEchoEffect:
-          'Clímax de ♦: Desvira as Damas (Q) dos dois jogadores e garante fuga limpa da cena!',
-        dailyIdea: 'Pode ser abastecer o carro, comprar uma passagem ou deixar tudo pronto para uma viagem.',
+        topWatcherTrigger: '10 de força, compra +2 cartas. Pode recrutar.',
+        topWatcherEvent: 'O plano de fuga definitivo está no topo do edifício corporativo, mas o rotor precisa de um reparo hidráulico rápido.',
+        bottomEchoPrompt: '10 de poder + compra 2 cartas + Recrutamento.',
+        bottomEchoEffect: 'A carta de maior compra e impacto de ♦ Ouros no baralho.',
+        dailyIdea: 'Jogada mestre para virar partidas contra os Reis.',
         flavorText: 'Quando as hélices girarem, toda a zona sul vai olhar para cima.',
       },
     ],
@@ -666,15 +522,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Esporos Negros no Subsolo',
         artGlyph: '🍄',
         artSubtitle: 'Poeira Bioluminescente no Ar',
-        topWatcherTrigger:
-          'Ao ver poeira no feixe de luz, mofo, umidade ou entrar num lugar fechado.',
-        topWatcherEvent:
-          'A cepa fúngica do vírus tomou as paredes da estação. Respirar fundo sem máscara provoca visões da mente coletiva.',
-        bottomEchoPrompt:
-          'Prenda a respiração por três segundos, como quem atravessa a nuvem de esporos.',
-        bottomEchoEffect:
-          'Rei de ♣ Paus atravessa sem custo. Outros naipes devem virar a Dama (Q ⟳) ou revelar o Valete (J).',
-        dailyIdea: 'Pode ser uma garagem no subsolo, um cheiro de mofo ou um armário que ninguém abre há tempos.',
+        topWatcherTrigger: '5 de força (ou +4 em combo), reduz ataque da Ameaça.',
+        topWatcherEvent: 'A cepa fúngica do vírus tomou as paredes da estação. Respirar fundo sem máscara provoca visões da mente coletiva.',
+        bottomEchoPrompt: 'Naipe ♣ Paus: reduz o contra-ataque da Ameaça neste turno.',
+        bottomEchoEffect: 'No PvP, golpes pesados (6+) forçam o rival a descartar 1 carta.',
+        dailyIdea: 'Alivia em 3 o golpe de um Rei no seu turno (Figuras de ♣ são imunes).',
         flavorText: 'O vírus não quer apenas matar o hospedeiro; ele quer reescrever a floresta dentro dos pulmões.',
       },
       {
@@ -682,15 +534,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Sussurros no Rádio Desligado',
         artGlyph: '📻',
         artSubtitle: 'Vozes na Frequência Morta',
-        topWatcherTrigger:
-          'Ao notar um aparelho eletrônico em standby, chiado ou notificação inesperada.',
-        topWatcherEvent:
-          'Mesmo sem pilha, o comunicador sobre a mesa transmite uma contagem regressiva sussurrada por dezenas de vozes.',
-        bottomEchoPrompt:
-          'Invente um código de três palavras que avise do perigo sem alertar os inimigos.',
-        bottomEchoEffect:
-          'Se o parceiro entender o plano, escapam ilesos; se não, vire a Dama (Q ⟳) ou revele o Valete (J).',
-        dailyIdea: 'Pode ser um aparelho que liga sozinho, um áudio estranho ou um chiado no fone.',
+        topWatcherTrigger: '2 de força, reduz o ataque da Ameaça em 1.',
+        topWatcherEvent: 'Mesmo sem pilha, o comunicador sobre a mesa transmite uma contagem regressiva sussurrada por dezenas de vozes.',
+        bottomEchoPrompt: 'Reduz o dano recebido no fim do turno e ajuda a finalizar.',
+        bottomEchoEffect: 'Boa carta auxiliar em pares de valor 2.',
+        dailyIdea: 'Use quando precisar tirar 1 ou 2 pontos de ataque da Ameaça para sobreviver.',
         flavorText: 'Eles aprenderam a usar nossas próprias torres de repetição para chamar os que têm febre.',
       },
       {
@@ -698,15 +546,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Camuflagem de Sangue e Cinza',
         artGlyph: '🎭',
         artSubtitle: 'Caminhando Entre os Mortos',
-        topWatcherTrigger:
-          'Ao passar no meio de várias pessoas ou ver uma rua movimentada.',
-        topWatcherEvent:
-          'Não há como contornar a avenida. Para atravessar o quarteirão, é preciso andar devagar e imitar o vazio da horda.',
-        bottomEchoPrompt:
-          'Fotografe sua sombra ou faça uma expressão séria por um instante, sem dizer nada.',
-        bottomEchoEffect:
-          'Vocês passam invisíveis! Se alguém quebrar o silêncio mandando texto longo, precisa virar a Dama (Q ⟳).',
-        dailyIdea: 'Pode ser uma estação lotada, um evento onde você não conhece ninguém ou um dia de passar despercebido.',
+        topWatcherTrigger: '3 de força, reduz o ataque da Ameaça em 2.',
+        topWatcherEvent: 'Não há como contornar a avenida. Para atravessar o quarteirão, é preciso andar devagar e imitar o vazio da horda.',
+        bottomEchoPrompt: 'Tira 2 de ataque da Ameaça central neste turno.',
+        bottomEchoEffect: 'Ajuda a manter a mão cheia evitando bloqueios caros.',
+        dailyIdea: 'Corta pela metade o golpe de um Valete sem gastar defesa.',
         flavorText: 'Não respire rápido, não olhe nos olhos e deixe os ombros caírem como se o mundo já tivesse vencido.',
       },
       {
@@ -714,15 +558,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Laboratório Clandestino do Paciente Zero',
         artGlyph: '🧪',
         artSubtitle: 'Gaiolas Abertas e Prontuários Queimados',
-        topWatcherTrigger:
-          'Ao ver garrafas de vidro, produtos de limpeza, cozinha ou telas de computador.',
-        topWatcherEvent:
-          'Esta é a sala onde o surto começou. Há uma gravação no computador mostrando que a mutação tinha um propósito.',
-        bottomEchoPrompt:
-          'Diga uma suspeita secreta do seu personagem sobre o que realmente está por trás deste perigo.',
-        bottomEchoEffect:
-          'Sangue-frio resolve a cena: se seu Rei for de ♣, você também desvira sua Dama (Q).',
-        dailyIdea: 'Pode ser uma gaveta de papéis antigos, uma sala fechada no trabalho ou uma receita difícil de ler.',
+        topWatcherTrigger: '4 de força, reduz o ataque da Ameaça em 2.',
+        topWatcherEvent: 'Esta é a sala onde o surto começou. Há uma gravação no computador mostrando que a mutação tinha um propósito.',
+        bottomEchoPrompt: '4 de dano + neutraliza 2 de ataque do inimigo.',
+        bottomEchoEffect: 'Combina defesa e desgaste constante.',
+        dailyIdea: 'Excelente contra Chefes rápidos de Espadas.',
         flavorText: 'No quadro branco, uma única frase escrita a marcador vermelho: "Eles não estão doentes, estão acordando".',
       },
       {
@@ -730,15 +570,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'O Rei dos Ratos no Esgoto',
         artGlyph: '🐀',
         artSubtitle: 'Ninho Biomassa sob o Asfalto',
-        topWatcherTrigger:
-          'Ao ver um bueiro na calçada, ralo, grelha de drenagem ou tubulação.',
-        topWatcherEvent:
-          'Algo imenso e fundido se move nas galerias pluviais sob os seus pés, fazendo o asfalto tremer levemente.',
-        bottomEchoPrompt:
-          'Fotografe o chão onde você está pisando e diga para que lado você correria.',
-        bottomEchoEffect:
-          'Se responder rápido, vocês saem do raio de alcance. Se demorar, vire a Dama (Q ⟳) ou revele o Valete (J).',
-        dailyIdea: 'Pode ser um bueiro no caminho, um barulho no forro ou o lixo que precisa sair hoje.',
+        topWatcherTrigger: '5 de força, reduz o ataque da Ameaça em 3.',
+        topWatcherEvent: 'Algo imenso e fundido se move nas galerias pluviais sob os seus pés, fazendo o asfalto tremer levemente.',
+        bottomEchoPrompt: 'Causa 5 de dano e derruba em 3 o contra-ataque da Ameaça.',
+        bottomEchoEffect: 'Corta pela metade o golpe de uma Dama (6 vira 3).',
+        dailyIdea: 'Carta favorita para controlar o ritmo no modo Solo.',
         flavorText: 'Quando mil famintos dividem o mesmo túnel estreito, a carne esquece onde termina um e começa o outro.',
       },
       {
@@ -746,15 +582,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Marca de Mão Ensanguentada na Porta',
         artGlyph: '🖐️',
         artSubtitle: 'Aviso da Ceita dos Infectados',
-        topWatcherTrigger:
-          'Ao tocar numa maçaneta, corrimão, interruptor ou porta de entrada.',
-        topWatcherEvent:
-          'Um grupo de sobreviventes fanáticos que adoram a horda marcou a porta do esconderijo com tinta fosforescente.',
-        bottomEchoPrompt:
-          'Diga como você apaga seus rastros ou que pista falsa deixa para trás.',
-        bottomEchoEffect:
-          'Despista o perigo com sucesso! Se você estiver com o Valete (J) aberto, precisa virar sua Dama (Q ⟳) para não deixar vestígios.',
-        dailyIdea: 'Pode ser um aviso colado na porta, uma marca na parede ou um recado do condomínio.',
+        topWatcherTrigger: '6 de força, reduz o ataque em 3 (ou descarte rival no PvP).',
+        topWatcherEvent: 'Um grupo de sobreviventes fanáticos que adoram a horda marcou a porta do esconderijo com tinta fosforescente.',
+        bottomEchoPrompt: '6 de dano + -3 no ataque da Ameaça (ou faz rival descartar 1 carta).',
+        bottomEchoEffect: 'A partir do valor 6, ♣ também pressiona a mão do oponente no PvP.',
+        dailyIdea: 'Punição pesada tanto contra o centro quanto contra rivais.',
         flavorText: 'Eles pintam os dentes de preto e abrem as trancas dos abrigos durante a madrugada.',
       },
       {
@@ -762,15 +594,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Chuva Cinzenta de Cinzas Humanas',
         artGlyph: '🌧️',
         artSubtitle: 'Fuligem das Zonas Incineradas',
-        topWatcherTrigger:
-          'Ao olhar para as nuvens, sentir vento no rosto ou ver chuva/neblina.',
-        topWatcherEvent:
-          'O céu escurece ao meio-dia com a fuligem dos fornos da quarentena. Os infectados ficam agitados e mais velozes na penumbra.',
-        bottomEchoPrompt:
-          'Cubra a boca com a mão por um instante e descreva o ar em uma frase.',
-        bottomEchoEffect:
-          'Evita a contaminação e resolve a cena. Se seu Rei for de ♣ Paus, você também desvira a Dama (Q) do parceiro.',
-        dailyIdea: 'Pode ser um dia nublado, poeira na janela ou um céu fechado no fim da tarde.',
+        topWatcherTrigger: '7 de força, reduz ataque da Ameaça em 4.',
+        topWatcherEvent: 'O céu escurece ao meio-dia com a fuligem dos fornos da quarentena. Os infectados ficam agitados e mais velozes na penumbra.',
+        bottomEchoPrompt: '7 de dano + -4 no ataque da Ameaça.',
+        bottomEchoEffect: 'Zera o golpe da maioria dos Valetes e deixa uma Dama com 2.',
+        dailyIdea: 'Jogue com confiança quando quiser atacar sem perder Vida.',
         flavorText: 'A neve que cai em novembro não derrete na língua; ela tem gosto de ferro e despedida.',
       },
       {
@@ -778,15 +606,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Espelho Trincado no Banheiro do Posto',
         artGlyph: '🪞',
         artSubtitle: 'Quem Está Atrás de Você?',
-        topWatcherTrigger:
-          'Ao ver seu reflexo num espelho, vidro escuro, janela ou tela desligada.',
-        topWatcherEvent:
-          'Ao lavar o rosto, você percebe pelo reflexo trincado que uma figura parada no canto do banheiro não estava morta de verdade.',
-        bottomEchoPrompt:
-          'Sem olhar para trás, diga em voz alta ou por escrito: "Saia daí agora!".',
-        bottomEchoEffect:
-          'Reflexo rápido salva o Vigia sem custo! Se demorar a responder, vire a Dama (Q ⟳) ou revele o Valete (J).',
-        dailyIdea: 'Pode ser o banheiro de um restaurante, o espelho do elevador ou a pia antes de dormir.',
+        topWatcherTrigger: '8 de força, reduz ataque da Ameaça em 4.',
+        topWatcherEvent: 'Ao lavar o rosto, você percebe pelo reflexo trincado que uma figura parada no canto do banheiro não estava morta de verdade.',
+        bottomEchoPrompt: '8 de dano + -4 no ataque da Ameaça.',
+        bottomEchoEffect: 'Ótima também para descartar como bloqueio máximo de 8.',
+        dailyIdea: 'Permite encarar Reis com tranquilidade enquanto prepara o golpe letal.',
         flavorText: 'Os mais perigosos são os que ficam imóveis por dias esperando alguém abaixar a guarda.',
       },
       {
@@ -794,15 +618,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'Mutação Alfa: O Colosso da Avenida',
         artGlyph: '☣️',
         artSubtitle: 'Armadura de Ossos Calcificados',
-        topWatcherTrigger:
-          'Ao ouvir um barulho pesado (caminhão, obra, trovão, porta batendo forte).',
-        topWatcherEvent:
-          'Uma variante blindada do vírus derruba um poste de luz inteiro bloqueando a rua. Balas comuns ricocheteiam nele.',
-        bottomEchoPrompt:
-          'Imagine e descreva uma armadilha fictícia para deter o colosso, sem usar objetos reais.',
-        bottomEchoEffect:
-          'Exige virar a Dama (Q ⟳) de um dos jogadores (ou ter Rei de ♠ ou ♣) para vencer sem revelar o Valete (J).',
-        dailyIdea: 'Pode ser um caminhão no trânsito, uma obra enorme no caminho ou um problema maior do que parece.',
+        topWatcherTrigger: '9 de força, reduz ataque da Ameaça em 5.',
+        topWatcherEvent: 'Uma variante blindada do vírus derruba um poste de luz inteiro bloqueando a rua. Balas comuns ricocheteiam nele.',
+        bottomEchoPrompt: '9 de dano + -5 no ataque da Ameaça.',
+        bottomEchoEffect: 'Reduz até o ataque de O Paciente Zero ou de um Rei (Atq 8) para apenas 3.',
+        dailyIdea: 'Combine com um Ás de ♠ para somar dano extra e neutralizar o ataque na mesma jogada.',
         flavorText: 'A evolução levou milhões de anos para nos erguer, e seis semanas para criar nosso substituto.',
       },
       {
@@ -810,15 +630,11 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         title: 'A Catedral Silenciosa da Mente Colmeia',
         artGlyph: '⛪',
         artSubtitle: 'Canto Coral de Mil Gargantas Roucas',
-        topWatcherTrigger:
-          'Ao entrar num prédio amplo, ouvir música distante ou notar um silêncio súbito.',
-        topWatcherEvent:
-          'Milhares de infectados estão parados em círculo perfeito dentro da catedral destelhada, olhando para uma flor que cresce no altar.',
-        bottomEchoPrompt:
-          'Diga se você guarda a prova do segredo da infecção ou queima tudo.',
-        bottomEchoEffect:
-          'Clímax de ♣: Revela a verdade da Zona de Quarentena e vira para baixo (cura) qualquer Valete (J) ativo!',
-        dailyIdea: 'Pode ser um lugar cheio e calado, uma biblioteca ou a noite em que a casa toda já dorme.',
+        topWatcherTrigger: '10 de força, reduz ataque da Ameaça em 5.',
+        topWatcherEvent: 'Milhares de infectados estão parados em círculo perfeito dentro da catedral destelhada, olhando para uma flor que cresce no altar.',
+        bottomEchoPrompt: '10 de dano + -5 no ataque da Ameaça.',
+        bottomEchoEffect: 'Controle absoluto do campo de batalha por um turno completo.',
+        dailyIdea: 'No PvP, força o rival a perder 10 PV e 1 carta da mão se atingir direto.',
         flavorText: 'Não era o fim da vida na Terra; era o nascimento doloroso de outra coisa.',
       },
     ],
@@ -828,28 +644,20 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
       title: 'Comboio de Evacuação da ONU',
       artGlyph: '🕊️',
       artSubtitle: 'Sinalizador Verde no Céu Noturno',
-      topWatcherTrigger:
-        'Ao ver uma luz verde (semáforo, LED, placa de saída) ou um pássaro voando.',
-      topWatcherEvent:
-        'Um foguete sinalizador verde corta o céu! Uma zona segura flutuante no porto abriu corredor humanitário por uma hora.',
-      bottomEchoPrompt:
-        'Celebre: diga ou escreva o que você levou da velha vida até o píer.',
-      bottomEchoEffect:
-        'Presságio Claro (★): Ambos os jogadores desviram suas Damas (Q) e ocultam seus Valetes (J) imediatamente!',
+      topWatcherTrigger: 'Força 5. Jogue sozinho; pode recrutar no golpe final.',
+      topWatcherEvent: 'Um foguete sinalizador verde corta o céu! Uma zona segura flutuante no porto abriu corredor humanitário por uma hora.',
+      bottomEchoPrompt: 'Efeito imediato: +5 de poder, +4 PV, compra 2 cartas e reduz ataque da Ameaça em 3.',
+      bottomEchoEffect: 'Se derrotar a Ameaça, você pode recrutá-la como Aliado.',
       flavorText: 'O navio-hospital apitou três vezes na baía. Pela primeira vez em meses, o mar parecia infinito.',
     },
     dark: {
       title: 'Bombardeio Termobárico ("Protocolo Tabula Rasa")',
       artGlyph: '☢️',
       artSubtitle: 'Contagem Regressiva dos Caças no Radar',
-      topWatcherTrigger:
-        'Ao ouvir um avião passando no céu, um estrondo ou ver o pôr do sol vermelho.',
-      topWatcherEvent:
-        'O alto comando desistiu da cidade. Sirenes de ataque aéreo anunciam a incineração total da Zona de Quarentena em minutos.',
-      bottomEchoPrompt:
-        'Diga, em voz alta ou por escrito, o que você aceitaria perder para trancar a comporta do bunker.',
-      bottomEchoEffect:
-        'Cataclismo (💀): Um dos jogadores deve virar sua Dama (Q ⟳) E revelar seu Valete (J) para salvar o parceiro da onda de choque.',
+      topWatcherTrigger: 'Força 8. Jogue sozinho; você perde 2 PV.',
+      topWatcherEvent: 'O alto comando desistiu da cidade. Sirenes de ataque aéreo anunciam a incineração total da Zona de Quarentena em minutos.',
+      bottomEchoPrompt: 'Efeito imediato: +8 de poder no alvo escolhido, mas você perde 2 PV de recuo.',
+      bottomEchoEffect: 'O dano de 8 vai só no alvo escolhido; os 2 PV de recuo são seus.',
       flavorText: 'Quando o horizonte inteiro virou ouro incandescente, seguramos a porta do abrigo até o aço derreter.',
     },
   },

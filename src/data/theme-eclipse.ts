@@ -49,30 +49,24 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'O Guardião do Farol',
         artGlyph: '🗼',
         artSubtitle: 'Sentinela da Última Fronteira Luminosa',
-        passive:
-          'Passiva na Vida Real: Sempre que entrar num ambiente hoje, acenda uma luz ou posicione-se perto de uma janela/lâmpada como ponto de ancoragem.',
-        synergy:
-          'Sinergia (♠): Ao sacar Espadas, sua firmeza repele as criaturas da penumbra e protege a integridade física da dupla.',
+        passive: 'Como Ameaça (♠ · 26 PV / 11 Atq · Feroz): Sentinela da Última Fronteira Luminosa. Ao Abater, vale 25 pts e compra 2 cartas.',
+        synergy: 'Recrutado (♥/♦/Coringa · 3 usos): Dispara golpe pesado (+6 de dano na Ameaça ou rival por uso).',
         flavorText: 'Mesmo que o próprio sol desista do céu, minha lente continuará girando sobre o mar de cinzas.',
       },
       queen: {
         title: 'Lanterna de Fogo Frio',
         artGlyph: '🏮',
         artSubtitle: 'Chama Azul que Não Consome Oxigênio',
-        tapEffect:
-          'Virar (⟳ Tap): Dissipe instantaneamente uma anomalia gravitacional ou ameaça de ♠/♣, iluminando o caminho seguro.',
-        rechargeRule:
-          'Recarga (Untap): Desvire ao cumprir qualquer carta do naipe de ♦ Ouros (A♦ a 10♦) ou quando você e seu parceiro se encontrarem pessoalmente no mesmo ambiente iluminado.',
+        tapEffect: 'Como Ameaça (♠ · 18 PV / 8 Atq · Feroz): Chama Azul que Não Consome Oxigênio. Ao Abater, vale 15 pts e compra 2 cartas.',
+        rechargeRule: 'Recrutada (♥/♦/Coringa · 2 usos): Golpe rápido de flanco (+4 de dano na Ameaça ou rival por uso).',
         flavorText: 'Dentro do bulbo de vidro sopra o último suspiro de uma estrela que morreu há mil anos.',
       },
       jack: {
         title: 'Olhos de Cinza',
         artGlyph: '👁️‍🗨️',
         artSubtitle: 'Cegueira Gradual da Coroa Solar',
-        entryTrigger:
-          'Gatilho de Entrada: Revele ao encarar diretamente uma falha de ♠ Espadas ou perder a vigília do turno.',
-        realLifeTaboo:
-          'Tabu na Vida Real: Você não pode usar nomes de cores nas suas mensagens (tudo para você agora é claro, escuro, brasa ou cinza).',
+        entryTrigger: 'Como Ameaça (♠ · 12 PV / 5 Atq · Feroz): Cegueira Gradual da Coroa Solar. Ao Abater, vale 10 pts e compra 1 carta.',
+        realLifeTaboo: 'Recrutado (♥/♦/Coringa · 2 usos): Ataque curto de apoio (+2 de dano direto por uso).',
         flavorText: 'Quem olhou para o anel negro do eclipse nunca mais viu o azul do mesmo jeito.',
       },
     },
@@ -81,30 +75,24 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'A Cronista das Últimas Horas',
         artGlyph: '🎙️',
         artSubtitle: 'Colecionadora de Vozes Antes do Silêncio',
-        passive:
-          'Passiva na Vida Real: Guarde uma frase dita pelo parceiro hoje e repita-a mais tarde como se estivesse gravando para a eternidade.',
-        synergy:
-          'Sinergia (♥): Ao sacar Copas, sua lembrança impede que o mundo apague os sentimentos da dupla e restaura Valetes (J).',
+        passive: 'Como Ameaça (♥ · 26 PV / 8 Atq · Regenera): Colecionadora de Vozes Antes do Silêncio. Ao Abater, vale 25 pts e compra 2 cartas.',
+        synergy: 'Recrutado (♥/♦/Coringa · 3 usos): Restaura fôlego vital (+6 PV por uso).',
         flavorText: 'Se não restar ninguém para ler os livros, que as próprias pedras decorem nossa história.',
       },
       queen: {
         title: 'Fita Cassete Intacta',
         artGlyph: '📼',
         artSubtitle: 'Gravação Magnética Imune ao Esquecimento',
-        tapEffect:
-          'Virar (⟳ Tap): Rebobine os últimos minutos da cena: anule uma falha recém-ocorrida ou recupere uma memória apagada pelo Valete (J).',
-        rechargeRule:
-          'Recarga (Untap): Desvire ao cumprir qualquer carta do naipe de ♦ Ouros (A♦ a 10♦) ou ao trocar um áudio de voz com o parceiro.',
+        tapEffect: 'Como Ameaça (♥ · 18 PV / 6 Atq · Regenera): Gravação Magnética Imune ao Esquecimento. Ao Abater, vale 15 pts e compra 2 cartas.',
+        rechargeRule: 'Recrutada (♥/♦/Coringa · 2 usos): Cura tática de emergência (+4 PV por uso).',
         flavorText: 'Lado A: o som das ondas em janeiro. Lado B: nossas risadas antes de o céu parar.',
       },
       jack: {
         title: 'Esquecimento',
         artGlyph: '🌫️',
         artSubtitle: 'Nomes e Datas Desbotando das Fotografias',
-        entryTrigger:
-          'Gatilho de Entrada: Revele ao falhar numa carta de ♥ Copas ou deixar uma pergunta do parceiro sem resposta emocional.',
-        realLifeTaboo:
-          'Tabu na Vida Real: Você não pode usar verbos no passado nem mencionar dias anteriores; fale apenas do instante presente.',
+        entryTrigger: 'Como Ameaça (♥ · 12 PV / 4 Atq · Regenera): Nomes e Datas Desbotando das Fotografias. Ao Abater, vale 10 pts e compra 1 carta.',
+        realLifeTaboo: 'Recrutado (♥/♦/Coringa · 2 usos): Recuperação rápida (+2 PV por uso).',
         flavorText: 'Sei que amei alguém com o seu rosto, mas a névoa levou o nome da cidade onde nascemos.',
       },
     },
@@ -113,30 +101,24 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'O Cartógrafo da Fenda',
         artGlyph: '🧭',
         artSubtitle: 'Navegador das Ruas que Mudam de Lugar',
-        passive:
-          'Passiva na Vida Real: Observe ângulos, distâncias e relógios; comente quando o tempo parecer passar rápido ou devagar demais.',
-        synergy:
-          'Sinergia (♦): Ao sacar Ouros, você estabiliza a geometria do local e desvira sua Dama (Q) automaticamente.',
+        passive: 'Como Ameaça (♦ · 26 PV / 8 Atq · Blindada): Navegador das Ruas que Mudam de Lugar. Ao Abater, vale 25 pts e compra 2 cartas.',
+        synergy: 'Recrutado (♥/♦/Coringa · 3 usos): Abre recursos táticos (+3 cartas compradas por uso).',
         flavorText: 'A avenida principal agora dobra para dentro do oceano; precisamos atualizar o mapa a cada quinze minutos.',
       },
       queen: {
         title: 'Bússola de Mercúrio',
         artGlyph: '🧭',
         artSubtitle: 'Agulha Líquida que Aponta para Quem Você Procura',
-        tapEffect:
-          'Virar (⟳ Tap): Ignore qualquer distância ou barreira espacial do evento e conecte sua posição diretamente à do parceiro.',
-        rechargeRule:
-          'Recarga (Untap): Desvire ao cumprir qualquer carta do naipe de ♦ Ouros (A♦ a 10♦) ou ao alinhar dois objetos lado a lado em cima da mesa.',
+        tapEffect: 'Como Ameaça (♦ · 18 PV / 6 Atq · Blindada): Agulha Líquida que Aponta para Quem Você Procura. Ao Abater, vale 15 pts e compra 2 cartas.',
+        rechargeRule: 'Recrutada (♥/♦/Coringa · 2 usos): Vasculha o baralho (+2 cartas compradas por uso).',
         flavorText: 'O norte magnético morreu na terça-feira; agora a agulha só aponta para o calor da sua mão.',
       },
       jack: {
         title: 'Vertigem Temporal',
         artGlyph: '🌀',
         artSubtitle: 'Gravidade Inclinada a Quarenta Graus',
-        entryTrigger:
-          'Gatilho de Entrada: Revele ao se perder numa anomalia de ♦ Ouros ou atrasar o sincronismo do turno.',
-        realLifeTaboo:
-          'Tabu na Vida Real: Suas mensagens escritas devem começar pelo fim (a conclusão primeiro, a explicação depois).',
+        entryTrigger: 'Como Ameaça (♦ · 12 PV / 4 Atq · Blindada): Gravidade Inclinada a Quarenta Graus. Ao Abater, vale 10 pts e compra 1 carta.',
+        realLifeTaboo: 'Recrutado (♥/♦/Coringa · 2 usos): Compra extra de suprimento (+1 carta comprada por uso).',
         flavorText: 'A chuva está caindo do asfalto em direção às nuvens, e meus passos chegam antes de mim.',
       },
     },
@@ -145,30 +127,24 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'O Profeta da Estrela Negra',
         artGlyph: '🪐',
         artSubtitle: 'Intérprete da Harmonia Cósmica Final',
-        passive:
-          'Passiva na Vida Real: Trate coincidências banais do dia (um número, um pássaro, uma música) como sinais solenes do universo.',
-        synergy:
-          'Sinergia (♣): Ao sacar Paus, você compreende o sussurro do eclipse e converte o medo em revelação.',
+        passive: 'Como Ameaça (♣ · 26 PV / 8 Atq · Imune a armadilhas): Intérprete da Harmonia Cósmica Final. Ao Abater, vale 25 pts e compra 2 cartas.',
+        synergy: 'Recrutado (♥/♦/Coringa · 3 usos): Trava a ofensiva inimiga (-6 no ataque da Ameaça no turno por uso).',
         flavorText: 'Não tenham medo da escuridão que desce; o universo está apenas fechando as pálpebras para sonhar de novo.',
       },
       queen: {
         title: 'Relógio Quebrado',
         artGlyph: '🕰️',
         artSubtitle: 'Ponteiros Cravados no Segundo Zero',
-        tapEffect:
-          'Virar (⟳ Tap): Congele o avanço do cataclismo por um turno inteiro, anulando qualquer custo de ♣ ou do Coringa Escuro.',
-        rechargeRule:
-          'Recarga (Untap): Desvire ao cumprir qualquer carta do naipe de ♦ Ouros (A♦ a 10♦) ou quando o relógio real marcar horas ou meias-horas exatas (ex.: 14:00 ou 14:30).',
+        tapEffect: 'Como Ameaça (♣ · 18 PV / 6 Atq · Imune a armadilhas): Ponteiros Cravados no Segundo Zero. Ao Abater, vale 15 pts e compra 2 cartas.',
+        rechargeRule: 'Recrutada (♥/♦/Coringa · 2 usos): Cortina de contenção (-4 no ataque da Ameaça no turno por uso).',
         flavorText: 'Se os ponteiros não se movem, a última hora nunca termina de chegar.',
       },
       jack: {
         title: 'Eco de Outra Vida',
         artGlyph: '👥',
         artSubtitle: 'Dupla Sobreposição de Linhas do Tempo',
-        entryTrigger:
-          'Gatilho de Entrada: Revele ao falhar numa visão de ♣ Paus ou encarar a Fenda sem proteção.',
-        realLifeTaboo:
-          'Tabu na Vida Real: Fale sempre na primeira pessoa do plural ("nós vimos", "nós estamos"), como se suas versões de outros mundos falassem juntas.',
+        entryTrigger: 'Como Ameaça (♣ · 12 PV / 4 Atq · Imune a armadilhas): Dupla Sobreposição de Linhas do Tempo. Ao Abater, vale 10 pts e compra 1 carta.',
+        realLifeTaboo: 'Recrutado (♥/♦/Coringa · 2 usos): Armadilha leve (-2 no ataque da Ameaça no turno por uso).',
         flavorText: 'Em outra linha do tempo o eclipse nunca aconteceu, e nós dois estamos tomando café naquela padaria da esquina.',
       },
     },
@@ -180,15 +156,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'O Primeiro Anel da Coroa Negra',
         artGlyph: '🌑',
         artSubtitle: 'O Sol Diminui para um Fio de Ouro',
-        topWatcherTrigger:
-          'O céu, uma lâmpada circular ou o reflexo da luz numa lente.',
-        topWatcherEvent:
-          'A temperatura cai dez graus em um minuto. As sombras das árvores ficam nítidas como lâminas de obsidiana no chão.',
-        bottomEchoPrompt:
-          'Acenda uma luz perto de você, ou fotografe a fonte de luz mais próxima.',
-        bottomEchoEffect:
-          'Se for ♠ Espadas, sua vigília mantém o calor. Caso contrário, responda rápido ou vire a Dama (Q ⟳).',
-        dailyIdea: 'Pode ser uma noite de estudo, um prazo apertado ou a última tarefa antes de dormir.',
+        topWatcherTrigger: 'Sozinho vale 5. Com outra carta numérica, soma +4 a ela.',
+        topWatcherEvent: 'A temperatura cai dez graus em um minuto. As sombras das árvores ficam nítidas como lâminas de obsidiana no chão.',
+        bottomEchoPrompt: 'Naipe ♠ Espadas: +2 de dano extra em cada jogada.',
+        bottomEchoEffect: 'Carta-chave para finalizar Chefes ou romper a guarda do rival no PvP.',
+        dailyIdea: 'Combina com qualquer carta numérica da mão para formar um Combo de Comando.',
         flavorText: 'Os pássaros pararam de cantar às duas da tarde, confusos com a noite que chegou sem crepúsculo.',
       },
       {
@@ -196,15 +168,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Maré Alta no Meio da Avenida',
         artGlyph: '🌊',
         artSubtitle: 'Atração Lunar Descontrolada',
-        topWatcherTrigger:
-          'Ao ver água corrente, torneira, chuva, garrafa cheia ou poça na calçada.',
-        topWatcherEvent:
-          'O alinhamento gravitacional puxou o oceano para dentro dos bueiros da cidade. Uma lâmina de água espelhada cobre o asfalto.',
-        bottomEchoPrompt:
-          'Suba um degrau ou tire os pés do chão por um instante, buscando terreno alto.',
-        bottomEchoEffect:
-          'Evita ser arrastado pela maré astral. Se tiver Valete (J) ativo, precisa do apoio do parceiro.',
-        dailyIdea: 'Pode ser uma chuva no caminho, uma rua cheia ou uma pilha de louça que não para de crescer.',
+        topWatcherTrigger: '2 de valor + 2 de bônus ♠ = 4 de dano.',
+        topWatcherEvent: 'O alinhamento gravitacional puxou o oceano para dentro dos bueiros da cidade. Uma lâmina de água espelhada cobre o asfalto.',
+        bottomEchoPrompt: 'Ideal para finalizar uma Ameaça com 2 a 4 de Vida restante.',
+        bottomEchoEffect: 'Também serve como bloqueio leve para economizar cartas maiores.',
+        dailyIdea: 'Junte duas cartas de valor 2 para somar poder dobrado no mesmo turno.',
         flavorText: 'O mar subiu as escadas do metrô procurando pela lua que o hipnotizou.',
       },
       {
@@ -212,15 +180,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Cães de Sombra Alongada',
         artGlyph: '🐺',
         artSubtitle: 'Silhuetas que Caminham Sem Corpo',
-        topWatcherTrigger:
-          'Ao ver sombras compridas no fim da tarde ou sob postes de rua.',
-        topWatcherEvent:
-          'As sombras projetadas pelos postes de luz se descolaram dos objetos e rondam a calçada como cães famintos por calor.',
-        bottomEchoPrompt:
-          'Ilumine uma sombra perto de você com a tela do celular até ela sumir.',
-        bottomEchoEffect:
-          'Dissipa as silhuetas. Jogadores de ♠ ou ♣ ganham vantagem no próximo turno.',
-        dailyIdea: 'Pode ser uma pendência que te persegue, uma mensagem sem resposta ou um cansaço que não larga.',
+        topWatcherTrigger: '3 de valor + 2 de bônus ♠ = 5 de dano.',
+        topWatcherEvent: 'As sombras projetadas pelos postes de luz se descolaram dos objetos e rondam a calçada como cães famintos por calor.',
+        bottomEchoPrompt: 'Quebra o impasse no início da onda de Valetes.',
+        bottomEchoEffect: 'Se o golpe zerar a Vida da Figura, ela vira seu Troféu.',
+        dailyIdea: 'Excelente carta de abertura para pressionar o Horizonte sem gastar cartas altas.',
         flavorText: 'Enquanto houver uma vela acesa entre nós dois, elas não podem tocar nossos calcanhares.',
       },
       {
@@ -228,15 +192,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Vento Estático nas Linhas de Transmissão',
         artGlyph: '⚡',
         artSubtitle: 'Faíscas Azuis Dançando nos Fios',
-        topWatcherTrigger:
-          'Ao ouvir o zumbido de aparelhos elétricos, vento na janela ou tocar em metal.',
-        topWatcherEvent:
-          'Uma tempestade geomagnética faz os postes da rua cantarem como harpas de alta tensão. O ar cheira a ozônio puro.',
-        bottomEchoPrompt:
-          'Toque em algo de madeira ou tecido e descreva, em uma frase, como você protege seus equipamentos da estática.',
-        bottomEchoEffect:
-          'Protege o rádio e a lanterna. Se falhar, sua Dama (Q) vira (⟳) pela sobrecarga magnética.',
-        dailyIdea: 'Pode ser a internet caindo, um computador travado ou uma chamada de vídeo cheia de falhas.',
+        topWatcherTrigger: '4 de valor + 2 de bônus ♠ = 6 de dano.',
+        topWatcherEvent: 'Uma tempestade geomagnética faz os postes da rua cantarem como harpas de alta tensão. O ar cheira a ozônio puro.',
+        bottomEchoPrompt: 'Total de 6 de dano bruto contra Ameaça ou rival.',
+        bottomEchoEffect: 'Se tiver afinidade ♠ na classe, chega a 7 de impacto imediato.',
+        dailyIdea: 'Forte opção para punir um oponente no modo Competitivo PvP.',
         flavorText: 'As auroras boreais desceram até a linha do equador para assistir ao fim do espetáculo.',
       },
       {
@@ -244,15 +204,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Saqueadores do Último Inverno',
         artGlyph: '🧥',
         artSubtitle: 'Desesperados Buscando Lenha e Baterias',
-        topWatcherTrigger:
-          'Ao ver pessoas apressadas na rua, agasalhos pesados ou portas trancadas.',
-        topWatcherEvent:
-          'Um grupo em pânico tenta forçar a entrada do observatório que serve de abrigo contra o frio cósmico.',
-        bottomEchoPrompt:
-          'Diga, em voz alta ou por escrito, se você impõe respeito na porta ou divide parte do seu calor com os saqueadores.',
-        bottomEchoEffect:
-          'Ambos os caminhos resolvem a crise sem violência se o Eco responder com convicção.',
-        dailyIdea: 'Pode ser uma fila no mercado, o último lugar no ônibus ou a bateria do celular acabando.',
+        topWatcherTrigger: '5 de valor + 2 de bônus ♠ = 7 de dano.',
+        topWatcherEvent: 'Um grupo em pânico tenta forçar a entrada do observatório que serve de abrigo contra o frio cósmico.',
+        bottomEchoPrompt: 'Entrega 7 de dano direto no alvo.',
+        bottomEchoEffect: 'Bloqueia 5 de dano se usada na defesa.',
+        dailyIdea: 'Pode ser jogada com um Ás para somar 9 + 2 de bônus ♠ (11 de dano).',
         flavorText: 'Não há vilões no último dia do mundo, apenas pessoas com medo de ficar no escuro sozinhas.',
       },
       {
@@ -260,15 +216,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Estátuas de Sal na Praça Central',
         artGlyph: '🗿',
         artSubtitle: 'Aqueles que Olharam Para Cima Sem Filtro',
-        topWatcherTrigger:
-          'Ao ver pessoas paradas na fila, manequins de vitrine ou estátuas.',
-        topWatcherEvent:
-          'Quem encarou o núcleo aberto do eclipse ficou paralisado no tempo como escultura de cinza branca.',
-        bottomEchoPrompt:
-          'Olhe apenas para as suas mãos por cinco segundos, com o visor abaixado.',
-        bottomEchoEffect:
-          'Evita o Valete de Olhos de Cinza (J♠). Se já estiver ativo, um jogador de ♥ pode aliviá-lo.',
-        dailyIdea: 'Pode ser uma tela que prende seu olhar, uma espera parada ou uma tarefa que paralisa.',
+        topWatcherTrigger: '6 de valor + 2 de bônus ♠ = 8 de dano.',
+        topWatcherEvent: 'Quem encarou o núcleo aberto do eclipse ficou paralisado no tempo como escultura de cinza branca.',
+        bottomEchoPrompt: '8 de dano total num único golpe de ♠.',
+        bottomEchoEffect: 'Com um Ás, chega a 12 de dano (6 + 4 + 2).',
+        dailyIdea: 'Use como bloco principal ou guarde para impedir um bloqueio fácil do rival.',
         flavorText: 'Eles parecem em paz, apontando para o céu como se tivessem visto o rosto de Deus.',
       },
       {
@@ -276,15 +228,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Ponte Pênsil Partida ao Meio',
         artGlyph: '🌉',
         artSubtitle: 'Blocos de Concreto Flutuando no Ar',
-        topWatcherTrigger:
-          'Uma escada, um corredor comprido, um viaduto ou uma divisão no piso.',
-        topWatcherEvent:
-          'A gravidade falhou no vão central da ponte: carros e pedaços de asfalto flutuam imóveis a três metros do chão.',
-        bottomEchoPrompt:
-          'Descreva, em uma frase, como a travessia é feita de pedra em pedra.',
-        bottomEchoEffect:
-          'Travessia surreal concluída! Se for ♠ ou ♦, você desvira a Dama (Q) do parceiro no salto.',
-        dailyIdea: 'Pode ser uma reunião tensa, uma conversa que pode desandar ou uma travessia demorada no trânsito.',
+        topWatcherTrigger: '7 de valor + 2 de bônus ♠ = 9 de dano.',
+        topWatcherEvent: 'A gravidade falhou no vão central da ponte: carros e pedaços de asfalto flutuam imóveis a três metros do chão.',
+        bottomEchoPrompt: '9 de dano letal em uma única carta.',
+        bottomEchoEffect: 'Tira três quartos da vida de um Valete num golpe solitário.',
+        dailyIdea: 'Combine com outro 7 para explodir 16 de dano e deixar uma Dama por um fio.',
         flavorText: 'Caminhar no ar é fácil; o difícil é convencer o coração de que não vamos cair.',
       },
       {
@@ -292,15 +240,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'O Trem Fantasma das 18h15',
         artGlyph: '🚊',
         artSubtitle: 'Vagões Iluminados Sem Maquinista',
-        topWatcherTrigger:
-          'Ao ver um ônibus, trem, metrô ou ouvir o barulho de rodas no asfalto.',
-        topWatcherEvent:
-          'Uma composição inteira passa pelos trilhos vazios com as luzes acesas, repetindo em loop a última viagem de ontem.',
-        bottomEchoPrompt:
-          'Diga, em voz alta ou por escrito, se você embarca no trem temporal ou segue a pé pelos trilhos.',
-        bottomEchoEffect:
-          'Embarcar avança a jornada rapidamente, mas exige que uma Dama (Q) esteja de pé para ancorar a descida.',
-        dailyIdea: 'Pode ser o ônibus ou o metrô da volta, o horário de pico ou uma condução que atrasa.',
+        topWatcherTrigger: '8 de valor + 2 de bônus ♠ = 10 de dano.',
+        topWatcherEvent: 'Uma composição inteira passa pelos trilhos vazios com as luzes acesas, repetindo em loop a última viagem de ontem.',
+        bottomEchoPrompt: '10 de dano imediato — deixa um Valete intacto por um fio.',
+        bottomEchoEffect: 'Carta de alto valor tanto para ataque quanto para absorver 8 de bloqueio.',
+        dailyIdea: 'No PvP, tira 10 PV de um rival, que não pode bloquear.',
         flavorText: 'Os passageiros lá dentro leem o jornal de terça-feira sem saber que a quarta-feira nunca veio.',
       },
       {
@@ -308,15 +252,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Nevasca de Cinza Estelar',
         artGlyph: '❄️',
         artSubtitle: 'Flocos Mornos que Brilham no Escuro',
-        topWatcherTrigger:
-          'Ao sentir frio, vento ou ver poeira/partículas suspensas na luz.',
-        topWatcherEvent:
-          'Do anel do eclipse começa a cair uma neve silenciosa e morna que apaga os sons da rua em um raio de cem metros.',
-        bottomEchoPrompt:
-          'Diga ou escreva a frase que sua voz levaria através da nevasca.',
-        bottomEchoEffect:
-          'Mantém o contato da dupla intacto e limpa penalidades de isolamento.',
-        dailyIdea: 'Pode ser uma faxina pesada, uma caixa de entrada lotada ou uma pilha de papéis acumulados.',
+        topWatcherTrigger: '9 de valor + 2 de bônus ♠ = 11 de dano.',
+        topWatcherEvent: 'Do anel do eclipse começa a cair uma neve silenciosa e morna que apaga os sons da rua em um raio de cem metros.',
+        bottomEchoPrompt: '11 de dano direto de Espadas.',
+        bottomEchoEffect: 'Garante limpeza rápida na onda das Damas e dos Reis.',
+        dailyIdea: 'Combine com um Ás para um bombardeio devastador de 15 de dano.',
         flavorText: 'Peguei um floco na luva: não era gelo, era poeira de ouro gasto.',
       },
       {
@@ -324,15 +264,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'A Cúpula do Último Farol',
         artGlyph: '🗼',
         artSubtitle: 'O Feixe que Corta a Escuridão Total',
-        topWatcherTrigger:
-          'Ao chegar ao lugar mais alto do seu dia ou acender a luz principal da sala.',
-        topWatcherEvent:
-          'A lanterna mestra do penhasco está ao alcance. Ativar o espelho parabólico enviará o sinal para todos os sobreviventes do hemisfério.',
-        bottomEchoPrompt:
-          'Escreva, em uma frase, a mensagem final que o farol transmite para o mundo que escurece.',
-        bottomEchoEffect:
-          'Clímax de ♠: O farol brilha contra o eclipse! Desvira todas as Damas (Q) e dissipa qualquer Valete (J).',
-        dailyIdea: 'Pode ser uma prova, uma entrega importante ou a apresentação que fecha a semana.',
+        topWatcherTrigger: '10 de valor + 2 de bônus ♠ = 12 de dano.',
+        topWatcherEvent: 'A lanterna mestra do penhasco está ao alcance. Ativar o espelho parabólico enviará o sinal para todos os sobreviventes do hemisfério.',
+        bottomEchoPrompt: '12 de dano puro com uma só carta.',
+        bottomEchoEffect: 'O maior impacto individual do baralho convencional.',
+        dailyIdea: 'Segure para o Rei final ou para decidir o duelo no modo Competitivo.',
         flavorText: 'Não acendemos a luz para salvar o sol; acendemos para que o sol saiba onde estávamos.',
       },
     ],
@@ -342,15 +278,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Álbum de Fotografias que Desbotam',
         artGlyph: '📷',
         artSubtitle: 'Rostos Sumindo do Papel Fotográfico',
-        topWatcherTrigger:
-          'Ao abrir a galeria de fotos do celular ou ver um porta-retratos.',
-        topWatcherEvent:
-          'O eclipse está devorando os registros visuais primeiro. As fotos antigas na mochila estão ficando brancas pelas bordas.',
-        bottomEchoPrompt:
-          'Descreva em palavras uma foto real que você ama, guardando-a na memória antes que suma.',
-        bottomEchoEffect:
-          'Salva a memória! Se for ♥ Copas, desvira sua Dama (Q) e remove o Valete de Esquecimento (J♥).',
-        dailyIdea: 'Pode ser uma visita a alguém mais velho, uma foto antiga no celular ou uma conversa de lembranças.',
+        topWatcherTrigger: '5 de força (ou +4 em combo), cura +3 PV. Pode recrutar.',
+        topWatcherEvent: 'O eclipse está devorando os registros visuais primeiro. As fotos antigas na mochila estão ficando brancas pelas bordas.',
+        bottomEchoPrompt: 'Naipe ♥ Copas: cura PV e permite Recrutar a Figura no golpe final.',
+        bottomEchoEffect: 'Excelente com cartas altas de ♠ ou ♣ para derrubar e ainda recrutar o chefe.',
+        dailyIdea: 'Combo clássico: 9♠ + A♥ para bater forte e ainda trazer a Figura para o seu lado.',
         flavorText: 'O papel pode ficar em branco, mas ninguém apaga o que eu decorei de olhos fechados.',
       },
       {
@@ -358,15 +290,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'A Última Música no Rádio FM',
         artGlyph: '📻',
         artSubtitle: 'O Locutor Se Despede da Cidade',
-        topWatcherTrigger:
-          'Ao ouvir qualquer música tocando hoje (no fone, no carro, numa loja).',
-        topWatcherEvent:
-          'A última estação de rádio no ar coloca uma canção antiga para tocar em repetição antes de o transmissor desligar.',
-        bottomEchoPrompt:
-          'Diga qual música está tocando agora, ou qual você poria para tocar nos últimos cinco minutos da Terra.',
-        bottomEchoEffect:
-          'Acalma o coração da dupla: qualquer Valete (J) ativo perde sua penalidade durante este turno.',
-        dailyIdea: 'Pode ser uma música no caminho, uma playlist com alguém ou um áudio que você recebe.',
+        topWatcherTrigger: '2 de força, cura +1 PV. Pode recrutar.',
+        topWatcherEvent: 'A última estação de rádio no ar coloca uma canção antiga para tocar em repetição antes de o transmissor desligar.',
+        bottomEchoPrompt: 'Use como acabamento vermelho para recrutar uma Ameaça quase derrotada.',
+        bottomEchoEffect: 'Mantém a vida estável nos primeiros turnos.',
+        dailyIdea: 'Barata e versátil para fechar recrutamentos sem desperdiçar cartas grandes.',
         flavorText: '"Obrigado pela companhia nestes sessenta anos no ar. Fiquem perto de quem vocês amam."',
       },
       {
@@ -374,15 +302,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Telefone Público Tocando Sozinho',
         artGlyph: '☎️',
         artSubtitle: 'Uma Ligação de Cinco Anos Atrás',
-        topWatcherTrigger:
-          'Ao receber uma notificação, vibração de celular ou ouvir um toque.',
-        topWatcherEvent:
-          'Um orelhão desconectado na esquina toca. Do outro lado da linha está a sua própria voz gravada num dia feliz do passado.',
-        bottomEchoPrompt:
-          'Atenda o chamado: diga ou escreva o conselho que você daria a si mesmo de cinco anos atrás.',
-        bottomEchoEffect:
-          'Reconcilia o passado e o presente, fortalecendo o escudo emocional da dupla.',
-        dailyIdea: 'Pode ser uma ligação inesperada, uma mensagem de alguém sumido ou um contato antigo que reaparece.',
+        topWatcherTrigger: '3 de força, cura +2 PV. Pode recrutar.',
+        topWatcherEvent: 'Um orelhão desconectado na esquina toca. Do outro lado da linha está a sua própria voz gravada num dia feliz do passado.',
+        bottomEchoPrompt: 'Cura 2 PV enquanto avança o dano no Horizonte.',
+        bottomEchoEffect: 'No Coop, cura o jogador mais ferido da equipe.',
+        dailyIdea: 'Combine duas cartas de valor 3 para recuperar fôlego no meio da onda de Damas.',
         flavorText: 'A linha cruzou com uma tarde de domingo em que a única preocupação era a chuva.',
       },
       {
@@ -390,15 +314,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Jantar à Luz de Velas no Fim dos Tempos',
         artGlyph: '🕯️',
         artSubtitle: 'Mesa Posta Enquanto o Céu Gira',
-        topWatcherTrigger:
-          'Uma refeição, um lanche ou um café durante o dia.',
-        topWatcherEvent:
-          'Um restaurante pequeno abriu as portas de graça, servindo os melhores pratos que restavam na despensa sob luz de velas.',
-        bottomEchoPrompt:
-          'Fotografe ou descreva o que você está comendo ou bebendo e faça um brinde à jornada.',
-        bottomEchoEffect:
-          'Desvira a Dama (Q) se você for ♥ Copas e remove a exaustão da caminhada.',
-        dailyIdea: 'Pode ser uma refeição de hoje, um café com alguém ou um lanche no meio da tarde.',
+        topWatcherTrigger: '4 de força, cura +2 PV. Pode recrutar.',
+        topWatcherEvent: 'Um restaurante pequeno abriu as portas de graça, servindo os melhores pratos que restavam na despensa sob luz de velas.',
+        bottomEchoPrompt: 'Sustenta a equipe e prepara recrutamentos médios.',
+        bottomEchoEffect: 'Boa carta de bloqueio (4) quando a mão vem sem armadilhas.',
+        dailyIdea: 'Equilíbrio sólido entre avanço tático e recuperação.',
         flavorText: 'O vinho nunca teve um sabor tão doce quanto na véspera do infinito.',
       },
       {
@@ -406,15 +326,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Nome Escrito no Vidro Embaçado',
         artGlyph: '🪟',
         artSubtitle: 'Prova de que Estivemos Aqui',
-        topWatcherTrigger:
-          'Ao ver uma janela de vidro, espelho ou tela.',
-        topWatcherEvent:
-          'O frio da coroa solar embaça todas as vidraças da rua. Nome que não for escrito no vidro, a névoa apaga da memória.',
-        bottomEchoPrompt:
-          'Escreva com o dedo, num vidro ou numa tela, o nome de alguém que você não quer esquecer.',
-        bottomEchoEffect:
-          'Ancora a identidade de ambos: anula imediatamente o Valete de Esquecimento (J♥) ou Eco de Outra Vida (J♣).',
-        dailyIdea: 'Pode ser um bilhete deixado em casa, um recado na geladeira ou um bom-dia a quem você vê sempre.',
+        topWatcherTrigger: '5 de força, cura +3 PV. Pode recrutar.',
+        topWatcherEvent: 'O frio da coroa solar embaça todas as vidraças da rua. Nome que não for escrito no vidro, a névoa apaga da memória.',
+        bottomEchoPrompt: 'Cura 3 PV e converte a Ameaça em Aliado se zerar a Vida.',
+        bottomEchoEffect: 'Fundamental para montar mesa forte no PvP.',
+        dailyIdea: 'Com um Ás, soma 9 de persuasão e 5 de cura no mesmo turno.',
         flavorText: 'Enquanto uma única pessoa lembrar do seu nome, você ainda existe no universo.',
       },
       {
@@ -422,15 +338,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Caixa de Correio Cheia de Confissões',
         artGlyph: '📮',
         artSubtitle: 'Segredos que Não Podem Morrer Guardados',
-        topWatcherTrigger:
-          'Ao ver uma caixa, gaveta, bolsa ou envelope fechado.',
-        topWatcherEvent:
-          'As pessoas da cidade deixaram bilhetes sinceros nas portas e bancos de praça dizendo tudo o que calaram a vida inteira.',
-        bottomEchoPrompt:
-          'Diga ou escreva uma coisa sincera e bonita que seu personagem sempre quis dizer desde o começo da jornada.',
-        bottomEchoEffect:
-          'A verdade liberta: desvira uma Dama (Q) virada de qualquer um dos dois jogadores.',
-        dailyIdea: 'Pode ser um desabafo, uma conversa franca ou uma mensagem que você vem adiando.',
+        topWatcherTrigger: '6 de força, cura +3 PV. Pode recrutar.',
+        topWatcherEvent: 'As pessoas da cidade deixaram bilhetes sinceros nas portas e bancos de praça dizendo tudo o que calaram a vida inteira.',
+        bottomEchoPrompt: 'Recupera 3 PV e causa 6 de impacto.',
+        bottomEchoEffect: 'Excelente resposta após sofrer dano do Coringa Escuro.',
+        dailyIdea: 'Segura o ritmo contra a onda intermediária sem recuar.',
         flavorText: 'No fim do mundo, a timidez parece a maior perda de tempo da história humana.',
       },
       {
@@ -438,15 +350,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Criança Soltando Pipa na Gravidade Zero',
         artGlyph: '🪁',
         artSubtitle: 'Linha Branca Subindo Até as Estrelas',
-        topWatcherTrigger:
-          'Ao ver algo voando (pássaro, folha ao vento, nuvem) ou uma cor viva.',
-        topWatcherEvent:
-          'No topo do morro, uma pipa de papel colorido sobe sem precisar de vento, puxada suavemente pela maré gravitacional do eclipse.',
-        bottomEchoPrompt:
-          'Aponte um detalhe pequeno de beleza ou leveza que você consegue ver ao seu redor agora mesmo.',
-        bottomEchoEffect:
-          'Protege a esperança da dupla contra qualquer efeito de desespero na próxima carta.',
-        dailyIdea: 'Pode ser uma brincadeira com uma criança, um passeio no parque ou um momento leve com alguém.',
+        topWatcherTrigger: '7 de força, cura +4 PV. Pode recrutar.',
+        topWatcherEvent: 'No topo do morro, uma pipa de papel colorido sobe sem precisar de vento, puxada suavemente pela maré gravitacional do eclipse.',
+        bottomEchoPrompt: 'Cura 4 PV e entrega 7 de poder para recrutar.',
+        bottomEchoEffect: 'Bloqueia 7 de dano se usada defensivamente.',
+        dailyIdea: 'Vira o jogo quando você caiu abaixo da metade da Vida.',
         flavorText: 'Mesmo quando os planetas saem dos trilhos, alguém ainda lembra como brincar.',
       },
       {
@@ -454,15 +362,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Cápsula do Tempo Enterrada sob a Árvore',
         artGlyph: '🌱',
         artSubtitle: 'Para Quem Encontrar a Terra Depois de Nós',
-        topWatcherTrigger:
-          'Ao ver terra, jardim, vaso de planta ou chão de pedra.',
-        topWatcherEvent:
-          'Uma caixa de metal hermética espera, pronta para ser lacrada nas raízes de uma figueira centenária.',
-        bottomEchoPrompt:
-          'Escolha um objeto real que está com você agora para deixar dentro da cápsula como testemunho da humanidade.',
-        bottomEchoEffect:
-          'O legado está salvo! Jogadores de ♥ ou ♦ desviram sua Dama (Q).',
-        dailyIdea: 'Pode ser arrumar lembranças, plantar uma muda ou guardar um presente para alguém.',
+        topWatcherTrigger: '8 de força, cura +4 PV. Pode recrutar.',
+        topWatcherEvent: 'Uma caixa de metal hermética espera, pronta para ser lacrada nas raízes de uma figueira centenária.',
+        bottomEchoPrompt: '8 de poder + 4 de cura — fecha o recrutamento de um Valete já ferido.',
+        bottomEchoEffect: 'No Coop, pode salvar um aliado à beira do colapso.',
+        dailyIdea: 'Par de oitos (8+8) explode 16 de poder e muita cura simultânea.',
         flavorText: 'Colocamos um relógio de pulso, duas moedas, uma fita cassete e a foto de nós dois.',
       },
       {
@@ -470,15 +374,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Dança Lenta no Asfalto Vazio',
         artGlyph: '💃',
         artSubtitle: 'Faróis de Carro Como Palco Improvisado',
-        topWatcherTrigger:
-          'Ao ver uma rua vazia, corredor livre ou ouvir uma batida de música.',
-        topWatcherEvent:
-          'Os semáforos piscam em amarelo intermitente na avenida deserta. Não há mais pressa para chegar a lugar nenhum.',
-        bottomEchoPrompt:
-          'Imagine a última valsa e descreva, em uma frase, a música que tocaria nela.',
-        bottomEchoEffect:
-          'Remove qualquer Valete (J) ativo na mesa e sincroniza os corações da dupla.',
-        dailyIdea: 'Pode ser uma caminhada com alguém, uma música dividida ou o fim de tarde com quem você gosta.',
+        topWatcherTrigger: '9 de força, cura +5 PV. Pode recrutar.',
+        topWatcherEvent: 'Os semáforos piscam em amarelo intermitente na avenida deserta. Não há mais pressa para chegar a lugar nenhum.',
+        bottomEchoPrompt: '9 de poder e cura 5 PV imediatamente.',
+        bottomEchoEffect: 'Fecha o recrutamento de uma Dama que já perdeu metade da vida.',
+        dailyIdea: 'No modo Competitivo, vira o placar de Vida enquanto constrói exército.',
         flavorText: 'O mundo inteiro parou o trânsito só para que tivéssemos salão suficiente.',
       },
       {
@@ -486,15 +386,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'A Biblioteca das Memórias Salvas',
         artGlyph: '📚',
         artSubtitle: 'Cada Livro Brilha com uma Vida Inteira',
-        topWatcherTrigger:
-          'Ao ver uma estante de livros, caderno aberto ou tela cheia de texto.',
-        topWatcherEvent:
-          'A Fita Cassete com a crônica completa precisa chegar ao cofre de quartzo do observatório antes que a coroa se feche.',
-        bottomEchoPrompt:
-          'Dê um título poético para o livro que conta a sua história nesta jornada.',
-        bottomEchoEffect:
-          'Clímax de ♥: Amor e memória vencem o apagamento! Restaura todas as Damas (Q) e Valetes (J).',
-        dailyIdea: 'Pode ser um almoço em família, uma conversa longa ou uma visita a quem conta boas histórias.',
+        topWatcherTrigger: '10 de força, cura +5 PV. Pode recrutar.',
+        topWatcherEvent: 'A Fita Cassete com a crônica completa precisa chegar ao cofre de quartzo do observatório antes que a coroa se feche.',
+        bottomEchoPrompt: '10 de poder + 5 de cura + Recrutamento garantido ao finalizar.',
+        bottomEchoEffect: 'A carta de maior sustentação e diplomacia do baralho.',
+        dailyIdea: 'Combine com um Ás para alcançar 14 de poder e 7 de cura num único turno.',
         flavorText: 'As estrelas podem apagar uma por uma; nossa história já foi escrita fora do tempo.',
       },
     ],
@@ -504,15 +400,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Sextante de Latão no Observatório',
         artGlyph: '🔭',
         artSubtitle: 'Calculando o Ângulo da Fenda Solar',
-        topWatcherTrigger:
-          'Ao ver óculos, lente de câmera, janela redonda ou instrumento de medida.',
-        topWatcherEvent:
-          'Na cúpula astronômica, as lentes de cristal revelam uma coordenada segura onde a gravidade permanecerá estável.',
-        bottomEchoPrompt:
-          'Descreva um objeto redondo perto de você como se calibrasse um telescópio.',
-        bottomEchoEffect:
-          'Sucesso de ♦ Ouros: Desvira a Dama (Q) de ambos os jogadores imediatamente!',
-        dailyIdea: 'Pode ser medir algo para uma compra, ajustar um horário ou planejar o caminho do dia.',
+        topWatcherTrigger: '5 de força (ou +4 em combo), compra +1 carta. Pode recrutar.',
+        topWatcherEvent: 'Na cúpula astronômica, as lentes de cristal revelam uma coordenada segura onde a gravidade permanecerá estável.',
+        bottomEchoPrompt: 'Naipe ♦ Ouros: compra cartas extras e permite Recrutar a Figura no golpe final.',
+        bottomEchoEffect: 'Mantém a mão cheia para os combos decisivos do fim da partida.',
+        dailyIdea: 'Combine com qualquer carta alta para não perder ritmo após o ataque.',
         flavorText: 'A matemática não mente, mesmo quando o céu decide dobrar sobre si mesmo.',
       },
       {
@@ -520,15 +412,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Gotas de Mercúrio Subindo no Ar',
         artGlyph: '🌡️',
         artSubtitle: 'Termômetros Quebrados Flutuando como Pérolas',
-        topWatcherTrigger:
-          'Ao ver um copo de água, gotas na pia ou objeto prateado/metálico.',
-        topWatcherEvent:
-          'Pequenas esferas prateadas flutuam na altura do peito, apontando o fluxo magnético que leva ao abrigo subterrâneo.',
-        bottomEchoPrompt:
-          'Fotografe ou toque em um objeto prateado/metálico perto de você para seguir a trilha magnética.',
-        bottomEchoEffect:
-          'Desvira a Dama (Q) do jogador Eco e estabiliza o caminho do turno.',
-        dailyIdea: 'Pode ser medir a febre, tomar um remédio na hora ou conferir a temperatura do forno.',
+        topWatcherTrigger: '2 de força, compra +1 carta. Pode recrutar.',
+        topWatcherEvent: 'Pequenas esferas prateadas flutuam na altura do peito, apontando o fluxo magnético que leva ao abrigo subterrâneo.',
+        bottomEchoPrompt: 'Gira o baralho rápido sem custo de mão.',
+        bottomEchoEffect: 'Ótima para completar o recrutamento de máquinas ou humanos.',
+        dailyIdea: 'Nunca desperdice um 2♦ — ele se paga comprando uma carta nova.',
         flavorText: 'Quando o chumbo aprende a voar, basta seguir a direção para onde ele sobe.',
       },
       {
@@ -536,15 +424,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Escadaria que Termina no Teto',
         artGlyph: '🪜',
         artSubtitle: 'Geometria de Escher no Prédio Central',
-        topWatcherTrigger:
-          'Ao subir ou descer degraus, olhar para o teto ou ver um corredor.',
-        topWatcherEvent:
-          'O segundo andar do prédio dobrou espacialmente: quem sobe a escada norte sai caminhando de cabeça para baixo no salão sul.',
-        bottomEchoPrompt:
-          'Gire o celular ou incline a cabeça e descreva como o ambiente fica de lado, como num labirinto.',
-        bottomEchoEffect:
-          'Vocês decifram a dobra! Desvira a Dama (Q) do Vigia e remove o Valete de Vertigem (J♦).',
-        dailyIdea: 'Pode ser um formulário sem fim, um sistema confuso ou subir escadas com sacolas pesadas.',
+        topWatcherTrigger: '3 de força, compra +1 carta. Pode recrutar.',
+        topWatcherEvent: 'O segundo andar do prédio dobrou espacialmente: quem sobe a escada norte sai caminhando de cabeça para baixo no salão sul.',
+        bottomEchoPrompt: '3 de poder + compra 1 carta nova.',
+        bottomEchoEffect: 'Acelera a busca por combos e cartas pretas/vermelhas.',
+        dailyIdea: 'Use quando precisar cavar o baralho atrás de um bloqueio ou golpe final.',
         flavorText: '"Embaixo" e "em cima" são apenas convenções sociais que o eclipse cancelou.',
       },
       {
@@ -552,15 +436,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Rádio de Cristal de Quartzo',
         artGlyph: '📻',
         artSubtitle: 'Sintonizador Sem Bateria que Capta Ecos',
-        topWatcherTrigger:
-          'Ao usar fones de ouvido, caixa de som ou microfone.',
-        topWatcherEvent:
-          'Um receptor artesanal feito com fio de cobre e pedra galena consegue furar a interferência solar e captar vozes distantes.',
-        bottomEchoPrompt:
-          'Bata duas vezes na mesa e diga: "Câmbio, frequência estabilizada".',
-        bottomEchoEffect:
-          'Reconexão perfeita (♦): Desvira sua Dama (Q) na hora.',
-        dailyIdea: 'Pode ser consertar um fone, achar o carregador ou ajustar o wi-fi de casa.',
+        topWatcherTrigger: '4 de força, compra +1 carta. Pode recrutar.',
+        topWatcherEvent: 'Um receptor artesanal feito com fio de cobre e pedra galena consegue furar a interferência solar e captar vozes distantes.',
+        bottomEchoPrompt: '4 de impacto + compra 1 carta.',
+        bottomEchoEffect: 'Mantém o motor tático rodando sem secar a mão.',
+        dailyIdea: 'Par de quatros gera 8 de poder e compra de 2 cartas.',
         flavorText: 'Quando os satélites caem, a velha física dos anos 1920 volta a salvar o mundo.',
       },
       {
@@ -568,15 +448,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Chave do Bunker Geodésico',
         artGlyph: '🗝️',
         artSubtitle: 'Esfera de Titânio Sob a Montanha',
-        topWatcherTrigger:
-          'Ao pegar suas chaves, abrir uma tranca ou ver uma porta reforçada.',
-        topWatcherEvent:
-          'Um cartão perfurado dá acesso ao abrigo científico construído para suportar a inversão dos polos.',
-        bottomEchoPrompt:
-          'Segure uma chave ou cartão real e invente o código de abertura do bunker.',
-        bottomEchoEffect:
-          'Desvira a Dama (Q) de qualquer jogador que estiver virada.',
-        dailyIdea: 'Pode ser uma chave perdida, uma senha esquecida ou trancar a casa antes de sair.',
+        topWatcherTrigger: '5 de força, compra +1 carta. Pode recrutar.',
+        topWatcherEvent: 'Um cartão perfurado dá acesso ao abrigo científico construído para suportar a inversão dos polos.',
+        bottomEchoPrompt: '5 de poder + compra 1 carta + Recruta.',
+        bottomEchoEffect: 'Excelente para recrutar Ameaças de ♦ (Fenda & Bússola) no golpe final.',
+        dailyIdea: 'Use como carta de fechamento para converter sentinelas caras.',
         flavorText: 'Três metros de chumbo e granito separam esta porta do silêncio cósmico.',
       },
       {
@@ -584,15 +460,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Mapa Dobrado em Quatro Dimensões',
         artGlyph: '🗺️',
         artSubtitle: 'Atalho Através de Duas Portas Distantes',
-        topWatcherTrigger:
-          'Ao atravessar uma porta entre dois cômodos ou dobrar uma folha de papel.',
-        topWatcherEvent:
-          'Abrindo a porta do armário da esquina no segundo exato, ela dá diretamente para a praia a cinquenta quilômetros dali.',
-        bottomEchoPrompt:
-          'Imagine uma porta e diga para qual lugar do mundo você abriria essa passagem.',
-        bottomEchoEffect:
-          'Teletransporte poético concluído! Desvira a Dama (Q) da dupla.',
-        dailyIdea: 'Pode ser um aplicativo de mapas, um atalho no caminho ou resolver duas tarefas de uma vez.',
+        topWatcherTrigger: '6 de força, compra +1 carta. Pode recrutar.',
+        topWatcherEvent: 'Abrindo a porta do armário da esquina no segundo exato, ela dá diretamente para a praia a cinquenta quilômetros dali.',
+        bottomEchoPrompt: '6 de poder + compra 1 carta.',
+        bottomEchoEffect: 'Sustenta ciclos longos de combate no Solo e Coop.',
+        dailyIdea: 'Forte para abater Valetes danificados e já repor a mão.',
         flavorText: 'Se você dobrar o mapa até os dois pontos se tocarem, não precisa caminhar a linha entre eles.',
       },
       {
@@ -600,15 +472,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Pêndulo de Foucault Parado no Ar',
         artGlyph: '⚖️',
         artSubtitle: 'A Rotação da Terra Desacelera',
-        topWatcherTrigger:
-          'Ao ver algo pendurado (luminária, cordão, chaveiro, planta pendente).',
-        topWatcherEvent:
-          'O grande pêndulo de bronze do museu parou no ponto mais alto da oscilação, provando que o planeta prendeu a respiração.',
-        bottomEchoPrompt:
-          'Narre como seu personagem devolve o movimento à sala.',
-        bottomEchoEffect:
-          'Recarrega (Untap) sua Dama (Q) e impede qualquer atraso temporal neste turno.',
-        dailyIdea: 'Pode ser um relógio que atrasou, uma fila de banco ou um processo que não anda.',
+        topWatcherTrigger: '7 de força, compra +2 cartas. Pode recrutar.',
+        topWatcherEvent: 'O grande pêndulo de bronze do museu parou no ponto mais alto da oscilação, provando que o planeta prendeu a respiração.',
+        bottomEchoPrompt: '7 de poder e compra 2 cartas de uma vez!',
+        bottomEchoEffect: 'A partir do valor 7, cartas de ♦ Ouros compram duas cartas.',
+        dailyIdea: 'Motor de compras para encher a mão até o limite de 6 cartas.',
         flavorText: 'Por quatro segundos inteiros, o planeta esqueceu para que lado costumava girar.',
       },
       {
@@ -616,15 +484,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Prisma que Decompõe a Luz Negra',
         artGlyph: '💎',
         artSubtitle: 'Sete Cores que Nunca Existiram Antes',
-        topWatcherTrigger:
-          'Ao ver um reflexo colorido em vidro, água, tela ou óculos.',
-        topWatcherEvent:
-          'Passando o feixe da coroa solar por um cristal de lustre, surge uma frequência luminosa que afasta o esquecimento.',
-        bottomEchoPrompt:
-          'Fotografe um reflexo de luz em qualquer vidro ou superfície brilhante perto de você.',
-        bottomEchoEffect:
-          'Luz restauradora (♦): Desvira ambas as Damas (Q) e limpa o Valete de Olhos de Cinza (J♠).',
-        dailyIdea: 'Pode ser escolher uma roupa, separar o lixo reciclável ou organizar algo por cor.',
+        topWatcherTrigger: '8 de força, compra +2 cartas. Pode recrutar.',
+        topWatcherEvent: 'Passando o feixe da coroa solar por um cristal de lustre, surge uma frequência luminosa que afasta o esquecimento.',
+        bottomEchoPrompt: '8 de impacto + compra 2 cartas.',
+        bottomEchoEffect: 'Garante recursos para o turno seguinte ou bloqueio pesado.',
+        dailyIdea: 'Excelente no PvP para atacar forte e terminar com a mão cheia.',
         flavorText: 'Depois do violeta existe uma oitava cor que só aparece quando o sol se despede.',
       },
       {
@@ -632,15 +496,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Trilhos de Cobre da Torre Tesla',
         artGlyph: '⚡',
         artSubtitle: 'Gerador Atmosférico Carregado',
-        topWatcherTrigger:
-          'Ao colocar o celular para carregar ou ver uma tomada/interruptor.',
-        topWatcherEvent:
-          'As bobinas de cobre captam a própria carga estática do eclipse para alimentar os aquecedores e luzes do refúgio.',
-        bottomEchoPrompt:
-          'Descreva, em uma frase, como você recarrega a reserva de energia com um recurso seguro da história.',
-        bottomEchoEffect:
-          'Desvira sua Dama (Q) e concede vantagem automática na próxima carta do Deck do Mundo.',
-        dailyIdea: 'Pode ser uma conta de luz, um aparelho para ligar na tomada ou trocar uma lâmpada.',
+        topWatcherTrigger: '9 de força, compra +2 cartas. Pode recrutar.',
+        topWatcherEvent: 'As bobinas de cobre captam a própria carga estática do eclipse para alimentar os aquecedores e luzes do refúgio.',
+        bottomEchoPrompt: '9 de poder + compra 2 cartas + Recruta.',
+        bottomEchoEffect: 'Domina o ritmo da mesa nas ondas finais.',
+        dailyIdea: 'Permite montar combos de 3 ou 4 cartas na rodada seguinte.',
         flavorText: 'Usamos a própria tempestade que veio nos apagar para manter as lâmpadas acesas.',
       },
       {
@@ -648,15 +508,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'A Arca da Linha do Horizonte',
         artGlyph: '🚀',
         artSubtitle: 'Navio Que Navega Entre Estrelas e Mar',
-        topWatcherTrigger:
-          'Ao olhar para o horizonte distante, uma janela ampla ou estrada.',
-        topWatcherEvent:
-          'No cais onde o mar encontra o céu invertido, a embarcação blindada aguarda com as coordenadas completas da Fenda.',
-        bottomEchoPrompt:
-          'Trace a coordenada final: diga para qual novo mundo ou amanhecer você aponta o leme.',
-        bottomEchoEffect:
-          'Clímax de ♦: Rota de salvação descoberta! Desvira todas as Damas (Q) e limpa qualquer Valete (J).',
-        dailyIdea: 'Pode ser a compra do mês, fazer uma mala ou guardar tudo que importa num só lugar.',
+        topWatcherTrigger: '10 de força, compra +2 cartas. Pode recrutar.',
+        topWatcherEvent: 'No cais onde o mar encontra o céu invertido, a embarcação blindada aguarda com as coordenadas completas da Fenda.',
+        bottomEchoPrompt: '10 de poder + compra 2 cartas + Recrutamento.',
+        bottomEchoEffect: 'A carta de maior compra e impacto de ♦ Ouros no baralho.',
+        dailyIdea: 'Jogada mestre para virar partidas contra os Reis.',
         flavorText: 'Quando o mar e o céu se tornam um só oceano, qualquer barco vira uma nave estelar.',
       },
     ],
@@ -666,15 +522,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Sussurro da Coroa Solar',
         artGlyph: '🌑',
         artSubtitle: 'Frequência Grave que Vibra nos Ossos',
-        topWatcherTrigger:
-          'Ao notar o silêncio de uma sala ou sentir uma vibração grave.',
-        topWatcherEvent:
-          'O eclipse emite um acorde harmônico subaudível. Quem escuta com atenção percebe que a estrela está tentando dizer algo.',
-        bottomEchoPrompt:
-          'Traduza em uma frase curta e misteriosa o que o sol murmurou antes de fechar o anel negro.',
-        bottomEchoEffect:
-          'Se for ♣ Paus, você compreende o presságio e desvira sua Dama (Q). Outros naipes sentem o assombro cósmico.',
-        dailyIdea: 'Pode ser um barulho estranho em casa, o silêncio da madrugada ou uma intuição que não sai da cabeça.',
+        topWatcherTrigger: '5 de força (ou +4 em combo), reduz ataque da Ameaça.',
+        topWatcherEvent: 'O eclipse emite um acorde harmônico subaudível. Quem escuta com atenção percebe que a estrela está tentando dizer algo.',
+        bottomEchoPrompt: 'Naipe ♣ Paus: reduz o contra-ataque da Ameaça neste turno.',
+        bottomEchoEffect: 'No PvP, golpes pesados (6+) forçam o rival a descartar 1 carta.',
+        dailyIdea: 'Alivia em 3 o golpe de um Rei no seu turno (Figuras de ♣ são imunes).',
         flavorText: 'O sol nunca foi mudo; nós é que fazíamos barulho demais durante o dia para ouvi-lo.',
       },
       {
@@ -682,15 +534,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Déjà Vu de Três Segundos',
         artGlyph: '⏳',
         artSubtitle: 'Esta Cena Já Aconteceu Antes',
-        topWatcherTrigger:
-          'Ao repetir um gesto cotidiano (abrir porta, pegar copo, olhar celular).',
-        topWatcherEvent:
-          'O tempo soluça: uma xícara que cai volta para a mesa inteira, e você tem certeza absoluta de que já viveu este minuto.',
-        bottomEchoPrompt:
-          'Diga ou escreva duas vezes a mesma frase curta, mudando só a última palavra na segunda vez.',
-        bottomEchoEffect:
-          'Domina o loop temporal! Permite evitar a ativação de qualquer Valete (J) nesta rodada.',
-        dailyIdea: 'Pode ser uma rotina repetida, o caminho de sempre ou uma conversa que parece já ter acontecido.',
+        topWatcherTrigger: '2 de força, reduz o ataque da Ameaça em 1.',
+        topWatcherEvent: 'O tempo soluça: uma xícara que cai volta para a mesa inteira, e você tem certeza absoluta de que já viveu este minuto.',
+        bottomEchoPrompt: 'Reduz o dano recebido no fim do turno e ajuda a finalizar.',
+        bottomEchoEffect: 'Boa carta auxiliar em pares de valor 2.',
+        dailyIdea: 'Use quando precisar tirar 1 ou 2 pontos de ataque da Ameaça para sobreviver.',
         flavorText: 'Na primeira vez nós erramos o caminho; desta vez você segurou meu braço na esquina certa.',
       },
       {
@@ -698,15 +546,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Nuvens em Espiral de Fibonacci',
         artGlyph: '🌀',
         artSubtitle: 'Geometria Sagrada no Céu Crepuscular',
-        topWatcherTrigger:
-          'Ao olhar para as nuvens, fumaça de café ou espuma na xícara.',
-        topWatcherEvent:
-          'As nuvens acima da cidade giram em uma espiral matemática perfeita, centrada exatamente sobre o telhado mais próximo.',
-        bottomEchoPrompt:
-          'Desenhe uma espiral no ar com o dedo e descreva o que haveria no centro do redemoinho.',
-        bottomEchoEffect:
-          'Alinha a dupla com o olho do furacão (calmaria total no próximo turno).',
-        dailyIdea: 'Pode ser o céu do fim da tarde, uma janela com vista ou uma pausa olhando para longe.',
+        topWatcherTrigger: '3 de força, reduz o ataque da Ameaça em 2.',
+        topWatcherEvent: 'As nuvens acima da cidade giram em uma espiral matemática perfeita, centrada exatamente sobre o telhado mais próximo.',
+        bottomEchoPrompt: 'Tira 2 de ataque da Ameaça central neste turno.',
+        bottomEchoEffect: 'Ajuda a manter a mão cheia evitando bloqueios caros.',
+        dailyIdea: 'Corta pela metade o golpe de um Valete sem gastar defesa.',
         flavorText: 'No centro exato do ciclone não venta; há apenas o silêncio de um jardim suspenso.',
       },
       {
@@ -714,15 +558,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Visita do Seu Eu de Outro Mundo',
         artGlyph: '👥',
         artSubtitle: 'Alguém com Seu Rosto na Outra Calçada',
-        topWatcherTrigger:
-          'Ao ver seu reflexo num vidro ou cruzar com um desconhecido parecido.',
-        topWatcherEvent:
-          'Pela fenda da penumbra, outra versão sua caminha do outro lado da rua, sob um dia ensolarado.',
-        bottomEchoPrompt:
-          'Descreva o que sua versão daquele outro mundo parecia estar dizendo.',
-        bottomEchoEffect:
-          'Cura o Valete de Eco de Outra Vida (J♣) e inspira coragem na dupla.',
-        dailyIdea: 'Pode ser seu reflexo numa vitrine, uma foto sua antiga ou um momento sozinho pensando na vida.',
+        topWatcherTrigger: '4 de força, reduz o ataque da Ameaça em 2.',
+        topWatcherEvent: 'Pela fenda da penumbra, outra versão sua caminha do outro lado da rua, sob um dia ensolarado.',
+        bottomEchoPrompt: '4 de dano + neutraliza 2 de ataque do inimigo.',
+        bottomEchoEffect: 'Combina defesa e desgaste constante.',
+        dailyIdea: 'Excelente contra Chefes rápidos de Espadas.',
         flavorText: 'Eles olharam para nós através da chuva, sorriram e desejaram boa sorte na travessia.',
       },
       {
@@ -730,15 +570,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Constelações ao Meio-Dia',
         artGlyph: '✨',
         artSubtitle: 'Estrelas Desconhecidas no Céu Escuro',
-        topWatcherTrigger:
-          'Ao ver pontos de luz no teto, LEDs ou estrelas no céu.',
-        topWatcherEvent:
-          'Com o sol encoberto em pleno dia, constelações que não pertencem ao nosso hemisfério brilham intensamente sobre os prédios.',
-        bottomEchoPrompt:
-          'Aponte três pontos de luz no seu ambiente e dê um nome à nova constelação que guia você.',
-        bottomEchoEffect:
-          'Bênção astral: se uma Dama (Q) estiver virada, ela pode ser desvirada no início do próximo turno.',
-        dailyIdea: 'Pode ser um dia nublado, um cômodo escuro ao meio-dia ou uma ideia que surge do nada.',
+        topWatcherTrigger: '5 de força, reduz o ataque da Ameaça em 3.',
+        topWatcherEvent: 'Com o sol encoberto em pleno dia, constelações que não pertencem ao nosso hemisfério brilham intensamente sobre os prédios.',
+        bottomEchoPrompt: 'Causa 5 de dano e derruba em 3 o contra-ataque da Ameaça.',
+        bottomEchoEffect: 'Corta pela metade o golpe de uma Dama (6 vira 3).',
+        dailyIdea: 'Carta favorita para controlar o ritmo no modo Solo.',
         flavorText: 'Quando a luz grande se apaga, descobrimos que o céu sempre esteve cheio de pequenas fogueiras.',
       },
       {
@@ -746,15 +582,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Sinos que Tocam Sem Vento',
         artGlyph: '🔔',
         artSubtitle: 'Badaladas de Bronze na Cidade Silenciosa',
-        topWatcherTrigger:
-          'Ao ouvir um sino, notificação metálica, talher batendo ou som de vidro.',
-        topWatcherEvent:
-          'Todos os sinos e cristais da cidade vibram na mesma nota lá menor, anunciando que metade do disco solar já foi coberta.',
-        bottomEchoPrompt:
-          'Descreva ou escreva a nota que ressoa na cena.',
-        bottomEchoEffect:
-          'Harmoniza a frequência e protege contra o Valete (J) da rodada.',
-        dailyIdea: 'Pode ser um alarme que toca, uma campainha inesperada ou o sino de uma igreja no caminho.',
+        topWatcherTrigger: '6 de força, reduz o ataque em 3 (ou descarte rival no PvP).',
+        topWatcherEvent: 'Todos os sinos e cristais da cidade vibram na mesma nota lá menor, anunciando que metade do disco solar já foi coberta.',
+        bottomEchoPrompt: '6 de dano + -3 no ataque da Ameaça (ou faz rival descartar 1 carta).',
+        bottomEchoEffect: 'A partir do valor 6, ♣ também pressiona a mão do oponente no PvP.',
+        dailyIdea: 'Punição pesada tanto contra o centro quanto contra rivais.',
         flavorText: 'O bronze reconhece o fim de uma era antes mesmo dos astrônomos.',
       },
       {
@@ -762,15 +594,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Pássaros Brancos Pousados no Asfalto',
         artGlyph: '🕊️',
         artSubtitle: 'Centenas de Aves Olhando para o Oeste',
-        topWatcherTrigger:
-          'Ao ver aves, animais ou folhas paradas no chão.',
-        topWatcherEvent:
-          'Uma revoada inteira pousou em silêncio absoluto no cruzamento, esperando o segundo do Anel de Diamante.',
-        bottomEchoPrompt:
-          'Diga ou escreva uma frase curta de respeito ao presságio da natureza.',
-        bottomEchoEffect:
-          'Jogadores de ♣ ou ♥ purificam qualquer tensão acumulada na mesa.',
-        dailyIdea: 'Pode ser uma praça com pombos, um parque no caminho ou um quintal ao amanhecer.',
+        topWatcherTrigger: '7 de força, reduz ataque da Ameaça em 4.',
+        topWatcherEvent: 'Uma revoada inteira pousou em silêncio absoluto no cruzamento, esperando o segundo do Anel de Diamante.',
+        bottomEchoPrompt: '7 de dano + -4 no ataque da Ameaça.',
+        bottomEchoEffect: 'Zera o golpe da maioria dos Valetes e deixa uma Dama com 2.',
+        dailyIdea: 'Jogue com confiança quando quiser atacar sem perder Vida.',
         flavorText: 'Eles não estão com medo; estão apenas esperando o sinal para voar através da aurora.',
       },
       {
@@ -778,15 +606,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'Chuva que Para no Meio da Queda',
         artGlyph: '💧',
         artSubtitle: 'Milhares de Cristais Suspensos no Ar',
-        topWatcherTrigger:
-          'Ao ver água, vidro, gelo ou gotas na janela.',
-        topWatcherEvent:
-          'O tempo congela por um instante: as gotas de chuva ficam paradas na altura dos olhos como um cortinado de diamantes.',
-        bottomEchoPrompt:
-          'Descreva o que você faz enquanto caminha entre as gotas paradas no ar.',
-        bottomEchoEffect:
-          'Instante eterno: permite resolver o turno sem gastar recursos nem virar Damas (Q).',
-        dailyIdea: 'Pode ser uma pausa no meio da tarefa, uma chuva que você espera passar ou um minuto de silêncio.',
+        topWatcherTrigger: '8 de força, reduz ataque da Ameaça em 4.',
+        topWatcherEvent: 'O tempo congela por um instante: as gotas de chuva ficam paradas na altura dos olhos como um cortinado de diamantes.',
+        bottomEchoPrompt: '8 de dano + -4 no ataque da Ameaça.',
+        bottomEchoEffect: 'Ótima também para descartar como bloqueio máximo de 8.',
+        dailyIdea: 'Permite encarar Reis com tranquilidade enquanto prepara o golpe letal.',
         flavorText: 'Toquei uma gota suspensa e vi dentro dela o reflexo de todas as manhãs da minha vida.',
       },
       {
@@ -794,15 +618,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'A Porta de Luz Branca no Horizonte',
         artGlyph: '🚪',
         artSubtitle: 'Onde o Espaço e o Tempo se Encontram',
-        topWatcherTrigger:
-          'Uma porta iluminada, um corredor claro ou a saída de um prédio.',
-        topWatcherEvent:
-          'No fim da avenida escura, uma fenda vertical de luz morna se abre, convidando os que mantiveram a memória intacta.',
-        bottomEchoPrompt:
-          'Diga, em voz alta ou por escrito, quem você não deixaria para trás.',
-        bottomEchoEffect:
-          'Prepara a travessia final: limpa qualquer Valete (J) ativo na dupla.',
-        dailyIdea: 'Pode ser uma consulta, uma resposta que você espera ou a saída de um lugar onde passou o dia.',
+        topWatcherTrigger: '9 de força, reduz ataque da Ameaça em 5.',
+        topWatcherEvent: 'No fim da avenida escura, uma fenda vertical de luz morna se abre, convidando os que mantiveram a memória intacta.',
+        bottomEchoPrompt: '9 de dano + -5 no ataque da Ameaça.',
+        bottomEchoEffect: 'Reduz até o ataque de O Devorador do Sol ou de um Rei (Atq 8) para apenas 3.',
+        dailyIdea: 'Combine com um Ás de ♠ para somar dano extra e neutralizar o ataque na mesma jogada.',
         flavorText: 'O fim de um mundo é apenas o batente da porta para o próximo.',
       },
       {
@@ -810,15 +630,11 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         title: 'O Segundo do Anel de Diamante',
         artGlyph: '💍',
         artSubtitle: 'O Último Clarão Antes da Totalidade',
-        topWatcherTrigger:
-          'Ao ver um brilho intenso de luz, sol na janela ou reflexo dourado.',
-        topWatcherEvent:
-          'Na borda da lua negra, uma única gota de fogo solar explode como um diamante celeste sobre quem ainda resiste.',
-        bottomEchoPrompt:
-          'Diga qual é o último desejo ou visão que você crava no instante exato da Totalidade.',
-        bottomEchoEffect:
-          'Clímax de ♣: Transcendência completa! Todas as Damas (Q) desviram e a crônica atinge a iluminação.',
-        dailyIdea: 'Pode ser o último minuto do dia, a hora de apagar a luz ou o momento antes de uma notícia.',
+        topWatcherTrigger: '10 de força, reduz ataque da Ameaça em 5.',
+        topWatcherEvent: 'Na borda da lua negra, uma única gota de fogo solar explode como um diamante celeste sobre quem ainda resiste.',
+        bottomEchoPrompt: '10 de dano + -5 no ataque da Ameaça.',
+        bottomEchoEffect: 'Controle absoluto do campo de batalha por um turno completo.',
+        dailyIdea: 'No PvP, força o rival a perder 10 PV e 1 carta da mão se atingir direto.',
         flavorText: 'Um único segundo de luz verdadeira basta para justificar a existência do universo inteiro.',
       },
     ],
@@ -828,28 +644,20 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
       title: 'O Segundo Sol — O Despertar da Aurora',
       artGlyph: '☀️',
       artSubtitle: 'A Sombra Passa e o Céu Renasce Dourado',
-      topWatcherTrigger:
-        'Ao sentir calor do sol, ver luz dourada ou um sorriso inesperado.',
-      topWatcherEvent:
-        'Contra todos os cálculos dos profetas, a lua negra começa a se afastar! Um feixe quente de ouro novo toca o rosto dos sobreviventes.',
-      bottomEchoPrompt:
-        'Comemore o novo amanhecer: diga ou escreva a primeira coisa que fará agora que o mundo ganhou mais um dia.',
-      bottomEchoEffect:
-        'Presságio Claro (★): Milagre Solar! Ambos desviram suas Damas (Q) e removem todos os Valetes (J) imediatamente.',
+      topWatcherTrigger: 'Força 5. Jogue sozinho; pode recrutar no golpe final.',
+      topWatcherEvent: 'Contra todos os cálculos dos profetas, a lua negra começa a se afastar! Um feixe quente de ouro novo toca o rosto dos sobreviventes.',
+      bottomEchoPrompt: 'Efeito imediato: +5 de poder, +4 PV, compra 2 cartas e reduz ataque da Ameaça em 3.',
+      bottomEchoEffect: 'Se derrotar a Ameaça, você pode recrutá-la como Aliado.',
       flavorText: 'Abrimos as janelas do farol e choramos vendo a grama voltar a ser verde sob a manhã.',
     },
     dark: {
       title: 'Totalidade Eterna — O Colapso da Gravidade',
       artGlyph: '🕳️',
       artSubtitle: 'O Horizonte Se Dobra em Silêncio Absoluto',
-      topWatcherTrigger:
-        'Ao apagar a luz de um cômodo ou olhar para a noite fechada.',
-      topWatcherEvent:
-        'O anel do eclipse se fecha por completo. O chão desaparece sob os pés e apenas aquilo que for segurado com força continuará existindo.',
-      bottomEchoPrompt:
-        'Feche os olhos por um instante e diga, em voz alta ou por escrito, a lembrança que você guardaria se tudo mais se apagasse.',
-      bottomEchoEffect:
-        'Cataclismo (💀): Um jogador deve virar sua Dama (Q ⟳) E revelar seu Valete (J) para ancorar a existência do parceiro.',
+      topWatcherTrigger: 'Força 8. Jogue sozinho; você perde 2 PV.',
+      topWatcherEvent: 'O anel do eclipse se fecha por completo. O chão desaparece sob os pés e apenas aquilo que for segurado com força continuará existindo.',
+      bottomEchoPrompt: 'Efeito imediato: +8 de poder no alvo escolhido, mas você perde 2 PV de recuo.',
+      bottomEchoEffect: 'O dano de 8 vai só no alvo escolhido; os 2 PV de recuo são seus.',
       flavorText: 'Quando as estrelas se apagaram, segurei sua mão tão forte que nos tornamos nossa própria constelação.',
     },
   },
