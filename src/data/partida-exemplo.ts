@@ -52,10 +52,10 @@ const MAO_KAEL: CartaAcao[] = [
 ];
 
 const HORIZONTE_EXEMPLO: FiguraHorizonte[] = [
-  { posto: 'J', naipe: 'spades' }, // Batedor de Arpão (10 PV / 3 Atq)
-  { posto: 'J', naipe: 'clubs' }, // Rastejador Ácido (10 PV / 3 Atq)
-  { posto: 'Q', naipe: 'diamonds' }, // Sentinela de Plasma (14 PV / 5 Atq)
-  { posto: 'K', naipe: 'spades' }, // Imperador V8 (20 PV / 7 Atq)
+  { posto: 'J', naipe: 'spades' }, // Batedor de Arpão (12 PV / 5 Atq · Feroz)
+  { posto: 'J', naipe: 'clubs' }, // Rastejador Ácido (12 PV / 4 Atq · Imune a armadilhas)
+  { posto: 'Q', naipe: 'diamonds' }, // Sentinela de Plasma (18 PV / 6 Atq · Blindada)
+  { posto: 'K', naipe: 'spades' }, // Imperador V8 (26 PV / 11 Atq · Feroz)
 ];
 
 const COMPRA_EXEMPLO: CartaAcao[] = [
@@ -75,8 +75,8 @@ export const ROTEIRO_EXEMPLO: PassoDoExemplo[] = [
     titulo: 'Mara abre fogo contra o Batedor de Arpão (J♠)',
     quem: 'Mara',
     narrativa:
-      'Mara joga 6♠ (Escopeta de Cano Cerrado). Com +2 perfurante de Espadas e +1 da sua classe Atirador, causa 9 de dano direto e deixa J♠ com apenas 1 PV.',
-    notaMecanica: '6 (base) + 2 (♠) + 1 (afinidade ♠) = 9 de dano. Como J♠ sobreviveu com 1 PV, ele contra-ataca com 3.',
+      'Mara joga 6♠ (Escopeta de Cano Cerrado). Com +2 de bônus de Espadas e +1 da sua classe Atirador, causa 9 de dano direto e deixa J♠ com apenas 3 PV.',
+    notaMecanica: '6 (base) + 2 (♠) + 1 (afinidade ♠) = 9 de dano. Como J♠ sobreviveu com 3 PV, ele contra-ataca com 5 (4 de Ataque + 1 por ser Feroz).',
     acao: { tipo: 'jogarCartas', quem: 0, indicesMao: [0], alvo: 'horizonte_abater' },
   },
   {
@@ -84,8 +84,8 @@ export const ROTEIRO_EXEMPLO: PassoDoExemplo[] = [
     titulo: 'Mara usa sucata leve para amortecer o contra-ataque',
     quem: 'Mara',
     narrativa:
-      'Para não perder vida cheia, Mara descarta 2♣ (Estrepes) da mão para bloquear 2 dos 3 pontos de dano, sofrendo apenas 1 PV (vai a 19 PV) e repondo a mão.',
-    notaMecanica: 'Bloqueio Tático: 3 de dano pendente - 2 bloqueados = 1 PV perdido. Mão reposta até 5 cartas.',
+      'Para não perder vida cheia, Mara descarta 2♣ (Estrepes) da mão para bloquear 2 dos 5 pontos de dano, sofre 3 (vai a 12 PV) e compra 1 carta no fim do turno.',
+    notaMecanica: 'Bloqueio Tático: 5 de dano pendente - 2 bloqueados = 3 PV perdidos. No fim do turno, compra 1 carta: a carta gasta no bloqueio vai fazer falta.',
     acao: { tipo: 'bloquear', quem: 0, indicesMao: [0] },
   },
   {
@@ -93,8 +93,8 @@ export const ROTEIRO_EXEMPLO: PassoDoExemplo[] = [
     titulo: 'Kael recruta o Batedor de Arpão (J♠) para o seu lado',
     quem: 'Kael',
     narrativa:
-      'Kael vê o J♠ quase derrotado (1 PV) e joga 3♥ (Atadura Esterilizada). Como usou uma carta vermelha e zerou a vida da Ameaça, ele o recruta como Aliado!',
-    notaMecanica: '3 + 1 (afinidade ♥) = 4 de dano (zera 1 PV). Carta ♥ habilita Recrutar: J♠ entra com 2 cargas de +2 de dano e não contra-ataca!',
+      'Kael vê o J♠ quase derrotado (3 PV) e joga 3♥ (Atadura Esterilizada). Como usou uma carta vermelha e zerou a vida da Ameaça, ele o recruta como Aliado!',
+    notaMecanica: '3 + 1 (afinidade ♥) = 4 de dano (zera os 3 PV). Como o golpe final tem ♥, Kael pode Recrutar: J♠ vira Aliado com 2 usos (cada um causa 2 de dano) e não contra-ataca!',
     acao: { tipo: 'jogarCartas', quem: 1, indicesMao: [0], alvo: 'horizonte_recrutar' },
   },
   {
@@ -102,8 +102,8 @@ export const ROTEIRO_EXEMPLO: PassoDoExemplo[] = [
     titulo: 'Mara monta um Combo de Comando e atira em Kael!',
     quem: 'Mara',
     narrativa:
-      'Vendo Kael ganhar um aliado forte, Mara combina 4♣ + A♠ contra o rival! Além de 11 de dano direto em Kael, o golpe pesado de Paus arranca 1 carta da mão dele.',
-    notaMecanica: 'Combo (4 + 4 do Ás = 8) + 2 (♠) + 1 (afinidade ♠) = 11 de dano em Kael + descarte de 1 carta (♣ ≥ 6). Depois disso, o novo Rastejador (J♣) ataca Mara por 3.',
+      'Vendo Kael ganhar um aliado forte, Mara combina 4♣ + A♠ contra o rival! Além de 11 de dano direto em Kael, o golpe pesado de Paus arranca 1 carta da mão dele, puxada às cegas.',
+    notaMecanica: 'Combo (4 + 4 do Ás = 8) + 2 (♠) + 1 (afinidade ♠) = 11 de dano em Kael + descarte de 1 carta (♣ ≥ 6). Depois disso, o novo Rastejador (J♣) ataca Mara por 4 — e, Imune a armadilhas, ignora o ♣ que ela jogou.',
     acao: { tipo: 'jogarCartas', quem: 0, indicesMao: [0, 1], alvo: { rival: 1 } },
   },
   {
@@ -111,8 +111,8 @@ export const ROTEIRO_EXEMPLO: PassoDoExemplo[] = [
     titulo: 'Mara absorve o golpe no corpo para guardar cartas altas',
     quem: 'Mara',
     narrativa:
-      'Mara prefere preservar sua mão cheia (5♦, 3♦, 8♥) e aceita os 3 de dano direto nos PV (19 → 16 PV).',
-    notaMecanica: 'Receber no Corpo (0 cartas descartadas): excelente para manter recursos de combo para a próxima rodada.',
+      'Com só 2 cartas na mão (5♦, 3♦), Mara prefere guardá-las e aceita os 4 de dano direto nos PV (12 → 8 PV).',
+    notaMecanica: 'Receber no Corpo (0 cartas descartadas): troca vida por cartas, porque a reposição é de só 1 carta por turno.',
     acao: { tipo: 'bloquear', quem: 0, indicesMao: [] },
   },
   {
@@ -120,8 +120,8 @@ export const ROTEIRO_EXEMPLO: PassoDoExemplo[] = [
     titulo: 'Kael aciona o Batedor recrutado (J♠) antes da jogada',
     quem: 'Kael',
     narrativa:
-      'Agora é a vez de Kael: ele gasta 1 carga do J♠ recrutado para causar +2 de dano no Rastejador Ácido (J♣), abrindo caminho para sua ação principal.',
-    notaMecanica: 'Uso de Aliado (1× por turno, fase de ação): J♠ cai de 2 para 1 carga e reduz J♣ de 10 para 8 PV.',
+      'Agora é a vez de Kael: ele gasta 1 uso do J♠ recrutado para causar +2 de dano no Rastejador Ácido (J♣), abrindo caminho para sua ação principal.',
+    notaMecanica: 'Uso de Aliado (1× por turno, fase de ação): J♠ cai de 2 para 1 uso e reduz J♣ de 12 para 10 PV.',
     acao: { tipo: 'usarAliado', quem: 1, indiceAliado: 0 },
   },
 ];

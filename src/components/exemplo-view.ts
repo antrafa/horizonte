@@ -42,9 +42,9 @@ function minutos(deck: ThemeDeck): Minuto[] {
 const COLA: Array<[string, string]> = [
   ['Valores', `2–10 = face · Ás = ${REGRA.valorAsSolo} sozinho (+${REGRA.bonusAsCombo} em combo) · ★ = ${REGRA.valorEstrela} · 💀 = ${REGRA.valorCaveira} (-2 PV recuo)`],
   ['Naipes', `♠ +${REGRA.bonusEspadas} dano · ♣ reduz ataque da Ameaça (½ valor) · ♦ compra +1/+2 · ♥ cura PV (½ valor)`],
-  ['Finalizar', 'Abater (qualquer / ♠♣): vai p/ Troféus + compra Saque · Recrutar (com ♥♦★💀): vira seu Aliado!'],
+  ['Finalizar', 'Abater (qualquer carta): vira Troféu + você compra cartas · Recrutar (com ♥♦★💀): vira seu Aliado!'],
   ['Escala J/Q/K', `Valete: ${STATUS_FIGURA.J.vida}PV/${STATUS_FIGURA.J.ataque}Atq · Dama: ${STATUS_FIGURA.Q.vida}PV/${STATUS_FIGURA.Q.ataque}Atq · Rei: ${STATUS_FIGURA.K.vida}PV/${STATUS_FIGURA.K.ataque}Atq`],
-  ['Bloqueio', `Descarte cartas da mão para somar bloqueio = valor da carta (ou 1 carga de Aliado = ${REGRA.escudoAliado} bloqueio).`],
+  ['Bloqueio', `Descarte cartas da mão para somar bloqueio = valor da carta (ou 1 uso de Aliado = ${REGRA.escudoAliado} bloqueio).`],
 ];
 
 export function renderExemploHtml(deck: ThemeDeck): string {

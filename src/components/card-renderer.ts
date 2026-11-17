@@ -6,8 +6,8 @@ import {
   type Naipe,
   type PostoFigura,
   REGRA,
-  SIMBOLO,
   STATUS_FIGURA,
+  TRACO_AMEACA,
   valorBloqueioCarta,
 } from '../core/partida';
 import type { GameCard } from '../types/card';
@@ -62,19 +62,66 @@ interface RegraDaCarta {
   numeros?: Array<{ rotulo: string; valor: string }>;
 }
 
-function efeitoAliadoTexto(posto: PostoFigura, naipe: Naipe): string {
+const NOME_NAIPE: Record<Naipe, string> = {
+  spades: 'Espadas',
+  hearts: 'Copas',
+  diamonds: 'Ouros',
+  clubs: 'Paus',
+};
+
+function plural(qtd: number, singular: string, pluralForm: string): string {
+  return `${qtd} ${qtd === 1 ? singular : pluralForm}`;
+}
+
+/** O que 1 uso do Aliado faz, com o número já calculado para o posto. */
+function efeitoDoUsoDoAliado(posto: PostoFigura, naipe: Naipe): string {
   const st = STATUS_FIGURA[posto];
   switch (naipe) {
     case 'spades':
-      return `+${st.bonusAliado} de dano direto na Ameaça ou rival (${st.cargas} cargas).`;
+      return `causa ${st.bonusAliado} de dano na Ameaça ou num rival`;
     case 'clubs':
-      return `-${st.bonusAliado} no ataque da Ameaça neste turno (${st.cargas} cargas).`;
+      return `a Ameaça perde ${st.bonusAliado} de ataque neste turno`;
     case 'diamonds': {
       const qtd = posto === 'J' ? 1 : posto === 'Q' ? 2 : 3;
-      return `Compra +${qtd} carta(s) do baralho (${st.cargas} cargas).`;
+      return `compre ${plural(qtd, 'carta', 'cartas')}`;
     }
     case 'hearts':
-      return `Cura +${st.bonusAliado} PV imediatamente (${st.cargas} cargas).`;
+      return `cure ${st.bonusAliado} PV`;
+  }
+}
+
+/** O que a carta faz ao atacar, com os números já calculados para ela jogada sozinha. */
+function efeitoDeAtaque(naipe: Naipe, base: number): { rotulo: string; texto: string } {
+  const metade = Math.ceil(base / 2);
+  const recruta = 'Se este golpe derrotar a Ameaça, você pode recrutá-la como Aliado.';
+  switch (naipe) {
+    case 'spades':
+      return {
+        rotulo: '♠ Ataque · dano extra',
+        texto: `Causa ${base + REGRA.bonusEspadas} de dano (${base} + ${REGRA.bonusEspadas} de bônus de ♠; o bônus conta 1 vez por jogada).`,
+      };
+    case 'hearts':
+      return {
+        rotulo: '♥ Ataque · cura e recruta',
+        texto: `Causa ${base} de dano e você cura ${metade} PV (metade do valor jogado). ${recruta}`,
+      };
+    case 'diamonds': {
+      const compra = base >= 7 ? 'compra 2 cartas' : 'compra 1 carta (2 se o valor jogado for 7 ou mais)';
+      return {
+        rotulo: '♦ Ataque · compra e recruta',
+        texto: `Causa ${base} de dano e você ${compra}. ${recruta}`,
+      };
+    }
+    case 'clubs': {
+      const pvp =
+        base >= REGRA.minGolpeDescartePvp
+          ? 'No PvP, você também puxa às cegas 1 carta da mão do rival e a descarta.'
+          : `No PvP, se a jogada causar ${REGRA.minGolpeDescartePvp}+ de dano, puxe às cegas 1 carta da mão do rival e descarte-a.`;
+      return {
+        rotulo: '♣ Ataque · enfraquece a Ameaça',
+        texto: `Causa ${base} de dano e a Ameaça perde ${metade} de ataque neste turno (metade do valor jogado). ${pvp}`,
+      };
+    }
   }
 }
 
@@ -83,22 +130,25 @@ export function regraDaCarta(card: GameCard): RegraDaCarta {
     const posto = card.rank as PostoFigura;
     const naipe = card.suit as Naipe;
     const st = STATUS_FIGURA[posto];
-    const fn = FUNCAO_DO_NAIPE[naipe];
     return {
-      tipo: `${st.rotulo} · ${fn.pilar}`,
+      tipo: `${st.rotulo} · Ameaça de ${NOME_NAIPE[naipe]}`,
       numeros: [
         { rotulo: 'Vida', valor: String(st.vida) },
-        { rotulo: 'Ataque', valor: String(st.ataque) },
-        { rotulo: 'Troféus', valor: String(st.trofeus) },
+        { rotulo: 'Ataque', valor: String(st.ataque + (naipe === 'spades' ? st.ferocidade : 0)) },
+        { rotulo: 'Pontos', valor: String(st.trofeus) },
       ],
       blocos: [
         {
-          rotulo: `Abater (♠/♣) · Saque +${st.saque}`,
-          texto: `Dá ${st.trofeus} pts de Troféu e compra +${st.saque} carta(s) ao zerar a Vida.`,
+          rotulo: `Traço · ${TRACO_AMEACA[naipe].nome}`,
+          texto: TRACO_AMEACA[naipe].descricao(posto),
         },
         {
-          rotulo: `Recrutar (♥/♦) · ${st.cargas} cargas`,
-          texto: efeitoAliadoTexto(posto, naipe),
+          rotulo: 'Abater · golpe final com qualquer carta',
+          texto: `Ela vira seu Troféu (${st.trofeus} pts) e você compra ${plural(st.saque, 'carta', 'cartas')}.`,
+        },
+        {
+          rotulo: 'Recrutar · golpe final com ♥, ♦ ou Coringa',
+          texto: `Em vez de Troféu, ela vira seu Aliado com ${st.cargas} usos. Na sua vez (1 uso de Aliado por turno, Escudo incluído), gaste 1 uso: ${efeitoDoUsoDoAliado(posto, naipe)}. Na defesa, 1 uso bloqueia ${REGRA.escudoAliado}.`,
         },
       ],
     };
@@ -106,23 +156,23 @@ export function regraDaCarta(card: GameCard): RegraDaCarta {
 
   if (card.kind === 'joker') {
     const estrela = card.rank === 'JOKER_LIGHT';
+    const valor = estrela ? REGRA.valorEstrela : REGRA.valorCaveira;
     return {
-      tipo: estrela ? 'Coringa · ★ Virada Tática' : 'Coringa · 💀 Impacto Crítico',
+      tipo: estrela ? 'Coringa ★ · Virada Tática' : 'Coringa 💀 · Impacto Crítico',
       numeros: [
-        { rotulo: 'Força', valor: String(estrela ? REGRA.valorEstrela : REGRA.valorCaveira) },
-        { rotulo: 'Bloqueio', valor: String(estrela ? REGRA.valorEstrela : REGRA.valorCaveira) },
-        { rotulo: 'Cor', valor: '♠♥' },
+        { rotulo: 'Dano', valor: String(valor) },
+        { rotulo: 'Bloqueio', valor: String(valor) },
       ],
       blocos: [
         {
-          rotulo: 'Efeito imediato',
+          rotulo: 'Ataque',
           texto: estrela
-            ? `Cura +4 PV, compra +2 cartas e reduz o ataque da Ameaça em 3.`
-            : `Explode com força ${REGRA.valorCaveira}, mas causa ${REGRA.recuoCaveira} PV de recuo em quem jogou.`,
+            ? `Causa ${valor} de dano, você cura 4 PV, compra 2 cartas e a Ameaça perde 3 de ataque neste turno.`
+            : `Causa ${valor} de dano, mas você perde ${REGRA.recuoCaveira} PV.`,
         },
         {
-          rotulo: 'Versatilidade total',
-          texto: 'Habilita tanto Abater quanto Recrutar/Dominar ao finalizar uma Ameaça.',
+          rotulo: 'Regras do Coringa',
+          texto: `Jogue sempre sozinho, sem combo. Se este golpe derrotar a Ameaça, você pode recrutá-la como Aliado. Na defesa, bloqueia ${valor}.`,
         },
       ],
     };
@@ -131,22 +181,18 @@ export function regraDaCarta(card: GameCard): RegraDaCarta {
   const carta = cartaAcaoDoMotor(card);
   const naipe = card.suit as Naipe;
   const fn = FUNCAO_DO_NAIPE[naipe];
-  const forca = carta ? valorBloqueioCarta(carta) : 0;
+  const valor = carta ? valorBloqueioCarta(carta) : 0;
   const ehAs = card.rank === 'A';
-  const corRotulo = fn.corTatica === 'preta' ? 'Abater' : 'Recrutar';
 
   return {
-    tipo: `Ação · ${fn.pilar} · Força ${forca}${ehAs ? ` (+${REGRA.bonusAsCombo} combo)` : ''}`,
+    tipo: `Ação · ${fn.pilar} · Valor ${valor}`,
     blocos: [
+      efeitoDeAtaque(naipe, valor),
       {
-        rotulo: `${SIMBOLO[naipe]} ${fn.pilar} · ${corRotulo}`,
-        texto: fn.efeito,
-      },
-      {
-        rotulo: ehAs ? 'Combo de Comando' : 'Bloqueio & Par',
+        rotulo: ehAs ? 'Ás · Combo de Comando' : 'Defesa e Combo',
         texto: ehAs
-          ? `Sozinho vale ${REGRA.valorAsSolo}. Com 1 carta numérica, soma +${REGRA.bonusAsCombo} de poder.`
-          : `Bloqueia ${forca} de dano na defesa. Combine 2–4 cartas de valor ${card.rank} no ataque.`,
+          ? `Sozinho vale ${REGRA.valorAsSolo}. Jogado com 1 carta numérica, soma +${REGRA.bonusAsCombo} a ela (ex.: 7 + Ás = 11). Na defesa, bloqueia ${valor}.`
+          : `Na defesa, descarte para bloquear ${valor} de dano. No ataque, junte 2–4 cartas de valor ${card.rank} (soma tudo) ou 1 Ás (+${REGRA.bonusAsCombo}).`,
       },
     ],
   };
@@ -270,8 +316,8 @@ export function renderCardModalContentHtml(card: GameCard): string {
           <h4>Como funciona nos 3 modos</h4>
           <span class="chip">Carta de Ameaça / Aliado</span>
         </div>
-        <p><strong>Solo & Cooperativo:</strong> entra no centro da mesa como inimigo do Horizonte. Se for abatida com ♠/♣, gera Troféus e Saque; se for finalizada com ♥/♦ (ou Coringa), entra como Aliado no seu lado da mesa!</p>
-        <p><strong>Competitivo PvP:</strong> além de valer pontos de Domínio no final, quando recrutada dispara suas cargas de apoio contra o Horizonte ou direto no seu oponente.</p>
+        <p><strong>Solo & Cooperativo:</strong> entra no centro da mesa como inimigo do Horizonte. Quando o seu golpe zera a Vida dela, você a Abate (com qualquer carta): vira Troféu e você compra cartas. Se esse golpe final tiver ♥, ♦ ou Coringa, você pode Recrutá-la: ela entra como Aliado no seu lado da mesa!</p>
+        <p><strong>Competitivo PvP:</strong> além de valer pontos de Domínio no final, quando recrutada gasta seus usos para ajudar você (Aliados de ♠ podem atirar direto no oponente).</p>
       </div>`
     : `
       <div class="zoom-detail-box">

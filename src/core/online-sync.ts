@@ -1,10 +1,11 @@
 import { Peer, type DataConnection } from 'peerjs';
 import { DEFAULT_THEME_ID } from '../data/index';
 import type { ThemeId } from '../types/card';
-import type { ModoDeJogo, Naipe, Partida } from './partida';
+import type { ModoDeJogo, Naipe, Nivel, Partida } from './partida';
 
 export interface PreparoSala {
   modo: ModoDeJogo;
+  nivel: Nivel;
   jogadores: Array<{ nome: string; classe: Naipe }>;
 }
 

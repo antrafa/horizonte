@@ -1,4 +1,4 @@
-import { CLASSES, FUNCAO_DO_NAIPE, NAIPES, REGRA, SIMBOLO, STATUS_FIGURA } from '../core/partida';
+import { CLASSES, FUNCAO_DO_NAIPE, NAIPES, NIVEIS, REGRA, SIMBOLO, STATUS_FIGURA, TRACO_AMEACA } from '../core/partida';
 import type { ThemeDeck } from '../types/card';
 import { escapeHtml, renderMagicCardHtml } from './card-renderer';
 import { NUANCES_DO_TEMA } from './temas-view';
@@ -10,11 +10,11 @@ const PASSOS = [
   },
   {
     titulo: 'Compre 5 cartas e revele o Horizonte',
-    texto: `Cada jogador começa com ${REGRA.vidaInicial} Pontos de Vida (PV), escolhe sua Especialização de Naipe (+1 de força nesse naipe) e compra ${REGRA.maoInicial} cartas. Vire a primeira Figura no centro da mesa.`,
+    texto: `Cada jogador começa com ${REGRA.vidaInicial} Pontos de Vida (PV) no nível Veterano (${NIVEIS.recruta.vida} no Recruta, ${NIVEIS.lenda.vida} no Lenda), escolhe sua Especialização de Naipe (+1 de força nesse naipe) e compra ${REGRA.maoInicial} cartas. Vire a primeira Figura no centro da mesa: o naipe dela define o seu traço (♠ Feroz, ♥ Regenera, ♦ Blindada, ♣ Imune a armadilhas).`,
   },
   {
     titulo: 'Ative 1 Aliado recrutado (opcional)',
-    texto: 'Se você já recrutou uma Figura para o seu lado da mesa, pode gastar 1 carga dela antes da sua jogada principal (para causar dano, reduzir ataque, comprar cartas ou curar PV).',
+    texto: 'Se você já recrutou uma Figura para o seu lado da mesa, pode gastar 1 uso dela antes da sua jogada principal (para causar dano, reduzir ataque, comprar cartas ou curar PV). É 1 uso de Aliado por turno, contando o Escudo no bloqueio.',
   },
   {
     titulo: 'Jogue 1 carta ou um Combo',
@@ -22,11 +22,11 @@ const PASSOS = [
   },
   {
     titulo: 'Escolha: Abater, Recrutar ou PvP',
-    texto: 'Atire na Ameaça do Horizonte para abatê-la (♠/♣ dão bônus e saque), use uma carta Vermelha (♥/♦/Coringa) no golpe final para Recrutá-la para o seu lado, ou atire direto no rival no modo PvP!',
+    texto: 'Ataque a Ameaça do Horizonte. Se o golpe zerar a Vida dela, você a Abate (vira Troféu, com qualquer carta) ou, se a jogada tiver uma carta Vermelha (♥/♦/Coringa), pode Recrutá-la como Aliado. No modo PvP, você também pode atacar direto um rival.',
   },
   {
     titulo: 'Bloqueio Tático e Reposição',
-    texto: `Se a Ameaça central sobreviver ao seu ataque, ela contra-ataca. Você decide: recebe o dano nos ${REGRA.vidaInicial} PV ou descarta cartas da mão para bloquear pelo valor delas. Depois, compre até ter ${REGRA.maoInicial} cartas.`,
+    texto: `Se a Ameaça central sobreviver ao seu ataque, ela contra-ataca. Você decide: recebe o dano nos seus PV ou descarta cartas da mão para bloquear pelo valor delas. Depois, compre só ${REGRA.compraFimTurno} carta (máximo ${REGRA.maoMaxima} na mão): cada carta gasta no bloqueio faz falta no próximo ataque.`,
   },
 ];
 
@@ -51,7 +51,7 @@ function renderHeroSvg(deck: ThemeDeck): string {
       <text x="280" y="130" text-anchor="middle" font-size="24">👑</text>
       <text x="280" y="168" text-anchor="middle" fill="#18181b" font-size="10.5" font-weight="700">VIDA 20 · ATQ 7</text>
       <rect x="234" y="180" width="92" height="18" rx="4" fill="#fee2e2" />
-      <text x="280" y="192" text-anchor="middle" fill="#991b1b" font-size="9" font-weight="700">♠/♣ ABATER · 25 PTS</text>
+      <text x="280" y="192" text-anchor="middle" fill="#991b1b" font-size="9" font-weight="700">ABATER · 25 PTS</text>
       <rect x="234" y="201" width="92" height="16" rx="4" fill="#fef3c7" />
       <text x="280" y="212" text-anchor="middle" fill="#92400e" font-size="8.5" font-weight="700">♥/♦ RECRUTAR (3×)</text>
 
@@ -59,7 +59,7 @@ function renderHeroSvg(deck: ThemeDeck): string {
       <rect x="44" y="218" width="84" height="110" rx="8" fill="#faf9f5" stroke="#27272a" stroke-width="1.5" transform="rotate(-7 86 273)" />
       <text x="64" y="244" fill="#18181b" font-size="14" font-weight="800" transform="rotate(-7 86 273)">8♠</text>
       <text x="86" y="280" text-anchor="middle" font-size="22" transform="rotate(-7 86 273)">♠</text>
-      <text x="86" y="308" text-anchor="middle" fill="#18181b" font-size="9" font-weight="700" transform="rotate(-7 86 273)">+2 PERFURANTE</text>
+      <text x="86" y="308" text-anchor="middle" fill="#18181b" font-size="9" font-weight="700" transform="rotate(-7 86 273)">+2 DE DANO</text>
 
       <!-- Mão Centro-Esquerda (Combo Ás) -->
       <rect x="122" y="224" width="84" height="110" rx="8" fill="#faf9f5" stroke="#a3201c" stroke-width="1.5" transform="rotate(3 164 279)" />
@@ -72,7 +72,7 @@ function renderHeroSvg(deck: ThemeDeck): string {
       <text x="450" y="242" text-anchor="middle" fill="var(--ok)" font-size="9.5" font-weight="800" letter-spacing="1">ALIADO RECRUTADO</text>
       <text x="450" y="268" text-anchor="middle" fill="var(--ink)" font-size="16" font-weight="800">Q♦ Sentinela</text>
       <text x="450" y="290" text-anchor="middle" fill="var(--ink-2)" font-size="10">Cargas: ● ● (2×)</text>
-      <text x="450" y="310" text-anchor="middle" fill="var(--accent)" font-size="9.5" font-weight="700">+2 cartas por carga</text>
+      <text x="450" y="310" text-anchor="middle" fill="var(--accent)" font-size="9.5" font-weight="700">+2 cartas por uso</text>
     </svg>
   `;
 }
@@ -89,7 +89,7 @@ export function renderQuickstartGuideHtml(deck: ThemeDeck): string {
         <th scope="row" class="suit-${n} big-suit">${SIMBOLO[n]}</th>
         <td><strong>${FUNCAO_DO_NAIPE[n].pilar}</strong><br /><span class="muted">${escapeHtml(deck.suits[n].vocationName)}</span></td>
         <td>${FUNCAO_DO_NAIPE[n].efeito}</td>
-        <td><span class="chip">${FUNCAO_DO_NAIPE[n].corTatica === 'preta' ? 'Abater' : 'Recrutar'}</span></td>
+        <td><span class="chip">${FUNCAO_DO_NAIPE[n].corTatica === 'preta' ? 'Só Abater' : 'Abater ou Recrutar'}</span></td>
       </tr>`,
   ).join('');
 
@@ -166,11 +166,11 @@ export function renderQuickstartGuideHtml(deck: ThemeDeck): string {
       <section class="scene">
         <div class="scene-copy">
           <span class="eyebrow">Setup & Combate · ${escapeHtml(deck.name)}</span>
-          <h3>Dominar (♥/♦) vs. Destruir (♠/♣)</h3>
+          <h3>Abater (qualquer carta) vs. Recrutar (♥/♦)</h3>
           <p>${escapeHtml(nuance.oQueEOHorizonte)}</p>
-          <p><strong>Para Abater (♠/♣):</strong> cause dano até zerar a Vida da Figura. Ela vai para o seu monte de Troféus (10/15/25 pts) e dá saque de cartas extras.</p>
-          <p><strong>Para Recrutar / Dominar (♥/♦ ou Coringa):</strong> se a jogada que zera a Vida da Figura incluir pelo menos uma carta Vermelha (ou Coringa), você escolhe <strong>Recrutar</strong>! Ela entra na sua área com cargas de habilidade (+2/+4/+6) e ainda pode ser usada como escudo de +${REGRA.escudoAliado} no Bloqueio.</p>
-          <p class="muted"><strong>Bloqueio Tático:</strong> sempre que a Ameaça sobrevive e contra-ataca, você escolhe entre receber nos seus ${REGRA.vidaInicial} PV ou descartar cartas da mão pelo valor delas para bloquear.</p>
+          <p><strong>Abater (qualquer carta):</strong> é o resultado padrão. Quando o seu golpe zera a Vida da Figura, ela vai para o seu monte de Troféus (10/15/25 pts) e você compra cartas extras. Não precisa de naipe específico.</p>
+          <p><strong>Recrutar (precisa de ♥, ♦ ou Coringa):</strong> se a jogada que zera a Vida da Figura incluir pelo menos uma carta Vermelha (ou Coringa), você pode escolher <strong>Recrutar</strong> em vez de Abater. Ela vira seu Aliado com alguns <strong>usos</strong> (2 ou 3): em cada turno você pode gastar 1 uso para ativar o poder dela, ou gastar 1 uso como escudo de +${REGRA.escudoAliado} no Bloqueio.</p>
+          <p class="muted"><strong>Bloqueio Tático:</strong> sempre que a Ameaça sobrevive e contra-ataca, você escolhe entre receber nos seus PV ou descartar cartas da mão pelo valor delas para bloquear.</p>
         </div>
         <div class="scene-card">${renderMagicCardHtml(exemploFigura, { interactive: true })}</div>
       </section>
@@ -195,6 +195,7 @@ export function renderQuickstartGuideHtml(deck: ThemeDeck): string {
           <span class="eyebrow">Escala de Poder & Combos</span>
           <h3>Valetes, Damas e Reis (+ Carta de Ação)</h3>
           <p class="lede">Valetes têm ${STATUS_FIGURA.J.vida} PV / ${STATUS_FIGURA.J.ataque} Atq; Damas têm ${STATUS_FIGURA.Q.vida} PV / ${STATUS_FIGURA.Q.ataque} Atq; Reis têm ${STATUS_FIGURA.K.vida} PV / ${STATUS_FIGURA.K.ataque} Atq. Combine 2–4 cartas iguais (ex.: 6♠+6♥) ou qualquer carta com um Ás (+${REGRA.bonusAsCombo}) para explodir o dano!</p>
+          <p class="lede">Cada Figura tem um traço pelo naipe, e a ordem muda a cada partida: ${NAIPES.map((n) => `<strong>${SIMBOLO[n]} ${TRACO_AMEACA[n].nome}</strong> — ${TRACO_AMEACA[n].descricao('J').replace(/\d+/, 'N')}`).join(' · ')} (N cresce de Valete para Rei).</p>
         </header>
         <div class="trio-cards">${[...trio, exemploAcao].map((c) => (c ? renderMagicCardHtml(c, { interactive: true }) : '')).join('')}</div>
         <div class="class-list">${classes}</div>

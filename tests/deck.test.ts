@@ -58,6 +58,25 @@ describe('Catálogo de temas e baralho de 54 cartas (HORIZONTE)', () => {
         expect(c.themeId).toBe(id);
         expect(c.title.trim().length).toBeGreaterThan(0);
         expect(c.flavorText.trim().length).toBeGreaterThan(0);
+
+        const camposMecanicos = [
+          c.figurePassiveOrRule ?? '',
+          c.figureSpecialOrTaboo ?? '',
+          c.topWatcherTrigger ?? '',
+          c.bottomEchoPrompt ?? '',
+          c.bottomEchoEffect ?? '',
+          c.dailyIdea ?? '',
+        ].join(' ');
+
+        expect(camposMecanicos).not.toMatch(
+          /voz alta|por escrito|Tabu na Vida Real|Passiva na Vida Real|Untap|Gatilho de Entrada|Habilita Abater|dano perfurante/i,
+        );
+
+        if (c.kind === 'journey' || c.kind === 'joker') {
+          expect((c.bottomEchoPrompt ?? '').trim().length).toBeGreaterThan(0);
+        } else {
+          expect(c.figureSpecialOrTaboo).toMatch(/Recrutad.*por uso/);
+        }
       }
     }
   });

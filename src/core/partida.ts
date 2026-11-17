@@ -9,6 +9,14 @@
 export type Naipe = 'spades' | 'hearts' | 'diamonds' | 'clubs';
 export type PostoFigura = 'J' | 'Q' | 'K';
 export type ModoDeJogo = 'solo' | 'coop' | 'pvp';
+export type Nivel = 'recruta' | 'veterano' | 'lenda';
+
+/** O nível só muda a vida dos jogadores: o resto da regra é igual em todos. */
+export const NIVEIS: Record<Nivel, { nome: string; vida: number; resumo: string }> = {
+  recruta: { nome: 'Recruta', vida: 20, resumo: 'Para aprender: mais folga para errar.' },
+  veterano: { nome: 'Veterano', vida: 15, resumo: 'A regra padrão.' },
+  lenda: { nome: 'Lenda', vida: 12, resumo: 'Cada bloqueio conta.' },
+};
 
 export interface CartaNumerica {
   valor: number; // 1 (Ás) a 10
@@ -67,10 +75,11 @@ export interface Partida {
 }
 
 export const REGRA = {
-  vidaInicial: 20,
-  vidaMaxima: 20,
+  vidaInicial: 15,
+  vidaMaxima: 15,
   maoInicial: 5,
-  maoMaxima: 7,
+  maoMaxima: 6,
+  compraFimTurno: 1,
   maxAliados: 2,
   maxPessoas: 4,
   bonusEspadas: 2,
@@ -94,11 +103,30 @@ export const STATUS_FIGURA: Record<
     cargas: number;
     bonusAliado: number;
     saque: number;
+    /** Traço ♠ Feroz: ataque extra. */
+    ferocidade: number;
+    /** Traço ♥ Regenera: PV recuperados no fim de cada turno em que sobrevive. */
+    regeneracao: number;
+    /** Traço ♦ Blindada: dano descontado de cada golpe que recebe. */
+    blindagem: number;
+    /** No Cooperativo, PV extras por jogador além do primeiro (o grupo soma dano, mas a Ameaça só ataca quem está jogando). */
+    vidaPorJogadorExtra: number;
   }
 > = {
-  J: { rotulo: 'Valete', vida: 10, ataque: 3, trofeus: 10, cargas: 2, bonusAliado: 2, saque: 1 },
-  Q: { rotulo: 'Dama', vida: 14, ataque: 5, trofeus: 15, cargas: 2, bonusAliado: 4, saque: 2 },
-  K: { rotulo: 'Rei', vida: 20, ataque: 7, trofeus: 25, cargas: 3, bonusAliado: 6, saque: 2 },
+  J: { rotulo: 'Valete', vida: 12, ataque: 4, trofeus: 10, cargas: 2, bonusAliado: 2, saque: 1, ferocidade: 1, regeneracao: 2, blindagem: 1, vidaPorJogadorExtra: 2 },
+  Q: { rotulo: 'Dama', vida: 18, ataque: 6, trofeus: 15, cargas: 2, bonusAliado: 4, saque: 2, ferocidade: 2, regeneracao: 3, blindagem: 2, vidaPorJogadorExtra: 3 },
+  K: { rotulo: 'Rei', vida: 26, ataque: 8, trofeus: 25, cargas: 3, bonusAliado: 6, saque: 2, ferocidade: 3, regeneracao: 4, blindagem: 3, vidaPorJogadorExtra: 4 },
+};
+
+/**
+ * Cada Ameaça tem um traço dado pelo naipe. Como a ordem das Figuras muda a cada partida,
+ * a sequência de problemas a resolver também muda — é a principal fonte de variedade do jogo.
+ */
+export const TRACO_AMEACA: Record<Naipe, { nome: string; descricao: (posto: PostoFigura) => string }> = {
+  spades: { nome: 'Feroz', descricao: (p) => `Ataca com +${STATUS_FIGURA[p].ferocidade} de força (já somado ao Ataque).` },
+  hearts: { nome: 'Regenera', descricao: (p) => `Recupera ${STATUS_FIGURA[p].regeneracao} PV no fim de cada turno em que sobreviver.` },
+  diamonds: { nome: 'Blindada', descricao: (p) => `Cada golpe que ela recebe causa ${STATUS_FIGURA[p].blindagem} de dano a menos.` },
+  clubs: { nome: 'Imune a armadilhas', descricao: () => 'Nada reduz o ataque dela: ♣, ★ e Aliados de ♣ não funcionam.' },
 };
 
 export const NAIPES: Naipe[] = ['spades', 'hearts', 'diamonds', 'clubs'];
@@ -115,25 +143,25 @@ export const FUNCAO_DO_NAIPE: Record<
 > = {
   spades: {
     pilar: 'Chumbo & Lâmina',
-    efeito: `+${REGRA.bonusEspadas} de dano perfurante. Habilita Abater.`,
+    efeito: `Causa +${REGRA.bonusEspadas} de dano extra (1 vez por jogada).`,
     corTatica: 'preta',
     papelAliado: 'Causa dano direto na Ameaça ou em um rival.',
   },
   clubs: {
     pilar: 'Sucata & Armadilha',
-    efeito: `Reduz o ataque da Ameaça na metade do valor (ou força descarte no PvP com golpe ${REGRA.minGolpeDescartePvp}+). Habilita Abater.`,
+    efeito: `A Ameaça perde ataque igual à metade do valor jogado, só neste turno. No PvP, um golpe de ${REGRA.minGolpeDescartePvp}+ de dano faz o rival descartar 1 carta.`,
     corTatica: 'preta',
     papelAliado: 'Reduz o ataque da Ameaça neste turno.',
   },
   diamonds: {
     pilar: 'Tecnologia & Combustível',
-    efeito: 'Compra +1 carta (ou +2 se valor base ≥ 7). Habilita Recrutar/Dominar.',
+    efeito: 'Você compra 1 carta (2 se o valor jogado for 7 ou mais). Pode recrutar a Ameaça no golpe final.',
     corTatica: 'vermelha',
     papelAliado: 'Compra cartas extras de suprimento.',
   },
   hearts: {
     pilar: 'Suprimento & Carisma',
-    efeito: 'Cura PV igual à metade do valor arredondada para cima. Habilita Recrutar/Dominar.',
+    efeito: 'Você cura PV igual à metade do valor jogado (arredonde para cima). Pode recrutar a Ameaça no golpe final.',
     corTatica: 'vermelha',
     papelAliado: 'Restaura PV (no Coop, cura quem está mais ferido).',
   },
@@ -172,13 +200,13 @@ export interface PreviaJogada {
   cura: number;
   danoRecuo: number;
   forcarDescartePvp: number;
-  habilitaAbater: boolean;
   habilitaRecrutar: boolean;
   naipes: Naipe[];
 }
 
 export interface OpcoesCriarPartida {
   modo?: ModoDeJogo;
+  nivel?: Nivel;
   jogadores: Array<{ nome: string; classe: Naipe }>;
   baralhoCompra?: CartaAcao[];
   horizonteDeck?: FiguraHorizonte[];
@@ -207,14 +235,13 @@ export function valorBloqueioCarta(c: CartaAcao): number {
   return c.valor === 1 ? REGRA.valorAsSolo : c.valor;
 }
 
+function estaEmJogo(j: Jogador | undefined): boolean {
+  return !!j && !j.eliminado && j.vida > 0;
+}
+
 function ehVermelha(c: CartaAcao): boolean {
   if (ehCoringa(c)) return true;
   return c.naipe === 'hearts' || c.naipe === 'diamonds';
-}
-
-function ehPreta(c: CartaAcao): boolean {
-  if (ehCoringa(c)) return true;
-  return c.naipe === 'spades' || c.naipe === 'clubs';
 }
 
 function shuffle<T>(arr: T[]): T[] {
@@ -245,20 +272,42 @@ export function criarHorizonteDeck(embaralhar = true): FiguraHorizonte[] {
   return [...shuffle(valetes), ...shuffle(damas), ...shuffle(reis)];
 }
 
-function instanciarAmeaca(figura: FiguraHorizonte): AmeacaAtiva {
+function vidaDaAmeaca(posto: PostoFigura, modo: ModoDeJogo, totalJogadores: number): number {
+  const st = STATUS_FIGURA[posto];
+  const extras = modo === 'coop' ? totalJogadores - 1 : 0;
+  return st.vida + extras * st.vidaPorJogadorExtra;
+}
+
+function instanciarAmeaca(figura: FiguraHorizonte, modo: ModoDeJogo, totalJogadores: number): AmeacaAtiva {
   const st = STATUS_FIGURA[figura.posto];
+  const vida = vidaDaAmeaca(figura.posto, modo, totalJogadores);
   return {
     figura,
-    vidaAtual: st.vida,
-    vidaMax: st.vida,
-    ataqueBase: st.ataque,
+    vidaAtual: vida,
+    vidaMax: vida,
+    ataqueBase: st.ataque + (figura.naipe === 'spades' ? st.ferocidade : 0),
     reducaoAtaqueTurno: 0,
   };
 }
 
 export function ataqueEfetivoAmeaca(ameaca: AmeacaAtiva | null): number {
   if (!ameaca) return 0;
+  if (ameaca.figura.naipe === 'clubs') return ameaca.ataqueBase;
   return Math.max(0, ameaca.ataqueBase - ameaca.reducaoAtaqueTurno);
+}
+
+/** Dano que um golpe realmente tira da Ameaça, descontada a blindagem (♦). */
+export function danoNaAmeaca(ameaca: AmeacaAtiva, dano: number): number {
+  const blindagem = ameaca.figura.naipe === 'diamonds' ? STATUS_FIGURA[ameaca.figura.posto].blindagem : 0;
+  return Math.max(0, dano - blindagem);
+}
+
+function regenerarNoFimDoTurno(ameaca: AmeacaAtiva, diario: string[]): AmeacaAtiva {
+  const proxima = { ...ameaca, reducaoAtaqueTurno: 0 };
+  if (ameaca.figura.naipe !== 'hearts' || ameaca.vidaAtual >= ameaca.vidaMax) return proxima;
+  proxima.vidaAtual = Math.min(ameaca.vidaMax, ameaca.vidaAtual + STATUS_FIGURA[ameaca.figura.posto].regeneracao);
+  diario.push(`${codigoFigura(ameaca.figura)} se regenera (+${proxima.vidaAtual - ameaca.vidaAtual} PV).`);
+  return proxima;
 }
 
 // ---------- Criação de Partida ----------
@@ -270,6 +319,7 @@ export function criarPartida(opcoes: OpcoesCriarPartida): Partida {
 
   let baralhoCompra = opcoes.baralhoCompra ? [...opcoes.baralhoCompra] : criarBaralhoAcao(embaralhar);
   const horizonteDeck = opcoes.horizonteDeck ? [...opcoes.horizonteDeck] : criarHorizonteDeck(embaralhar);
+  const vidaDoNivel = opcoes.nivel ? NIVEIS[opcoes.nivel].vida : REGRA.vidaInicial;
 
   const jogadores: Jogador[] = opcoes.jogadores.slice(0, totalPessoas).map((j, idx) => {
     let mao: CartaAcao[];
@@ -282,8 +332,8 @@ export function criarPartida(opcoes: OpcoesCriarPartida): Partida {
     return {
       nome: j.nome.trim() || `Jogador ${idx + 1}`,
       classe: j.classe,
-      vida: REGRA.vidaInicial,
-      vidaMax: REGRA.vidaMaxima,
+      vida: vidaDoNivel,
+      vidaMax: vidaDoNivel,
       mao,
       aliados: [],
       trofeus: [],
@@ -293,7 +343,7 @@ export function criarPartida(opcoes: OpcoesCriarPartida): Partida {
   });
 
   const primeiraFigura = horizonteDeck.shift() ?? null;
-  const ameacaAtiva = primeiraFigura ? instanciarAmeaca(primeiraFigura) : null;
+  const ameacaAtiva = primeiraFigura ? instanciarAmeaca(primeiraFigura, modo, jogadores.length) : null;
   const modoRotulo = modo === 'solo' ? 'Solo' : modo === 'coop' ? 'Cooperativo' : 'Competitivo PvP';
   const diario: string[] = [
     `Partida ${modoRotulo} iniciada com ${jogadores.map((j) => `${j.nome} (${SIMBOLO[j.classe]} ${CLASSES[j.classe].nome})`).join(', ')}.`,
@@ -337,7 +387,6 @@ export function simularJogada(partida: Partida, quem: number, indicesMao: number
     cura: 0,
     danoRecuo: 0,
     forcarDescartePvp: 0,
-    habilitaAbater: false,
     habilitaRecrutar: false,
     naipes: [],
   });
@@ -377,15 +426,9 @@ export function simularJogada(partida: Partida, quem: number, indicesMao: number
       tipoCombo = `${nomes[numericas.length]} de ${v === 1 ? 'Ases' : v}`;
       valorBase = v === 1 ? REGRA.valorAsSolo + (numericas.length - 1) * REGRA.bonusAsCombo : v * numericas.length;
     } else if (numericas.length === 2 && numericas.some((c) => c.valor === 1)) {
-      const asCount = numericas.filter((c) => c.valor === 1).length;
-      if (asCount === 1) {
-        const outra = numericas.find((c) => c.valor !== 1)!;
-        tipoCombo = `Combo de Comando (${outra.valor} + Ás)`;
-        valorBase = outra.valor + REGRA.bonusAsCombo;
-      } else {
-        tipoCombo = 'Par de Ases';
-        valorBase = REGRA.valorAsSolo + REGRA.bonusAsCombo;
-      }
+      const outra = numericas.find((c) => c.valor !== 1)!;
+      tipoCombo = `Combo de Comando (${outra.valor} + Ás)`;
+      valorBase = outra.valor + REGRA.bonusAsCombo;
     } else {
       return invalida('Combine 2–4 cartas de mesmo valor ou 1 carta numérica + 1 Ás.');
     }
@@ -419,7 +462,6 @@ export function simularJogada(partida: Partida, quem: number, indicesMao: number
   }
 
   const forcarDescartePvp = naipesSet.has('clubs') && poderTotal >= REGRA.minGolpeDescartePvp ? 1 : 0;
-  const habilitaAbater = cartas.some(ehPreta);
   const habilitaRecrutar = cartas.some(ehVermelha);
 
   return {
@@ -434,7 +476,6 @@ export function simularJogada(partida: Partida, quem: number, indicesMao: number
     cura,
     danoRecuo,
     forcarDescartePvp,
-    habilitaAbater,
     habilitaRecrutar,
     naipes,
   };
@@ -488,6 +529,20 @@ function proximoJogadorVivo(jogadores: Jogador[], atual: number): { indice: numb
     }
   }
   return { indice: atual, virouRodada: false };
+}
+
+function indiceAlvoCuraCoop(jogadores: Jogador[], quem: number): number {
+  let alvoIdx = quem;
+  let menorVida = jogadores[quem]?.vida ?? Infinity;
+  for (let offset = 1; offset <= jogadores.length; offset++) {
+    const idx = (quem + offset) % jogadores.length;
+    const p = jogadores[idx];
+    if (!p.eliminado && p.vida < menorVida) {
+      menorVida = p.vida;
+      alvoIdx = idx;
+    }
+  }
+  return alvoIdx;
 }
 
 export function pontosDeDominio(jogador: Jogador): number {
@@ -549,7 +604,7 @@ function verificarEliminacoesEAvancar(
     const caido = jogadores.find((j) => j.eliminado)!;
     const motivoFim =
       partida.modo === 'solo'
-        ? `${caido.nome} caiu sem PV diante da Terra Devastada.`
+        ? `${caido.nome} caiu sem PV diante do Horizonte.`
         : `${caido.nome} não resistiu aos ferimentos. No modo Cooperativo, o grupo cai junto.`;
     return {
       ...partida,
@@ -603,19 +658,19 @@ function verificarEliminacoesEAvancar(
     }
   }
 
-  // Repõe a mão do jogador atual até maoInicial (se vivo) e passa o turno
+  // Compra fixa de fim de turno: cartas gastas no bloqueio fazem falta no próximo ataque
   let compra = baralhoCompra;
   let desc = descarte;
   const jogadoresComCompra = jogadores.map((j, idx) => {
-    if (idx !== quem || j.eliminado || j.mao.length >= REGRA.maoInicial) return j;
-    const res = comprarCartas(compra, desc, REGRA.maoInicial - j.mao.length, REGRA.maoInicial, j.mao);
+    if (idx !== quem || j.eliminado) return j;
+    const res = comprarCartas(compra, desc, REGRA.compraFimTurno, REGRA.maoMaxima, j.mao);
     compra = res.baralhoCompra;
     desc = res.descarte;
     return { ...j, mao: res.mao };
   });
 
   const prox = proximoJogadorVivo(jogadoresComCompra, quem);
-  const proxAmeaca = ameacaAtiva ? { ...ameacaAtiva, reducaoAtaqueTurno: 0 } : null;
+  const proxAmeaca = ameacaAtiva ? regenerarNoFimDoTurno(ameacaAtiva, diario) : null;
 
   return {
     ...partida,
@@ -632,6 +687,31 @@ function verificarEliminacoesEAvancar(
   };
 }
 
+type SeguirAposRevelar = (
+  partida: Partida,
+  jogadores: Jogador[],
+  baralhoCompra: CartaAcao[],
+  descarte: CartaAcao[],
+  novaAmeaca: AmeacaAtiva,
+  quem: number,
+  diario: string[],
+) => Partida;
+
+/** Depois de um ataque da mão, a nova Ameaça entra e o turno passa. */
+const encerrarTurno: SeguirAposRevelar = verificarEliminacoesEAvancar;
+
+/** Depois de um disparo de Aliado, a nova Ameaça entra e o jogador ainda faz a ação principal. */
+const continuarTurno: SeguirAposRevelar = (partida, jogadores, baralhoCompra, descarte, novaAmeaca, _quem, diario) => ({
+  ...partida,
+  jogadores,
+  baralhoCompra,
+  descarte,
+  ameacaAtiva: novaAmeaca,
+  fase: 'acao',
+  aliadoUsadoNoTurno: true,
+  diario,
+});
+
 function resolverDerrotaDeAmeaca(
   partida: Partida,
   jogadoresAtualizados: Jogador[],
@@ -642,6 +722,7 @@ function resolverDerrotaDeAmeaca(
   quem: number,
   recrutar: boolean,
   diario: string[],
+  seguir: SeguirAposRevelar = encerrarTurno,
 ): Partida {
   const stats = STATUS_FIGURA[figuraDerrotada.posto];
   let compra = baralhoCompra;
@@ -649,7 +730,7 @@ function resolverDerrotaDeAmeaca(
   const jogadores = [...jogadoresAtualizados];
   const j = { ...jogadores[quem], aliados: [...jogadores[quem].aliados], trofeus: [...jogadores[quem].trofeus] };
 
-  if (recrutar) {
+  if (recrutar && j.vida > 0) {
     if (j.aliados.length >= REGRA.maxAliados) {
       const dispensado = j.aliados.shift()!;
       const ptsDisp = Math.floor(STATUS_FIGURA[dispensado.figura.posto].trofeus / 2);
@@ -659,7 +740,7 @@ function resolverDerrotaDeAmeaca(
     }
     j.aliados.push({ figura: figuraDerrotada, cargas: stats.cargas, maxCargas: stats.cargas });
     diario.push(`${j.nome} recrutou ${codigoFigura(figuraDerrotada)} (${stats.cargas} cargas)!`);
-  } else {
+  } else if (j.vida > 0) {
     j.trofeus.push(figuraDerrotada);
     j.pontosTrofeu += stats.trofeus;
     const saque = comprarCartas(compra, desc, stats.saque, REGRA.maoMaxima, j.mao);
@@ -667,17 +748,27 @@ function resolverDerrotaDeAmeaca(
     desc = saque.descarte;
     j.mao = saque.mao;
     diario.push(`${j.nome} abateu ${codigoFigura(figuraDerrotada)} (+${stats.trofeus} pts, saque +${saque.compradas}).`);
+  } else {
+    j.trofeus.push(figuraDerrotada);
+    j.pontosTrofeu += stats.trofeus;
+    diario.push(`${j.nome} abateu ${codigoFigura(figuraDerrotada)} no sacrifício final (+${stats.trofeus} pts).`);
   }
 
   jogadores[quem] = j;
+
+  // Em Solo/Coop, se quem jogou morreu pelo recuo (💀), a derrota do grupo prevalece mesmo na última Ameaça
+  if (jogadores.some((p) => p.vida <= 0) && (partida.modo === 'solo' || partida.modo === 'coop')) {
+    return verificarEliminacoesEAvancar(partida, jogadores, compra, desc, null, quem, diario);
+  }
 
   const novoHorizonte = [...horizonteDeckAtual];
   const proximaFigura = novoHorizonte.shift() ?? null;
 
   if (!proximaFigura) {
+    const jogadoresFinais = jogadores.map((p) => (p.vida <= 0 ? { ...p, vida: 0, eliminado: true } : p));
     const baseFinal: Partida = {
       ...partida,
-      jogadores,
+      jogadores: jogadoresFinais,
       baralhoCompra: compra,
       descarte: desc,
       horizonteDeck: [],
@@ -686,10 +777,10 @@ function resolverDerrotaDeAmeaca(
     return finalizarPorHorizonteLimpo(baseFinal, diario);
   }
 
-  const novaAmeaca = instanciarAmeaca(proximaFigura);
+  const novaAmeaca = instanciarAmeaca(proximaFigura, partida.modo, partida.jogadores.length);
   diario.push(`Nova Ameaça no Horizonte: ${codigoFigura(proximaFigura)} (Vida ${novaAmeaca.vidaMax} · Ataque ${novaAmeaca.ataqueBase}).`);
 
-  return verificarEliminacoesEAvancar(
+  return seguir(
     { ...partida, horizonteDeck: novoHorizonte },
     jogadores,
     compra,
@@ -719,11 +810,11 @@ export function agir(partida: Partida, acao: Acao): Partida {
     if (ehContraRival) {
       if (partida.modo !== 'pvp') return partida;
       const rIdx = (acao.alvo as { rival: number }).rival;
-      if (rIdx === acao.quem || !partida.jogadores[rIdx] || partida.jogadores[rIdx].eliminado) return partida;
+      if (rIdx === acao.quem || !estaEmJogo(partida.jogadores[rIdx])) return partida;
     } else {
       if (!partida.ameacaAtiva) return partida;
       if (acao.alvo === 'horizonte_recrutar') {
-        if (!previa.habilitaRecrutar || previa.poderTotal < partida.ameacaAtiva.vidaAtual) {
+        if (!previa.habilitaRecrutar || danoNaAmeaca(partida.ameacaAtiva, previa.poderTotal) < partida.ameacaAtiva.vidaAtual) {
           return partida;
         }
       }
@@ -739,30 +830,17 @@ export function agir(partida: Partida, acao: Acao): Partida {
 
     // Aplica cura (no Coop, cura o jogador vivo mais ferido; caso contrário, o próprio jogador)
     if (previa.cura > 0) {
-      if (partida.modo === 'coop') {
-        let alvoCuraIdx = acao.quem;
-        let menorVida = j.vida;
-        jogadores.forEach((p, idx) => {
-          const v = idx === acao.quem ? j.vida : p.vida;
-          if (!p.eliminado && v < menorVida) {
-            menorVida = v;
-            alvoCuraIdx = idx;
-          }
-        });
-        if (alvoCuraIdx === acao.quem) {
-          const antes = j.vida;
-          j.vida = Math.min(j.vidaMax, j.vida + previa.cura);
-          if (j.vida > antes) diario.push(`${j.nome} recuperou +${j.vida - antes} PV.`);
-        } else {
-          const aliado = jogadores[alvoCuraIdx];
-          const antes = aliado.vida;
-          aliado.vida = Math.min(aliado.vidaMax, aliado.vida + previa.cura);
-          if (aliado.vida > antes) diario.push(`${j.nome} curou ${aliado.nome} (+${aliado.vida - antes} PV).`);
-        }
-      } else {
+      jogadores[acao.quem] = j;
+      const alvoCuraIdx = partida.modo === 'coop' ? indiceAlvoCuraCoop(jogadores, acao.quem) : acao.quem;
+      if (alvoCuraIdx === acao.quem) {
         const antes = j.vida;
         j.vida = Math.min(j.vidaMax, j.vida + previa.cura);
         if (j.vida > antes) diario.push(`${j.nome} recuperou +${j.vida - antes} PV.`);
+      } else {
+        const aliado = jogadores[alvoCuraIdx];
+        const antes = aliado.vida;
+        aliado.vida = Math.min(aliado.vidaMax, aliado.vida + previa.cura);
+        if (aliado.vida > antes) diario.push(`${j.nome} curou ${aliado.nome} (+${aliado.vida - antes} PV).`);
       }
     }
 
@@ -778,7 +856,7 @@ export function agir(partida: Partida, acao: Acao): Partida {
     // Aplica recuo do Coringa Escuro 💀
     if (previa.danoRecuo > 0) {
       j.vida = Math.max(0, j.vida - previa.danoRecuo);
-      diario.push(`${j.nome} sofreu ${previa.danoRecuo} de radiação da Tempestade (💀).`);
+      diario.push(`${j.nome} sofreu ${previa.danoRecuo} de recuo do Coringa Escuro (💀).`);
     }
 
     jogadores[acao.quem] = j;
@@ -792,20 +870,29 @@ export function agir(partida: Partida, acao: Acao): Partida {
       rival.vida = Math.max(0, rival.vida - previa.poderTotal);
       let msgDescarte = '';
       if (previa.forcarDescartePvp > 0 && rival.mao.length > 0) {
-        const descartada = rival.mao.pop()!;
+        const [descartada] = rival.mao.splice(Math.floor(Math.random() * rival.mao.length), 1);
         desc = [...desc, descartada];
         msgDescarte = ` e descartou ${codigoCarta(descartada)}`;
       }
       jogadores[rIdx] = rival;
       diario.push(`${j.nome} jogou [${nomesCartas}] (${previa.tipoCombo}) em ${rival.nome}: ${previa.poderTotal} de dano${msgDescarte}.`);
 
+      // Coringa Claro (★) mantém redução de ataque da Ameaça mesmo ao mirar rival; ♣ só reduz ao mirar a Ameaça
+      const jogouEstrela = removidos.some((c) => ehCoringa(c) && c.coringa === 'estrela');
+      const ameaca =
+        partida.ameacaAtiva && jogouEstrela
+          ? {
+              ...partida.ameacaAtiva,
+              reducaoAtaqueTurno: partida.ameacaAtiva.reducaoAtaqueTurno + previa.reducaoAtaque,
+            }
+          : partida.ameacaAtiva;
+
       // Se jogador atual morreu de recuo ou rival caiu e só sobrou 1
       if (j.vida <= 0 || jogadores.filter((p) => p.vida > 0 && !p.eliminado).length <= 1) {
-        return verificarEliminacoesEAvancar(partida, jogadores, compra, desc, partida.ameacaAtiva, acao.quem, diario);
+        return verificarEliminacoesEAvancar(partida, jogadores, compra, desc, ameaca, acao.quem, diario);
       }
 
       // Se a Ameaça do Horizonte ainda está ativa, ela contra-ataca o jogador da vez
-      const ameaca = partida.ameacaAtiva;
       const danoContra = ataqueEfetivoAmeaca(ameaca);
       if (ameaca && danoContra > 0) {
         diario.push(`${codigoFigura(ameaca.figura)} contra-ataca ${j.nome} com ${danoContra} de dano!`);
@@ -814,6 +901,7 @@ export function agir(partida: Partida, acao: Acao): Partida {
           jogadores,
           baralhoCompra: compra,
           descarte: desc,
+          ameacaAtiva: ameaca,
           fase: 'bloqueio',
           danoPendente: danoContra,
           diario,
@@ -826,14 +914,11 @@ export function agir(partida: Partida, acao: Acao): Partida {
     // Caso 2: Jogada contra o Horizonte
     const ameaca = { ...partida.ameacaAtiva! };
     ameaca.reducaoAtaqueTurno += previa.reducaoAtaque;
-    ameaca.vidaAtual = Math.max(0, ameaca.vidaAtual - previa.poderTotal);
+    const danoCausado = danoNaAmeaca(ameaca, previa.poderTotal);
+    ameaca.vidaAtual = Math.max(0, ameaca.vidaAtual - danoCausado);
     diario.push(
-      `${j.nome} usou [${nomesCartas}] (${previa.tipoCombo}) contra ${codigoFigura(ameaca.figura)}: ${previa.poderTotal} de dano${previa.reducaoAtaque > 0 ? ` (-${previa.reducaoAtaque} Atq)` : ''}.`,
+      `${j.nome} usou [${nomesCartas}] (${previa.tipoCombo}) contra ${codigoFigura(ameaca.figura)}: ${danoCausado} de dano${previa.reducaoAtaque > 0 ? ` (-${previa.reducaoAtaque} Atq)` : ''}.`,
     );
-
-    if (j.vida <= 0) {
-      return verificarEliminacoesEAvancar(partida, jogadores, compra, desc, ameaca, acao.quem, diario);
-    }
 
     if (ameaca.vidaAtual <= 0) {
       return resolverDerrotaDeAmeaca(
@@ -844,9 +929,13 @@ export function agir(partida: Partida, acao: Acao): Partida {
         partida.horizonteDeck,
         ameaca.figura,
         acao.quem,
-        acao.alvo === 'horizonte_recrutar',
+        j.vida > 0 && acao.alvo === 'horizonte_recrutar',
         diario,
       );
+    }
+
+    if (j.vida <= 0) {
+      return verificarEliminacoesEAvancar(partida, jogadores, compra, desc, ameaca, acao.quem, diario);
     }
 
     const danoContra = ataqueEfetivoAmeaca(ameaca);
@@ -894,12 +983,13 @@ export function agir(partida: Partida, acao: Acao): Partida {
       if (acao.alvoRival !== undefined) {
         if (partida.modo !== 'pvp' || acao.alvoRival === acao.quem) return partida;
         const rival = jogadores[acao.alvoRival];
-        if (!rival || rival.eliminado) return partida;
+        if (!estaEmJogo(rival)) return partida;
         rival.vida = Math.max(0, rival.vida - stats.bonusAliado);
         diario.push(`Aliado ${codigoFigura(aliado.figura)} de ${j.nome} disparou em ${rival.nome}: ${stats.bonusAliado} de dano!`);
       } else if (ameaca) {
-        ameaca.vidaAtual = Math.max(0, ameaca.vidaAtual - stats.bonusAliado);
-        diario.push(`Aliado ${codigoFigura(aliado.figura)} de ${j.nome} causou ${stats.bonusAliado} de dano em ${codigoFigura(ameaca.figura)}!`);
+        const danoCausado = danoNaAmeaca(ameaca, stats.bonusAliado);
+        ameaca.vidaAtual = Math.max(0, ameaca.vidaAtual - danoCausado);
+        diario.push(`Aliado ${codigoFigura(aliado.figura)} de ${j.nome} causou ${danoCausado} de dano em ${codigoFigura(ameaca.figura)}!`);
       }
     } else if (aliado.figura.naipe === 'clubs') {
       if (!ameaca) return partida;
@@ -913,13 +1003,8 @@ export function agir(partida: Partida, acao: Acao): Partida {
       j.mao = res.mao;
       diario.push(`Aliado ${codigoFigura(aliado.figura)} de ${j.nome} garantiu +${res.compradas} carta(s).`);
     } else if (aliado.figura.naipe === 'hearts') {
-      let alvoCura = j;
-      if (partida.modo === 'coop') {
-        const maisFerido = jogadores
-          .filter((p) => !p.eliminado)
-          .sort((x, y) => x.vida - y.vida)[0];
-        if (maisFerido) alvoCura = maisFerido;
-      }
+      const alvoIdx = partida.modo === 'coop' ? indiceAlvoCuraCoop(jogadores, acao.quem) : acao.quem;
+      const alvoCura = jogadores[alvoIdx];
       const antes = alvoCura.vida;
       alvoCura.vida = Math.min(alvoCura.vidaMax, alvoCura.vida + stats.bonusAliado);
       diario.push(`Aliado ${codigoFigura(aliado.figura)} restaurou +${alvoCura.vida - antes} PV em ${alvoCura.nome}.`);
@@ -950,6 +1035,7 @@ export function agir(partida: Partida, acao: Acao): Partida {
         acao.quem,
         false,
         diario,
+        continuarTurno,
       );
     }
 
@@ -987,6 +1073,7 @@ export function agir(partida: Partida, acao: Acao): Partida {
     const diario = [...partida.diario];
 
     if (acao.usarAliadoEscudo !== undefined) {
+      if (partida.aliadoUsadoNoTurno) return partida;
       const a = j.aliados[acao.usarAliadoEscudo];
       if (!a || a.cargas <= 0) return partida;
       a.cargas -= 1;

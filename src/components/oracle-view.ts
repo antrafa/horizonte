@@ -16,7 +16,7 @@ export function renderOracleGuideHtml(deck: ThemeDeck): string {
           <th scope="row" class="num"><button type="button" class="btn-ghost btn-sm" data-zoom-card-id="${escapeHtml(card.id)}">${escapeHtml(card.playingCardCode)}</button></th>
           <td><strong>${escapeHtml(card.title)}</strong><br /><span class="muted">${escapeHtml(card.artSubtitle)}</span></td>
           <td class="num">${st.vida} PV / ${st.ataque} Atq</td>
-          <td class="num">${st.trofeus} pts (Saque +${st.saque})</td>
+          <td class="num">${st.trofeus} pts (+${st.saque} carta${st.saque === 1 ? '' : 's'})</td>
           <td>${escapeHtml(card.figureSpecialOrTaboo ?? FUNCAO_DO_NAIPE[naipe].papelAliado)}</td>
         </tr>`;
     }),
@@ -66,8 +66,10 @@ export function renderOracleGuideHtml(deck: ThemeDeck): string {
             <dt>Mão & Vida</dt><dd>${REGRA.vidaInicial} PV iniciais · compra ${REGRA.maoInicial} cartas (máximo ${REGRA.maoMaxima}).</dd>
             <dt>Combos</dt><dd>1 carta · OU 2–4 cartas iguais (Par/Trinca/Quadra) · OU 1 numérica + Ás (+${REGRA.bonusAsCombo}).</dd>
             <dt>Ás (A)</dt><dd>Sozinho vale ${REGRA.valorAsSolo} (de poder ou bloqueio). Em combo com outra carta adiciona +${REGRA.bonusAsCombo}.</dd>
-            <dt>Recrutar (♥/♦)</dt><dd>Se o golpe final zerar a Ameaça e incluir ♥, ♦ ou Coringa, ela entra como Aliado (máx. ${REGRA.maxAliados}).</dd>
-            <dt>Bloqueio</dt><dd>Descarte cartas para abater o valor delas do dano recebido, ou gaste 1 carga de Aliado para bloquear ${REGRA.escudoAliado}.</dd>
+            <dt>Abater</dt><dd>Derrotar a Ameaça e guardá-la como Troféu (pontos) + comprar cartas. Acontece com qualquer carta: é o padrão quando o seu golpe zera a Vida dela.</dd>
+            <dt>Recrutar (♥/♦)</dt><dd>Alternativa ao Abater: se o golpe final zerar a Ameaça e incluir ♥, ♦ ou Coringa, você pode trazê-la como Aliado (máx. ${REGRA.maxAliados}).</dd>
+            <dt>Usos do Aliado</dt><dd>Cada Aliado chega com 2 ou 3 usos. Na sua vez, gaste 1 uso para ativar o poder dele — no máximo 1 uso de Aliado por turno, contando o Escudo. Sem usos, ele vira Troféu valendo metade dos pontos.</dd>
+            <dt>Bloqueio</dt><dd>Quando a Ameaça sobrevive, ela ataca você. Descarte cartas da mão para reduzir o dano pelo valor delas, ou gaste 1 uso de Aliado para bloquear ${REGRA.escudoAliado} (se ainda não usou Aliado no turno). No fim do turno, compre ${REGRA.compraFimTurno} carta.</dd>
           </dl>
 
           <h3 class="spaced">Especializações de Naipe</h3>

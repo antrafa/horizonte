@@ -7,9 +7,14 @@ import {
   FUNCAO_DO_NAIPE,
   linhaDeStatus,
   type ModoDeJogo,
+  NIVEIS,
+  type Nivel,
+  danoNaAmeaca,
+  TRACO_AMEACA,
   NAIPES,
   type Naipe,
   type Partida,
+  type PostoFigura,
   pontosDeDominio,
   REGRA,
   SIMBOLO,
@@ -28,6 +33,7 @@ export type PreparacaoMesa = PreparoSala;
 export function preparacaoPadrao(): PreparacaoMesa {
   return {
     modo: 'solo',
+    nivel: 'veterano',
     jogadores: [{ nome: 'Sobrevivente 1', classe: 'spades' }],
   };
 }
@@ -153,7 +159,7 @@ function renderPreparacao(
       <header class="section-head">
         <span class="eyebrow">Preparar Mesa · ${escapeHtml(deck.name)}</span>
         <h2>Escolha o modo e os sobreviventes</h2>
-        <p class="lede">Cada jogador começa com <strong>${REGRA.vidaInicial} PV</strong> e <strong>${REGRA.maoInicial} cartas</strong>. As 12 Figuras (4 Valetes, 4 Damas, 4 Reis) formam o Deck do Horizonte.</p>
+        <p class="lede">Cada jogador começa com <strong>${NIVEIS[preparo.nivel].vida} PV</strong> e <strong>${REGRA.maoInicial} cartas</strong>. As 12 Figuras (4 Valetes, 4 Damas, 4 Reis) formam o Deck do Horizonte.</p>
       </header>
 
       <div class="setup-theme-brief">
@@ -169,6 +175,18 @@ function renderPreparacao(
 
       <div class="mode-grid" role="group" aria-label="Modo de jogo">
         ${modosHtml}
+      </div>
+
+      <div class="mode-grid" role="group" aria-label="Nível de dificuldade">
+        ${(Object.keys(NIVEIS) as Nivel[])
+          .map(
+            (n) => `
+          <button type="button" class="mode-tile ${preparo.nivel === n ? 'is-active' : ''}" data-nivel-mesa="${n}">
+            <strong>${NIVEIS[n].nome} · ${NIVEIS[n].vida} PV</strong>
+            <span class="muted">${NIVEIS[n].resumo}</span>
+          </button>`,
+          )
+          .join('')}
       </div>
 
       ${
@@ -245,6 +263,7 @@ function renderPainelHorizonte(deck: ThemeDeck, partida: Partida): string {
         </div>
         <h3>${escapeHtml(cartaTema?.title ?? codigoFigura(ameaca.figura))} <span class="muted">${escapeHtml(codigoFigura(ameaca.figura))}</span></h3>
         <p class="muted">${escapeHtml(cartaTema?.artSubtitle ?? '')}</p>
+        <p><span class="chip chip-strong">${TRACO_AMEACA[ameaca.figura.naipe].nome}</span> ${escapeHtml(TRACO_AMEACA[ameaca.figura.naipe].descricao(ameaca.figura.posto))}</p>
 
         <div class="horizon-bars">
           <div class="horizon-vital">
@@ -268,12 +287,28 @@ function renderPainelHorizonte(deck: ThemeDeck, partida: Partida): string {
 
         <div class="horizon-recruit-info">
           <strong>Ao finalizar:</strong>
-          <span>♠/♣ Abater → +${st.trofeus} troféus e compra ${st.saque}.</span>
-          <span>♥/♦/Coringa Recrutar → entra com ${st.cargas} carga(s) de +${st.bonusAliado}.</span>
+          <span>Abater (qualquer carta) → vira Troféu de ${st.trofeus} pts e você compra ${st.saque}.</span>
+          <span>Recrutar (golpe final com ♥/♦/Coringa) → vira seu Aliado com ${st.cargas} usos.</span>
         </div>
       </div>
     </section>
   `;
+}
+
+function rotuloUsoAliado(posto: PostoFigura, naipe: Naipe): string {
+  const st = STATUS_FIGURA[posto];
+  switch (naipe) {
+    case 'spades':
+      return `Gastar 1 uso (${st.bonusAliado} dano no Horizonte)`;
+    case 'clubs':
+      return `Gastar 1 uso (-${st.bonusAliado} Atq na Ameaça)`;
+    case 'diamonds': {
+      const qtd = posto === 'J' ? 1 : posto === 'Q' ? 2 : 3;
+      return `Gastar 1 uso (+${qtd} carta${qtd === 1 ? '' : 's'})`;
+    }
+    case 'hearts':
+      return `Gastar 1 uso (+${st.bonusAliado} PV)`;
+  }
 }
 
 function renderPainelJogadores(deck: ThemeDeck, partida: Partida): string {
@@ -300,16 +335,16 @@ function renderPainelJogadores(deck: ThemeDeck, partida: Partida): string {
                       .filter((x) => x.rIdx !== idx && !x.r.eliminado);
                     acoesAliado = `
                       <div class="inline wrap">
-                        <button type="button" class="btn-secondary btn-sm" data-acao="usarAliado" data-quem="${idx}" data-indice-aliado="${aIdx}">Atirar Horizonte (+${st.bonusAliado})</button>
+                        <button type="button" class="btn-secondary btn-sm" data-acao="usarAliado" data-quem="${idx}" data-indice-aliado="${aIdx}">Gastar 1 uso (${st.bonusAliado} dano no Horizonte)</button>
                         ${rivais
                           .map(
                             (x) =>
-                              `<button type="button" class="btn-ghost btn-sm" data-acao="usarAliado" data-quem="${idx}" data-indice-aliado="${aIdx}" data-alvo-rival="${x.rIdx}">Atirar em ${escapeHtml(x.r.nome)} (+${st.bonusAliado})</button>`,
+                              `<button type="button" class="btn-ghost btn-sm" data-acao="usarAliado" data-quem="${idx}" data-indice-aliado="${aIdx}" data-alvo-rival="${x.rIdx}">Atirar em ${escapeHtml(x.r.nome)} (${st.bonusAliado} dano)</button>`,
                           )
                           .join('')}
                       </div>`;
                   } else {
-                    acoesAliado = `<button type="button" class="btn-secondary btn-sm" data-acao="usarAliado" data-quem="${idx}" data-indice-aliado="${aIdx}">Ativar carga (+${st.bonusAliado})</button>`;
+                    acoesAliado = `<button type="button" class="btn-secondary btn-sm" data-acao="usarAliado" data-quem="${idx}" data-indice-aliado="${aIdx}">${rotuloUsoAliado(a.figura.posto, a.figura.naipe)}</button>`;
                   }
                 }
                 return `
@@ -401,13 +436,15 @@ function renderAreaDeAcao(deck: ThemeDeck, partida: Partida, selectedIndices: nu
       .reduce((acc, i) => acc + valorBloqueioCarta(jogador.mao[i]), 0);
     const danoFinal = Math.max(0, partida.danoPendente - bloqueioCartas);
 
-    const escudosAliados = jogador.aliados
-      .map((a, aIdx) =>
-        a.cargas > 0
-          ? `<button type="button" class="btn-secondary" data-acao="bloquear" data-quem="${quem}" data-escudo-aliado="${aIdx}">🛡️ Bloquear c/ Aliado ${escapeHtml(codigoFigura(a.figura))} (+${REGRA.escudoAliado})</button>`
-          : '',
-      )
-      .join('');
+    const escudosAliados = partida.aliadoUsadoNoTurno
+      ? ''
+      : jogador.aliados
+          .map((a, aIdx) =>
+            a.cargas > 0
+              ? `<button type="button" class="btn-secondary" data-acao="bloquear" data-quem="${quem}" data-escudo-aliado="${aIdx}">🛡️ Bloquear c/ Aliado ${escapeHtml(codigoFigura(a.figura))} (+${REGRA.escudoAliado})</button>`
+              : '',
+          )
+          .join('');
 
     return `
       <section class="action-zone is-blocking" aria-label="Janela de Bloqueio Tático">
@@ -433,7 +470,8 @@ function renderAreaDeAcao(deck: ThemeDeck, partida: Partida, selectedIndices: nu
   const previa = simularJogada(partida, quem, selectedIndices);
   const ameaca = partida.ameacaAtiva;
   const podeAbater = previa.valida && !!ameaca;
-  const podeRecrutar = previa.valida && !!ameaca && previa.habilitaRecrutar && previa.poderTotal >= ameaca.vidaAtual;
+  const danoNoHorizonte = ameaca ? danoNaAmeaca(ameaca, previa.poderTotal) : 0;
+  const podeRecrutar = previa.valida && !!ameaca && previa.habilitaRecrutar && danoNoHorizonte >= ameaca.vidaAtual;
   const podeCiclar = selectedIndices.length <= REGRA.maxDescarteCiclo;
 
   const efeitos: string[] = [];
@@ -479,10 +517,10 @@ function renderAreaDeAcao(deck: ThemeDeck, partida: Partida, selectedIndices: nu
 
       <div class="threat-actions">
         <button type="button" class="btn-primary" data-acao="jogarCartas" data-quem="${quem}" data-alvo="horizonte_abater" ${podeAbater ? '' : 'disabled'}>
-          ⚔ Abater no Horizonte ${previa.valida ? `(${previa.poderTotal} dano)` : ''}
+          ⚔ Abater no Horizonte ${previa.valida ? `(${danoNoHorizonte} dano${danoNoHorizonte < previa.poderTotal ? ', blindada' : ''})` : ''}
         </button>
         <button type="button" class="btn-secondary" data-acao="jogarCartas" data-quem="${quem}" data-alvo="horizonte_recrutar" ${podeRecrutar ? '' : 'disabled'}>
-          🤝 Recrutar / Dominar ${podeRecrutar ? '' : '(requer golpe letal + ♥/♦)'}
+          🤝 Recrutar ${podeRecrutar ? '' : '(precisa zerar a Vida e ter ♥/♦/Coringa)'}
         </button>
         ${botoesPvp}
         <button type="button" class="btn-ghost" data-acao="passarTurno" data-quem="${quem}" ${podeCiclar ? '' : 'disabled'}>

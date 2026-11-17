@@ -56,7 +56,7 @@ describe('Integração das views HTML de HORIZONTE', () => {
     const soloHtml = renderPlaytestTableHtml(wasteland, partidaSolo, preparo, [0]);
     expect(soloHtml).toContain('Modo Solo');
     expect(soloHtml).toContain('Abater no Horizonte');
-    expect(soloHtml).toContain('Recrutar / Dominar');
+    expect(soloHtml).toContain('🤝 Recrutar');
 
     // Avança para janela de bloqueio jogando carta baixa na Ameaça
     const pBloqueio = agir(partidaSolo, { tipo: 'jogarCartas', quem: 0, indicesMao: [0], alvo: 'horizonte_abater' });

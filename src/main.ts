@@ -36,6 +36,7 @@ import {
   criarPartida,
   linhaDeStatus,
   type ModoDeJogo,
+  type Nivel,
   NAIPES,
   type Naipe,
   type Partida,
@@ -155,6 +156,7 @@ export function mountHorizonteApp(root: HTMLElement): void {
         if (msg.preparo && Array.isArray(msg.preparo.jogadores) && msg.preparo.jogadores.length > 0) {
           state.preparo = {
             modo: msg.preparo.modo ?? 'coop',
+            nivel: msg.preparo.nivel ?? 'veterano',
             jogadores: msg.preparo.jogadores.map((j) => ({ nome: j.nome, classe: j.classe })),
           };
         }
@@ -557,6 +559,15 @@ export function mountHorizonteApp(root: HTMLElement): void {
   }
 
   function bindMesa(): void {
+    root.querySelectorAll<HTMLButtonElement>('[data-nivel-mesa]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const nivel = btn.dataset.nivelMesa as Nivel;
+        if (!nivel || nivel === state.preparo.nivel) return;
+        state.preparo.nivel = nivel;
+        sincronizarSala();
+        render();
+      });
+    });
     root.querySelectorAll<HTMLButtonElement>('[data-modo-mesa]').forEach((btn) => {
       btn.addEventListener('click', () => {
         const modo = btn.dataset.modoMesa as ModoDeJogo;
@@ -660,7 +671,7 @@ export function mountHorizonteApp(root: HTMLElement): void {
     if (nome === 'comecar' || nome === 'novaMesa') {
       const nomeados = jogadores.map((j, i) => ({ ...j, nome: j.nome.trim() || `Sobrevivente ${i + 1}` }));
       state.preparo = { ...state.preparo, jogadores: nomeados };
-      setPartida(criarPartida({ modo: state.preparo.modo, jogadores: nomeados }), true);
+      setPartida(criarPartida({ modo: state.preparo.modo, nivel: state.preparo.nivel, jogadores: nomeados }), true);
       if (nome === 'novaMesa') showToast('Nova partida iniciada!');
       return;
     }

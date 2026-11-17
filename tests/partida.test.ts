@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  NIVEIS,
   REGRA,
   STATUS_FIGURA,
   agir,
@@ -66,7 +67,6 @@ describe('Motor PvPvE de HORIZONTE — Zona de Conflito', () => {
     expect(s0.bonusEspadas).toBe(REGRA.bonusEspadas);
     expect(s0.bonusAfinidade).toBe(1);
     expect(s0.poderTotal).toBe(9);
-    expect(s0.habilitaAbater).toBe(true);
     expect(s0.habilitaRecrutar).toBe(false);
 
     const par = simularJogada(p, 0, [0, 1]);
@@ -105,7 +105,6 @@ describe('Motor PvPvE de HORIZONTE — Zona de Conflito', () => {
     expect(estrela.cura).toBe(4);
     expect(estrela.cartasComprar).toBe(2);
     expect(estrela.reducaoAtaque).toBe(3);
-    expect(estrela.habilitaAbater).toBe(true);
     expect(estrela.habilitaRecrutar).toBe(true);
 
     const caveira = simularJogada(p, 0, [5]);
@@ -120,14 +119,14 @@ describe('Motor PvPvE de HORIZONTE — Zona de Conflito', () => {
     expect(simularJogada(p, 0, [2, 3, 7]).valida).toBe(false); // 3 cartas valores distintos
   });
 
-  it('aplica efeitos de ataque, bloqueio tático com descarte/aliado e compra até 5 cartas ao fim do turno', () => {
+  it('aplica efeitos de ataque, bloqueio tático com descarte/aliado e compra 1 carta ao fim do turno', () => {
     const p0 = criarPartida({
       modo: 'solo',
       jogadores: [{ nome: 'Solo', classe: 'clubs' }],
-      horizonteDeck: [figura('J', 'spades'), figura('K', 'hearts')],
+      horizonteDeck: [figura('J', 'hearts'), figura('K', 'hearts')],
       maosIniciais: [
         [
-          { valor: 4, naipe: 'clubs' }, // 0: poder 4+1(afinidade)=5, -2 ataque J♠ (3->1)
+          { valor: 4, naipe: 'clubs' }, // 0: poder 4+1(afinidade)=5, -2 ataque J♥ (4->2)
           { valor: 2, naipe: 'hearts' }, // 1: usado p/ bloqueio
           { valor: 3, naipe: 'diamonds' }, // 2
           { valor: 5, naipe: 'spades' }, // 3
@@ -140,31 +139,33 @@ describe('Motor PvPvE de HORIZONTE — Zona de Conflito', () => {
 
     const p1 = agir(p0, { tipo: 'jogarCartas', quem: 0, indicesMao: [0], alvo: 'horizonte_abater' });
     expect(p1).not.toBe(p0);
-    expect(p1.ameacaAtiva?.vidaAtual).toBe(5);
-    expect(ataqueEfetivoAmeaca(p1.ameacaAtiva)).toBe(1);
+    expect(p1.ameacaAtiva?.vidaAtual).toBe(STATUS_FIGURA.J.vida - 5);
+    expect(ataqueEfetivoAmeaca(p1.ameacaAtiva)).toBe(2);
     expect(p1.fase).toBe('bloqueio');
-    expect(p1.danoPendente).toBe(1);
+    expect(p1.danoPendente).toBe(2);
 
     // Bloqueia com a carta 2♥ (index 0 agora porque index 0 anterior foi descartada -> index 0 é 2♥)
     const p2 = agir(p1, { tipo: 'bloquear', quem: 0, indicesMao: [0] });
     expect(p2.fase).toBe('acao');
     expect(p2.danoPendente).toBe(0);
     expect(p2.jogadores[0].vida).toBe(REGRA.vidaInicial);
-    // Tinha 3 cartas na mão após descartar 2 -> compra 2 para voltar a 5
-    expect(p2.jogadores[0].mao).toHaveLength(REGRA.maoInicial);
+    // Tinha 3 cartas na mão após jogar 1 e bloquear com 1 -> compra só 1 no fim do turno
+    expect(p2.jogadores[0].mao).toHaveLength(3 + REGRA.compraFimTurno);
+    // J♥ sobreviveu ao turno e se regenera (traço ♥)
+    expect(p2.ameacaAtiva?.vidaAtual).toBe(STATUS_FIGURA.J.vida - 5 + STATUS_FIGURA.J.regeneracao);
   });
 
   it('diferencia Abater (♠/♣) e Recrutar (♥/♦/Coringa), respeitando limite de 2 aliados e uso com cargas', () => {
     const p0 = criarPartida({
       modo: 'solo',
       jogadores: [{ nome: 'Recrutador', classe: 'hearts' }],
-      horizonteDeck: [figura('J', 'spades'), figura('Q', 'diamonds'), figura('K', 'clubs')],
+      horizonteDeck: [figura('J', 'spades'), figura('Q', 'spades'), figura('K', 'clubs')],
       maosIniciais: [
         [
-          { valor: 9, naipe: 'hearts' }, // 0: poder 9+1=10 -> mata J (10 vida)
+          { valor: 9, naipe: 'hearts' }, // 0: com o Ás ♦ (índice 3): 9+4+1 = 14 -> mata J (12 vida)
           { valor: 10, naipe: 'spades' }, // 1: poder 10+2=12 (não mata Q=14)
           { valor: 9, naipe: 'clubs' }, // 2: só preta
-          { valor: 2, naipe: 'diamonds' }, // 3
+          { valor: 1, naipe: 'diamonds' }, // 3
           { valor: 3, naipe: 'spades' }, // 4
         ],
       ],
@@ -175,11 +176,11 @@ describe('Motor PvPvE de HORIZONTE — Zona de Conflito', () => {
     // Tentar recrutar com carta preta pura falha
     expect(agir(p0, { tipo: 'jogarCartas', quem: 0, indicesMao: [2], alvo: 'horizonte_recrutar' })).toBe(p0);
 
-    // Recrutar J♠ com 9♥ (poder 10 >= 10 vida do J)
-    const p1 = agir(p0, { tipo: 'jogarCartas', quem: 0, indicesMao: [0], alvo: 'horizonte_recrutar' });
+    // Recrutar J♠ com 9♥ + A♦ (poder 14 >= 12 vida do J)
+    const p1 = agir(p0, { tipo: 'jogarCartas', quem: 0, indicesMao: [0, 3], alvo: 'horizonte_recrutar' });
     expect(p1.jogadores[0].aliados).toHaveLength(1);
     expect(p1.jogadores[0].aliados[0].cargas).toBe(STATUS_FIGURA.J.cargas);
-    // Avançou para a segunda figura (Q♦)
+    // Avançou para a segunda figura (Q♠)
     expect(p1.ameacaAtiva?.figura.posto).toBe('Q');
     expect(p1.fase).toBe('acao');
 
@@ -269,9 +270,9 @@ describe('Motor PvPvE de HORIZONTE — Zona de Conflito', () => {
     };
 
     const pCurado = agir(pFerido, { tipo: 'jogarCartas', quem: 0, indicesMao: [0], alvo: 'horizonte_abater' });
-    // Beto estava mais ferido (5 PV -> 8 PV) e K♠ caiu de 20 para 13 PV
+    // Beto estava mais ferido (5 PV -> 8 PV) e K♠ (com +PV por jogador extra no Coop) levou 7
     expect(pCurado.jogadores[1].vida).toBe(8);
-    expect(pCurado.ameacaAtiva?.vidaAtual).toBe(13);
+    expect(pCurado.ameacaAtiva?.vidaAtual).toBe(STATUS_FIGURA.K.vida + STATUS_FIGURA.K.vidaPorJogadorExtra - 7);
 
     // Agora coloca Beto em 2 PV na fase de bloqueio com 7 de dano pendente -> cai -> Coop perde
     const pQuaseFim: typeof pCurado = {
@@ -310,7 +311,7 @@ describe('Motor PvPvE de HORIZONTE — Zona de Conflito', () => {
 
     const p1 = agir(p0, { tipo: 'jogarCartas', quem: 0, indicesMao: [0], alvo: { rival: 1 } });
     // Rival levou 10 dano + descartou 1 carta, mas como é PvP o Horizonte ainda contra-ataca Mara
-    expect(p1.jogadores[1].vida).toBe(10);
+    expect(p1.jogadores[1].vida).toBe(REGRA.vidaInicial - 10);
     expect(p1.jogadores[1].mao).toHaveLength(4);
     expect(p1.fase).toBe('bloqueio');
 
@@ -323,7 +324,7 @@ describe('Motor PvPvE de HORIZONTE — Zona de Conflito', () => {
     const p4 = agir(p3, { tipo: 'bloquear', quem: 1, indicesMao: [] });
     expect(p4.turnoDe).toBe(0);
 
-    // Mara atira 10♠ no rival (poder 13 >= 10 PV restantes de Kael) -> vitória imediata!
+    // Mara atira 10♠ no rival (poder 13 >= PV restantes de Kael) -> vitória imediata!
     const idxEspadas = p4.jogadores[0].mao.findIndex((c) => 'valor' in c && c.valor === 10 && c.naipe === 'spades');
     const p5 = agir(p4, { tipo: 'jogarCartas', quem: 0, indicesMao: [idxEspadas], alvo: { rival: 1 } });
     expect(p5.jogadores[1].eliminado).toBe(true);
@@ -342,7 +343,7 @@ describe('Motor PvPvE de HORIZONTE — Zona de Conflito', () => {
       horizonteDeck: [figura('J', 'clubs')],
       maosIniciais: [
         [
-          { valor: 9, naipe: 'spades' }, // 9 + 2 + 1 = 12 >= 10 vida de J♣
+          { valor: 9, naipe: 'spades' }, // 9 + 2 + 1 = 12 >= 12 vida de J♣
           { valor: 2, naipe: 'clubs' },
           { valor: 3, naipe: 'diamonds' },
           { valor: 4, naipe: 'hearts' },
@@ -362,5 +363,110 @@ describe('Motor PvPvE de HORIZONTE — Zona de Conflito', () => {
     expect(pontosDeDominio(pFinal.jogadores[0])).toBeGreaterThan(pontosDeDominio(pFinal.jogadores[1]));
     expect(pFinal.motivoFim).toContain('venceu');
     expect(linhaDeStatus(pFinal)).toContain('Horizonte limpo');
+  });
+
+  it('respeita limite único de Aliado por turno (Passo 1 + Escudo), redução de ★ contra rival e sacrifício com 💀', () => {
+    // 1. Limite de 1 uso de Aliado no turno (se usar no Passo 1, não pode usar escudo no Passo 3)
+    const pBase = criarPartida({
+      modo: 'solo',
+      jogadores: [{ nome: 'Solo', classe: 'spades' }],
+      horizonteDeck: [figura('K', 'spades')],
+      maosIniciais: [[{ valor: 2, naipe: 'hearts' }, { valor: 3, naipe: 'hearts' }, { valor: 4, naipe: 'hearts' }, { valor: 5, naipe: 'hearts' }, { valor: 6, naipe: 'hearts' }]],
+      embaralhar: false,
+    });
+    const comAliados = {
+      ...pBase,
+      jogadores: [
+        {
+          ...pBase.jogadores[0],
+          aliados: [
+            { figura: figura('J', 'hearts'), cargas: 2, maxCargas: 2 },
+            { figura: figura('J', 'diamonds'), cargas: 2, maxCargas: 2 },
+          ],
+        },
+      ],
+    };
+    const aposPasso1 = agir(comAliados, { tipo: 'usarAliado', quem: 0, indiceAliado: 0 });
+    expect(aposPasso1.aliadoUsadoNoTurno).toBe(true);
+    const emBloqueio = agir(aposPasso1, { tipo: 'jogarCartas', quem: 0, indicesMao: [0], alvo: 'horizonte_abater' });
+    expect(emBloqueio.fase).toBe('bloqueio');
+    // Tentar usar Aliado como escudo após já ter ativado Aliado no Passo 1 é rejeitado
+    const tentativaEscudo = agir(emBloqueio, { tipo: 'bloquear', quem: 0, indicesMao: [], usarAliadoEscudo: 1 });
+    expect(tentativaEscudo).toBe(emBloqueio);
+
+    // 2. Coringa Claro (★) contra rival no PvP reduz o ataque da Ameaça em 3; Coringa Escuro (💀) letal revela próxima Figura mesmo se o jogador cair a 0 PV no recuo
+    const pvp3 = criarPartida({
+      modo: 'pvp',
+      jogadores: [
+        { nome: 'A', classe: 'spades' },
+        { nome: 'B', classe: 'hearts' },
+        { nome: 'C', classe: 'clubs' },
+      ],
+      horizonteDeck: [figura('Q', 'spades'), figura('K', 'clubs')],
+      maosIniciais: [
+        [{ coringa: 'estrela' }, { valor: 2, naipe: 'clubs' }, { valor: 3, naipe: 'clubs' }, { valor: 4, naipe: 'clubs' }, { valor: 5, naipe: 'clubs' }],
+        [{ coringa: 'caveira' }, { valor: 2, naipe: 'hearts' }, { valor: 3, naipe: 'hearts' }, { valor: 4, naipe: 'hearts' }, { valor: 5, naipe: 'hearts' }],
+        maoPadrao(),
+      ],
+      embaralhar: false,
+    });
+    // Jogador A usa ★ no rival B: Q♠ (Feroz) tem ataque reduzido em 3
+    const aposEstrelaPvp = agir(pvp3, { tipo: 'jogarCartas', quem: 0, indicesMao: [0], alvo: { rival: 1 } });
+    expect(aposEstrelaPvp.fase).toBe('bloqueio');
+    expect(aposEstrelaPvp.danoPendente).toBe(STATUS_FIGURA.Q.ataque + STATUS_FIGURA.Q.ferocidade - 3);
+    const vezDeB = agir(aposEstrelaPvp, { tipo: 'bloquear', quem: 0, indicesMao: [] });
+
+    // Jogador B fica com 2 PV e a Ameaça Q♠ fica com 8 PV; B joga 💀 contra Q♠
+    const bQuaseMorto = {
+      ...vezDeB,
+      ameacaAtiva: { ...vezDeB.ameacaAtiva!, vidaAtual: 8 },
+      jogadores: vezDeB.jogadores.map((j, i) => (i === 1 ? { ...j, vida: 2 } : j)),
+    };
+    const aposSacrificio = agir(bQuaseMorto, { tipo: 'jogarCartas', quem: 1, indicesMao: [0], alvo: 'horizonte_abater' });
+    expect(aposSacrificio.jogadores[1].eliminado).toBe(true);
+    // Q♠ foi abatida e K♣ assumiu com vida cheia para os sobreviventes A e C
+    expect(aposSacrificio.ameacaAtiva?.figura).toEqual(figura('K', 'clubs'));
+    expect(aposSacrificio.ameacaAtiva?.vidaAtual).toBe(STATUS_FIGURA.K.vida);
+  });
+
+  it('aplica os traços das Ameaças, o nível de dificuldade e mantém o turno quando um Aliado de ♠ derruba a Ameaça', () => {
+    const mao: CartaAcao[] = [
+      { valor: 8, naipe: 'clubs' },
+      { valor: 9, naipe: 'spades' },
+      { valor: 2, naipe: 'hearts' },
+      { valor: 3, naipe: 'hearts' },
+      { valor: 4, naipe: 'hearts' },
+    ];
+    const criar = (fig: FiguraHorizonte, nivel?: 'recruta' | 'lenda') =>
+      criarPartida({ modo: 'solo', nivel, jogadores: [{ nome: 'S', classe: 'hearts' }], horizonteDeck: [fig, figura('Q', 'hearts')], maosIniciais: [mao], embaralhar: false });
+
+    // Nível muda só a vida inicial
+    expect(criar(figura('J', 'clubs'), 'recruta').jogadores[0].vida).toBe(NIVEIS.recruta.vida);
+    expect(criar(figura('J', 'clubs'), 'lenda').jogadores[0].vidaMax).toBe(NIVEIS.lenda.vida);
+
+    // ♣ Imune a armadilhas: o 8♣ causa dano, mas não reduz o ataque
+    const imune = agir(criar(figura('J', 'clubs')), { tipo: 'jogarCartas', quem: 0, indicesMao: [0], alvo: 'horizonte_abater' });
+    expect(imune.danoPendente).toBe(STATUS_FIGURA.J.ataque);
+
+    // ♦ Blindada: o golpe perde a blindagem
+    const blindada = agir(criar(figura('J', 'diamonds')), { tipo: 'jogarCartas', quem: 0, indicesMao: [1], alvo: 'horizonte_abater' });
+    expect(blindada.ameacaAtiva?.vidaAtual).toBe(STATUS_FIGURA.J.vida - (9 + 2 - STATUS_FIGURA.J.blindagem));
+
+    // ♠ Feroz: ataque já vem somado
+    expect(criar(figura('J', 'spades')).ameacaAtiva?.ataqueBase).toBe(STATUS_FIGURA.J.ataque + STATUS_FIGURA.J.ferocidade);
+
+    // Aliado de ♠ que zera a Ameaça: ela é abatida, a próxima entra e o jogador ainda faz a ação principal
+    const base = criar(figura('J', 'clubs'));
+    const quaseMorta = {
+      ...base,
+      ameacaAtiva: { ...base.ameacaAtiva!, vidaAtual: 1 },
+      jogadores: [{ ...base.jogadores[0], aliados: [{ figura: figura('J', 'spades'), cargas: 2, maxCargas: 2 }] }],
+    };
+    const aposAliado = agir(quaseMorta, { tipo: 'usarAliado', quem: 0, indiceAliado: 0 });
+    expect(aposAliado.ameacaAtiva?.figura).toEqual(figura('Q', 'hearts'));
+    expect(aposAliado.fase).toBe('acao');
+    expect(aposAliado.turnoDe).toBe(0);
+    expect(aposAliado.aliadoUsadoNoTurno).toBe(true);
+    expect(aposAliado.jogadores[0].pontosTrofeu).toBe(STATUS_FIGURA.J.trofeus);
   });
 });

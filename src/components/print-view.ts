@@ -1,4 +1,4 @@
-import { CLASSES, FUNCAO_DO_NAIPE, REGRA, STATUS_FIGURA } from '../core/partida';
+import { CLASSES, FUNCAO_DO_NAIPE, NIVEIS, REGRA, STATUS_FIGURA } from '../core/partida';
 import type { GameCard, ThemeDeck } from '../types/card';
 import { getGeneratedCardBackPath } from './card-art';
 import { escapeHtml, isFigure, renderMagicCardHtml } from './card-renderer';
@@ -152,7 +152,7 @@ export function gerarCartasDeDinamismo(deck: ThemeDeck): GameCard[] {
       5,
       '20',
       'hearts',
-      'Marcador de Pontos de Vida (20 PV)',
+      `Marcador de Vida (comece em ${NIVEIS.veterano.vida}; Recruta ${NIVEIS.recruta.vida}, Lenda ${NIVEIS.lenda.vida})`,
       '❤️',
       'Use um dado ou clipe na borda',
       '20 · 19 · 18 · 17 · 16 · 15 · 14 · 13 · 12 · 11 · 10 · 9 · 8 · 7 · 6 · 5 · 4 · 3 · 2 · 1 · 0',

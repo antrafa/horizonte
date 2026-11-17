@@ -86,7 +86,7 @@ export const NUANCES_DO_TEMA: Record<ThemeId, NuanceDoTema> = {
     oQueEOHorizonte:
       'As águas tempestuosas ao redor do Convés Torto. As Figuras são piratas rivais, canhões, monstros marinhos e navios fantasmas.',
     dinamicaDeCombate:
-      'Dispare abordagens (♠/♣) ou recrute tripulações e saqueie mapas náuticos (♥/♦).',
+      'Derrube navios rivais com qualquer carta ou recrute tripulações com ♥/♦ no golpe final.',
     chefeFinal:
       'Das brumas emerge a esquadra de O Navio Fantasma do Almirante.',
   },
