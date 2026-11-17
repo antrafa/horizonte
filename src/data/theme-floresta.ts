@@ -8,6 +8,7 @@ export const FLORESTA_BLUEPRINT: ThemeBlueprint = {
   tagline: 'Toda planta guarda um espírito, toda chuva traz um recado, e nenhuma trilha leva duas vezes ao mesmo lugar.',
   tom: 'poético, gentil',
   chefe: {
+    regra: 'geada',
     nome: 'A Rainha do Inverno Sem Fim',
     descricao: 'Ela quer que a floresta durma para sempre sob a geada, sem brotos, sem cantos e sem primavera.',
   },
@@ -195,7 +196,7 @@ export const FLORESTA_BLUEPRINT: ThemeBlueprint = {
         topWatcherTrigger: '4 de valor + 2 de bônus ♠ = 6 de dano.',
         topWatcherEvent: 'Durante a noite, o espinheiro cresceu e fechou o caminho de casa com uma muralha de galhos e rosas brancas.',
         bottomEchoPrompt: 'Total de 6 de dano bruto contra Ameaça ou rival.',
-        bottomEchoEffect: 'Se tiver afinidade ♠ na classe, chega a 7 de impacto imediato.',
+        bottomEchoEffect: 'Com Especialização em ♠ (Atirador), chega a 8 de impacto imediato.',
         dailyIdea: 'Forte opção para punir um oponente no modo Competitivo PvP.',
         flavorText: 'Até a muralha mais fechada guarda uma rosa para quem tem paciência.',
       },

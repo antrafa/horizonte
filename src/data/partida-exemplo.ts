@@ -75,8 +75,8 @@ export const ROTEIRO_EXEMPLO: PassoDoExemplo[] = [
     titulo: 'Mara abre fogo contra o Batedor de Arpão (J♠)',
     quem: 'Mara',
     narrativa:
-      'Mara joga 6♠ (Escopeta de Cano Cerrado). Com +2 de bônus de Espadas e +1 da sua classe Atirador, causa 9 de dano direto e deixa J♠ com apenas 3 PV.',
-    notaMecanica: '6 (base) + 2 (♠) + 1 (afinidade ♠) = 9 de dano. Como J♠ sobreviveu com 3 PV, ele contra-ataca com 5 (4 de Ataque + 1 por ser Feroz).',
+      'Mara joga 6♠ (Escopeta de Cano Cerrado). Com +2 de bônus de Espadas e +2 da sua Especialização de Atirador, causa 10 de dano direto e deixa J♠ com apenas 2 PV.',
+    notaMecanica: '6 (base) + 2 (♠) + 2 (Atirador) = 10 de dano. Como J♠ sobreviveu com 2 PV, ele contra-ataca com 5 (4 de Ataque + 1 por ser Feroz).',
     acao: { tipo: 'jogarCartas', quem: 0, indicesMao: [0], alvo: 'horizonte_abater' },
   },
   {
@@ -93,8 +93,8 @@ export const ROTEIRO_EXEMPLO: PassoDoExemplo[] = [
     titulo: 'Kael recruta o Batedor de Arpão (J♠) para o seu lado',
     quem: 'Kael',
     narrativa:
-      'Kael vê o J♠ quase derrotado (3 PV) e joga 3♥ (Atadura Esterilizada). Como usou uma carta vermelha e zerou a vida da Ameaça, ele o recruta como Aliado!',
-    notaMecanica: '3 + 1 (afinidade ♥) = 4 de dano (zera os 3 PV). Como o golpe final tem ♥, Kael pode Recrutar: J♠ vira Aliado com 2 usos (cada um causa 2 de dano) e não contra-ataca!',
+      'Kael vê o J♠ quase derrotado (2 PV) e joga 3♥ (Atadura Esterilizada). Como usou uma carta vermelha e zerou a vida da Ameaça, ele o recruta como Aliado!',
+    notaMecanica: '3 de dano zeram os 2 PV (a Especialização de Médico reforça a cura, não o dano). Como o golpe final tem ♥, Kael pode Recrutar: J♠ vira Aliado com 2 usos (cada um causa 2 de dano) e não contra-ataca!',
     acao: { tipo: 'jogarCartas', quem: 1, indicesMao: [0], alvo: 'horizonte_recrutar' },
   },
   {
@@ -102,8 +102,8 @@ export const ROTEIRO_EXEMPLO: PassoDoExemplo[] = [
     titulo: 'Mara monta um Combo de Comando e atira em Kael!',
     quem: 'Mara',
     narrativa:
-      'Vendo Kael ganhar um aliado forte, Mara combina 4♣ + A♠ contra o rival! Além de 11 de dano direto em Kael, o golpe pesado de Paus arranca 1 carta da mão dele, puxada às cegas.',
-    notaMecanica: 'Combo (4 + 4 do Ás = 8) + 2 (♠) + 1 (afinidade ♠) = 11 de dano em Kael + descarte de 1 carta (♣ ≥ 6). Depois disso, o novo Rastejador (J♣) ataca Mara por 4 — e, Imune a armadilhas, ignora o ♣ que ela jogou.',
+      'Vendo Kael ganhar um aliado forte, Mara combina 4♣ + A♠ contra o rival! Além de 12 de dano direto em Kael, o golpe pesado de Paus arranca 1 carta da mão dele, puxada às cegas.',
+    notaMecanica: 'Combo (4 + 4 do Ás = 8) + 2 (♠) + 2 (Atirador) = 12 de dano em Kael + descarte de 1 carta (♣ ≥ 6). Depois disso, o novo Rastejador (J♣) ataca Mara por 4 — e, Imune a armadilhas, ignora o ♣ que ela jogou.',
     acao: { tipo: 'jogarCartas', quem: 0, indicesMao: [0, 1], alvo: { rival: 1 } },
   },
   {

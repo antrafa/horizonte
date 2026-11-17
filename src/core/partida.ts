@@ -42,6 +42,10 @@ export interface AmeacaAtiva {
   vidaMax: number;
   ataqueBase: number;
   reducaoAtaqueTurno: number;
+  /** Só a última Figura do Horizonte tem: a regra do chefe do tema. */
+  chefe?: RegraChefe;
+  /** Chefe 'renasce': já voltou uma vez. */
+  renasceu?: boolean;
 }
 
 export interface Jogador {
@@ -58,6 +62,9 @@ export interface Jogador {
 
 export interface Partida {
   modo: ModoDeJogo;
+  /** Opcionais porque partidas salvas antes destas regras não os têm. */
+  nivel?: Nivel;
+  chefe?: RegraChefe;
   jogadores: Jogador[];
   baralhoCompra: CartaAcao[];
   descarte: CartaAcao[];
@@ -129,6 +136,43 @@ export const TRACO_AMEACA: Record<Naipe, { nome: string; descricao: (posto: Post
   clubs: { nome: 'Imune a armadilhas', descricao: () => 'Nada reduz o ataque dela: ♣, ★ e Aliados de ♣ não funcionam.' },
 };
 
+export type RegraChefe =
+  | 'detencao'
+  | 'abordagem'
+  | 'fome'
+  | 'pulsa'
+  | 'geada'
+  | 'colossal'
+  | 'firewall'
+  | 'sombra'
+  | 'portas'
+  | 'drena'
+  | 'racionamento'
+  | 'renasce';
+
+export const PONTUACAO = { vitoria: 50, rodadasParaBonus: 40, porRodadaPoupada: 2 } as const;
+
+const CHEFE = { colossalVida: 20, firewall: 8, maoDetencao: 3, pulsa: 3, portas: 1, fome: 2, drena: 2, abordagem: 2, geadaPorCarta: 1 } as const;
+
+/**
+ * A última Figura do Horizonte é o chefe do tema: além do traço do naipe, ganha a regra do tema.
+ * É o que faz cada um dos 12 temas terminar de um jeito diferente.
+ */
+export const REGRA_CHEFE: Record<RegraChefe, { nome: string; descricao: string }> = {
+  detencao: { nome: 'Detenção', descricao: `Ninguém compra cartas além de ${CHEFE.maoDetencao} na mão.` },
+  abordagem: { nome: 'Abordagem', descricao: `Sempre que ele te causa dano, leva ${CHEFE.abordagem} cartas aleatórias da sua mão.` },
+  fome: { nome: 'Fome Crescente', descricao: `Ganha +${CHEFE.fome} de Ataque no fim de cada turno.` },
+  pulsa: { nome: 'A Trilha Se Fecha', descricao: `Recupera ${CHEFE.pulsa} PV no fim de cada turno (soma com o traço ♥).` },
+  geada: { nome: 'Geada', descricao: `Ninguém cura, e cada carta de bloqueio absorve ${CHEFE.geadaPorCarta} a menos.` },
+  colossal: { nome: 'Colossal', descricao: `Tem +${CHEFE.colossalVida} PV.` },
+  firewall: { nome: 'Firewall', descricao: `Golpes de ${CHEFE.firewall} ou menos de dano não passam.` },
+  sombra: { nome: 'Sem Retrato', descricao: 'Golpe de dano ímpar não acerta: só dano par passa.' },
+  portas: { nome: 'Portas Seladas', descricao: `Só dá para bloquear com ${CHEFE.portas} carta por ataque (o Escudo de Aliado vale).` },
+  drena: { nome: 'Sede', descricao: `Recupera ${CHEFE.drena}× o dano que te causa depois do bloqueio.` },
+  racionamento: { nome: 'Racionamento', descricao: '♦, ★ e Aliados de ♦ não compram cartas.' },
+  renasce: { nome: 'Levanta de Novo', descricao: 'Ao cair pela 1ª vez, volta com metade da Vida; só então pode ser recrutado.' },
+};
+
 export const NAIPES: Naipe[] = ['spades', 'hearts', 'diamonds', 'clubs'];
 export const SIMBOLO: Record<Naipe, string> = { spades: '♠', hearts: '♥', diamonds: '♦', clubs: '♣' };
 
@@ -172,11 +216,14 @@ export interface Classe {
   descricao: string;
 }
 
+/** Cada Especialização reforça o efeito do próprio naipe, não só o dano: são papéis diferentes na mesa. */
+const BONUS_CLASSE: Record<Naipe, number> = { spades: 2, hearts: 2, diamonds: 1, clubs: 2 };
+
 export const CLASSES: Record<Naipe, Classe> = {
-  spades: { nome: 'Atirador', descricao: '+1 de poder ao jogar cartas de ♠ Espadas.' },
-  hearts: { nome: 'Médico / Diplomata', descricao: '+1 de poder ao jogar cartas de ♥ Copas.' },
-  diamonds: { nome: 'Engenheiro / Hacker', descricao: '+1 de poder ao jogar cartas de ♦ Ouros.' },
-  clubs: { nome: 'Sabotador', descricao: '+1 de poder ao jogar cartas de ♣ Paus.' },
+  spades: { nome: 'Atirador', descricao: `Jogadas com ♠ causam +${BONUS_CLASSE.spades} de dano.` },
+  hearts: { nome: 'Médico / Diplomata', descricao: `Jogadas com ♥ curam +${BONUS_CLASSE.hearts} PV.` },
+  diamonds: { nome: 'Engenheiro / Hacker', descricao: `Jogadas com ♦ compram +${BONUS_CLASSE.diamonds} carta.` },
+  clubs: { nome: 'Sabotador', descricao: `Jogadas com ♣ tiram +${BONUS_CLASSE.clubs} do ataque da Ameaça.` },
 };
 
 export type AlvoJogada = 'horizonte_abater' | 'horizonte_recrutar' | { rival: number };
@@ -212,6 +259,7 @@ export interface OpcoesCriarPartida {
   horizonteDeck?: FiguraHorizonte[];
   maosIniciais?: CartaAcao[][];
   embaralhar?: boolean;
+  chefe?: RegraChefe;
 }
 
 // ---------- Utilitários de Carta ----------
@@ -278,15 +326,17 @@ function vidaDaAmeaca(posto: PostoFigura, modo: ModoDeJogo, totalJogadores: numb
   return st.vida + extras * st.vidaPorJogadorExtra;
 }
 
-function instanciarAmeaca(figura: FiguraHorizonte, modo: ModoDeJogo, totalJogadores: number): AmeacaAtiva {
+function instanciarAmeaca(figura: FiguraHorizonte, modo: ModoDeJogo, totalJogadores: number, chefe?: RegraChefe): AmeacaAtiva {
   const st = STATUS_FIGURA[figura.posto];
-  const vida = vidaDaAmeaca(figura.posto, modo, totalJogadores);
+  const colossal = chefe === 'colossal';
+  const vida = vidaDaAmeaca(figura.posto, modo, totalJogadores) + (colossal ? CHEFE.colossalVida : 0);
   return {
     figura,
     vidaAtual: vida,
     vidaMax: vida,
     ataqueBase: st.ataque + (figura.naipe === 'spades' ? st.ferocidade : 0),
     reducaoAtaqueTurno: 0,
+    ...(chefe ? { chefe } : {}),
   };
 }
 
@@ -296,18 +346,51 @@ export function ataqueEfetivoAmeaca(ameaca: AmeacaAtiva | null): number {
   return Math.max(0, ameaca.ataqueBase - ameaca.reducaoAtaqueTurno);
 }
 
-/** Dano que um golpe realmente tira da Ameaça, descontada a blindagem (♦). */
+/** Dano que um golpe realmente tira da Ameaça, descontada a blindagem (♦) e as regras de chefe. */
 export function danoNaAmeaca(ameaca: AmeacaAtiva, dano: number): number {
   const blindagem = ameaca.figura.naipe === 'diamonds' ? STATUS_FIGURA[ameaca.figura.posto].blindagem : 0;
-  return Math.max(0, dano - blindagem);
+  const golpe = Math.max(0, dano - blindagem);
+  if (ameaca.chefe === 'firewall' && golpe <= CHEFE.firewall) return 0;
+  if (ameaca.chefe === 'sombra' && golpe % 2 === 1) return 0;
+  return golpe;
 }
 
-function regenerarNoFimDoTurno(ameaca: AmeacaAtiva, diario: string[]): AmeacaAtiva {
+/** O golpe tira a Ameaça de vez? O chefe que renasce não cai na primeira vez. */
+export function golpeDerruba(ameaca: AmeacaAtiva, dano: number): boolean {
+  return danoNaAmeaca(ameaca, dano) >= ameaca.vidaAtual && !(ameaca.chefe === 'renasce' && !ameaca.renasceu);
+}
+
+/** Aplica o golpe na cópia da Ameaça recebida (muta `ameaca`). */
+function golpearAmeaca(ameaca: AmeacaAtiva, dano: number, diario: string[]): void {
+  ameaca.vidaAtual = Math.max(0, ameaca.vidaAtual - danoNaAmeaca(ameaca, dano));
+  if (ameaca.vidaAtual > 0 || ameaca.chefe !== 'renasce' || ameaca.renasceu) return;
+  ameaca.vidaAtual = Math.ceil(ameaca.vidaMax / 2);
+  ameaca.renasceu = true;
+  diario.push(`${codigoFigura(ameaca.figura)} levanta de novo com ${ameaca.vidaAtual} PV!`);
+}
+
+function fimDoTurnoDaAmeaca(ameaca: AmeacaAtiva, diario: string[]): AmeacaAtiva {
   const proxima = { ...ameaca, reducaoAtaqueTurno: 0 };
-  if (ameaca.figura.naipe !== 'hearts' || ameaca.vidaAtual >= ameaca.vidaMax) return proxima;
-  proxima.vidaAtual = Math.min(ameaca.vidaMax, ameaca.vidaAtual + STATUS_FIGURA[ameaca.figura.posto].regeneracao);
+  if (ameaca.chefe === 'fome') {
+    proxima.ataqueBase += CHEFE.fome;
+    diario.push(`${codigoFigura(ameaca.figura)} tem mais fome (Ataque ${proxima.ataqueBase}).`);
+  }
+  const regeneracao =
+    (ameaca.figura.naipe === 'hearts' ? STATUS_FIGURA[ameaca.figura.posto].regeneracao : 0) +
+    (ameaca.chefe === 'pulsa' ? CHEFE.pulsa : 0);
+  if (regeneracao === 0 || ameaca.vidaAtual >= ameaca.vidaMax) return proxima;
+  proxima.vidaAtual = Math.min(ameaca.vidaMax, ameaca.vidaAtual + regeneracao);
   diario.push(`${codigoFigura(ameaca.figura)} se regenera (+${proxima.vidaAtual - ameaca.vidaAtual} PV).`);
   return proxima;
+}
+
+function limiteDeMao(ameaca: AmeacaAtiva | null): number {
+  return ameaca?.chefe === 'detencao' ? CHEFE.maoDetencao : REGRA.maoMaxima;
+}
+
+/** Cura que chega a um jogador: zero sob a Geada do chefe. */
+function curaEfetiva(partida: Partida, cura: number): number {
+  return partida.ameacaAtiva?.chefe === 'geada' ? 0 : cura;
 }
 
 // ---------- Criação de Partida ----------
@@ -343,7 +426,8 @@ export function criarPartida(opcoes: OpcoesCriarPartida): Partida {
   });
 
   const primeiraFigura = horizonteDeck.shift() ?? null;
-  const ameacaAtiva = primeiraFigura ? instanciarAmeaca(primeiraFigura, modo, jogadores.length) : null;
+  const chefeJaNaMesa = horizonteDeck.length === 0 ? opcoes.chefe : undefined;
+  const ameacaAtiva = primeiraFigura ? instanciarAmeaca(primeiraFigura, modo, jogadores.length, chefeJaNaMesa) : null;
   const modoRotulo = modo === 'solo' ? 'Solo' : modo === 'coop' ? 'Cooperativo' : 'Competitivo PvP';
   const diario: string[] = [
     `Partida ${modoRotulo} iniciada com ${jogadores.map((j) => `${j.nome} (${SIMBOLO[j.classe]} ${CLASSES[j.classe].nome})`).join(', ')}.`,
@@ -354,6 +438,8 @@ export function criarPartida(opcoes: OpcoesCriarPartida): Partida {
 
   return {
     modo,
+    nivel: opcoes.nivel ?? 'veterano',
+    ...(opcoes.chefe ? { chefe: opcoes.chefe } : {}),
     jogadores,
     baralhoCompra,
     descarte: [],
@@ -443,13 +529,14 @@ export function simularJogada(partida: Partida, quem: number, indicesMao: number
   const temEstrela = cartas.some((c) => ehCoringa(c) && c.coringa === 'estrela');
   const temCaveira = cartas.some((c) => ehCoringa(c) && c.coringa === 'caveira');
 
+  const bonusDaClasse = (naipe: Naipe): number => (jogador.classe === naipe && naipesSet.has(naipe) ? BONUS_CLASSE[naipe] : 0);
   const bonusEspadas = naipesSet.has('spades') ? REGRA.bonusEspadas : 0;
-  const bonusAfinidade = naipesSet.has(jogador.classe) ? 1 : 0;
+  const bonusAfinidade = bonusDaClasse('spades');
   const poderTotal = valorBase + bonusEspadas + bonusAfinidade;
 
-  let reducaoAtaque = naipesSet.has('clubs') ? Math.ceil(valorBase / 2) : 0;
-  let cartasComprar = naipesSet.has('diamonds') ? (valorBase >= 7 ? 2 : 1) : 0;
-  let cura = naipesSet.has('hearts') ? Math.ceil(valorBase / 2) : 0;
+  let reducaoAtaque = naipesSet.has('clubs') ? Math.ceil(valorBase / 2) + bonusDaClasse('clubs') : 0;
+  let cartasComprar = naipesSet.has('diamonds') ? (valorBase >= 7 ? 2 : 1) + bonusDaClasse('diamonds') : 0;
+  let cura = naipesSet.has('hearts') ? Math.ceil(valorBase / 2) + bonusDaClasse('hearts') : 0;
   let danoRecuo = 0;
 
   if (temEstrela) {
@@ -460,6 +547,8 @@ export function simularJogada(partida: Partida, quem: number, indicesMao: number
   if (temCaveira) {
     danoRecuo += REGRA.recuoCaveira;
   }
+  cura = curaEfetiva(partida, cura);
+  if (partida.ameacaAtiva?.chefe === 'racionamento') cartasComprar = 0;
 
   const forcarDescartePvp = naipesSet.has('clubs') && poderTotal >= REGRA.minGolpeDescartePvp ? 1 : 0;
   const habilitaRecrutar = cartas.some(ehVermelha);
@@ -572,20 +661,12 @@ function finalizarPorHorizonteLimpo(partida: Partida, diario: string[]): Partida
     };
   }
 
+  const fim: Partida = { ...partida, ameacaAtiva: null, fase: 'fim', danoPendente: 0, resultado: 'vitoria', vencedorIdx: null };
   const motivoFim =
     partida.modo === 'solo'
-      ? 'Vitória Solo! Todas as 12 Ameaças do Horizonte foram derrotadas.'
+      ? `Vitória Solo! Todas as 12 Ameaças do Horizonte foram derrotadas. Pontuação: ${pontuacaoSolo(fim)}.`
       : 'Vitória Cooperativa! O grupo superou todas as 12 Ameaças do Horizonte.';
-  return {
-    ...partida,
-    ameacaAtiva: null,
-    fase: 'fim',
-    danoPendente: 0,
-    resultado: 'vitoria',
-    vencedorIdx: null,
-    motivoFim,
-    diario: [...diario, motivoFim],
-  };
+  return { ...fim, motivoFim, diario: [...diario, motivoFim] };
 }
 
 function verificarEliminacoesEAvancar(
@@ -602,11 +683,7 @@ function verificarEliminacoesEAvancar(
 
   if (alguemCaiu && (partida.modo === 'solo' || partida.modo === 'coop')) {
     const caido = jogadores.find((j) => j.eliminado)!;
-    const motivoFim =
-      partida.modo === 'solo'
-        ? `${caido.nome} caiu sem PV diante do Horizonte.`
-        : `${caido.nome} não resistiu aos ferimentos. No modo Cooperativo, o grupo cai junto.`;
-    return {
+    const fim: Partida = {
       ...partida,
       jogadores,
       baralhoCompra,
@@ -616,9 +693,12 @@ function verificarEliminacoesEAvancar(
       danoPendente: 0,
       resultado: 'derrota',
       vencedorIdx: null,
-      motivoFim,
-      diario: [...diario, motivoFim],
     };
+    const motivoFim =
+      partida.modo === 'solo'
+        ? `${caido.nome} caiu sem PV diante do Horizonte. Pontuação: ${pontuacaoSolo(fim)}.`
+        : `${caido.nome} não resistiu aos ferimentos. No modo Cooperativo, o grupo cai junto.`;
+    return { ...fim, motivoFim, diario: [...diario, motivoFim] };
   }
 
   if (partida.modo === 'pvp') {
@@ -663,14 +743,14 @@ function verificarEliminacoesEAvancar(
   let desc = descarte;
   const jogadoresComCompra = jogadores.map((j, idx) => {
     if (idx !== quem || j.eliminado) return j;
-    const res = comprarCartas(compra, desc, REGRA.compraFimTurno, REGRA.maoMaxima, j.mao);
+    const res = comprarCartas(compra, desc, REGRA.compraFimTurno, limiteDeMao(ameacaAtiva), j.mao);
     compra = res.baralhoCompra;
     desc = res.descarte;
     return { ...j, mao: res.mao };
   });
 
   const prox = proximoJogadorVivo(jogadoresComCompra, quem);
-  const proxAmeaca = ameacaAtiva ? regenerarNoFimDoTurno(ameacaAtiva, diario) : null;
+  const proxAmeaca = ameacaAtiva ? fimDoTurnoDaAmeaca(ameacaAtiva, diario) : null;
 
   return {
     ...partida,
@@ -777,8 +857,10 @@ function resolverDerrotaDeAmeaca(
     return finalizarPorHorizonteLimpo(baseFinal, diario);
   }
 
-  const novaAmeaca = instanciarAmeaca(proximaFigura, partida.modo, partida.jogadores.length);
+  const chefe = novoHorizonte.length === 0 ? partida.chefe : undefined;
+  const novaAmeaca = instanciarAmeaca(proximaFigura, partida.modo, partida.jogadores.length, chefe);
   diario.push(`Nova Ameaça no Horizonte: ${codigoFigura(proximaFigura)} (Vida ${novaAmeaca.vidaMax} · Ataque ${novaAmeaca.ataqueBase}).`);
+  if (chefe) diario.push(`É o chefe final! ${REGRA_CHEFE[chefe].nome}: ${REGRA_CHEFE[chefe].descricao}`);
 
   return seguir(
     { ...partida, horizonteDeck: novoHorizonte },
@@ -814,7 +896,7 @@ export function agir(partida: Partida, acao: Acao): Partida {
     } else {
       if (!partida.ameacaAtiva) return partida;
       if (acao.alvo === 'horizonte_recrutar') {
-        if (!previa.habilitaRecrutar || danoNaAmeaca(partida.ameacaAtiva, previa.poderTotal) < partida.ameacaAtiva.vidaAtual) {
+        if (!previa.habilitaRecrutar || !golpeDerruba(partida.ameacaAtiva, previa.poderTotal)) {
           return partida;
         }
       }
@@ -846,7 +928,7 @@ export function agir(partida: Partida, acao: Acao): Partida {
 
     // Aplica compra de ♦ / ★
     if (previa.cartasComprar > 0) {
-      const resCompra = comprarCartas(compra, desc, previa.cartasComprar, REGRA.maoMaxima, j.mao);
+      const resCompra = comprarCartas(compra, desc, previa.cartasComprar, limiteDeMao(partida.ameacaAtiva), j.mao);
       compra = resCompra.baralhoCompra;
       desc = resCompra.descarte;
       j.mao = resCompra.mao;
@@ -915,10 +997,10 @@ export function agir(partida: Partida, acao: Acao): Partida {
     const ameaca = { ...partida.ameacaAtiva! };
     ameaca.reducaoAtaqueTurno += previa.reducaoAtaque;
     const danoCausado = danoNaAmeaca(ameaca, previa.poderTotal);
-    ameaca.vidaAtual = Math.max(0, ameaca.vidaAtual - danoCausado);
     diario.push(
       `${j.nome} usou [${nomesCartas}] (${previa.tipoCombo}) contra ${codigoFigura(ameaca.figura)}: ${danoCausado} de dano${previa.reducaoAtaque > 0 ? ` (-${previa.reducaoAtaque} Atq)` : ''}.`,
     );
+    golpearAmeaca(ameaca, previa.poderTotal, diario);
 
     if (ameaca.vidaAtual <= 0) {
       return resolverDerrotaDeAmeaca(
@@ -961,6 +1043,7 @@ export function agir(partida: Partida, acao: Acao): Partida {
     if (partida.fase !== 'acao' || partida.aliadoUsadoNoTurno) return partida;
     const aliado = jogadorAtual.aliados[acao.indiceAliado];
     if (!aliado || aliado.cargas <= 0) return partida;
+    if (aliado.figura.naipe === 'diamonds' && partida.ameacaAtiva?.chefe === 'racionamento') return partida;
 
     const stats = STATUS_FIGURA[aliado.figura.posto];
     let compra = [...partida.baralhoCompra];
@@ -987,9 +1070,8 @@ export function agir(partida: Partida, acao: Acao): Partida {
         rival.vida = Math.max(0, rival.vida - stats.bonusAliado);
         diario.push(`Aliado ${codigoFigura(aliado.figura)} de ${j.nome} disparou em ${rival.nome}: ${stats.bonusAliado} de dano!`);
       } else if (ameaca) {
-        const danoCausado = danoNaAmeaca(ameaca, stats.bonusAliado);
-        ameaca.vidaAtual = Math.max(0, ameaca.vidaAtual - danoCausado);
-        diario.push(`Aliado ${codigoFigura(aliado.figura)} de ${j.nome} causou ${danoCausado} de dano em ${codigoFigura(ameaca.figura)}!`);
+        diario.push(`Aliado ${codigoFigura(aliado.figura)} de ${j.nome} causou ${danoNaAmeaca(ameaca, stats.bonusAliado)} de dano em ${codigoFigura(ameaca.figura)}!`);
+        golpearAmeaca(ameaca, stats.bonusAliado, diario);
       }
     } else if (aliado.figura.naipe === 'clubs') {
       if (!ameaca) return partida;
@@ -997,7 +1079,7 @@ export function agir(partida: Partida, acao: Acao): Partida {
       diario.push(`Aliado ${codigoFigura(aliado.figura)} de ${j.nome} reduziu o ataque de ${codigoFigura(ameaca.figura)} em ${stats.bonusAliado}!`);
     } else if (aliado.figura.naipe === 'diamonds') {
       const qtd = aliado.figura.posto === 'J' ? 1 : aliado.figura.posto === 'Q' ? 2 : 3;
-      const res = comprarCartas(compra, desc, qtd, REGRA.maoMaxima, j.mao);
+      const res = comprarCartas(compra, desc, qtd, limiteDeMao(ameaca), j.mao);
       compra = res.baralhoCompra;
       desc = res.descarte;
       j.mao = res.mao;
@@ -1006,7 +1088,7 @@ export function agir(partida: Partida, acao: Acao): Partida {
       const alvoIdx = partida.modo === 'coop' ? indiceAlvoCuraCoop(jogadores, acao.quem) : acao.quem;
       const alvoCura = jogadores[alvoIdx];
       const antes = alvoCura.vida;
-      alvoCura.vida = Math.min(alvoCura.vidaMax, alvoCura.vida + stats.bonusAliado);
+      alvoCura.vida = Math.min(alvoCura.vidaMax, alvoCura.vida + curaEfetiva(partida, stats.bonusAliado));
       diario.push(`Aliado ${codigoFigura(aliado.figura)} restaurou +${alvoCura.vida - antes} PV em ${alvoCura.nome}.`);
     }
 
@@ -1052,6 +1134,8 @@ export function agir(partida: Partida, acao: Acao): Partida {
 
   if (acao.tipo === 'bloquear') {
     if (partida.fase !== 'bloqueio') return partida;
+    const chefe = partida.ameacaAtiva?.chefe;
+    if (chefe === 'portas' && acao.indicesMao.length > CHEFE.portas) return partida;
 
     const unicos = new Set(acao.indicesMao);
     if (unicos.size !== acao.indicesMao.length) return partida;
@@ -1069,7 +1153,8 @@ export function agir(partida: Partida, acao: Acao): Partida {
     const { restantes, removidos } = removerIndices(j.mao, acao.indicesMao);
     j.mao = restantes;
 
-    let bloqueioTotal = removidos.reduce((acc, c) => acc + valorBloqueioCarta(c), 0);
+    const perdaPorCarta = chefe === 'geada' ? CHEFE.geadaPorCarta : 0;
+    let bloqueioTotal = removidos.reduce((acc, c) => acc + Math.max(0, valorBloqueioCarta(c) - perdaPorCarta), 0);
     const diario = [...partida.diario];
 
     if (acao.usarAliadoEscudo !== undefined) {
@@ -1101,7 +1186,10 @@ export function agir(partida: Partida, acao: Acao): Partida {
       diario.push(`${j.nome} recebeu ${danoFinal} de dano direto (PV: ${j.vida}).`);
     }
 
-    return verificarEliminacoesEAvancar(partida, jogadores, partida.baralhoCompra, desc, partida.ameacaAtiva, acao.quem, diario);
+    const ameaca = partida.ameacaAtiva ? { ...partida.ameacaAtiva } : null;
+    if (ameaca && danoFinal > 0) aplicarChefeAoFerir(ameaca, j, danoFinal, desc, diario);
+
+    return verificarEliminacoesEAvancar(partida, jogadores, partida.baralhoCompra, desc, ameaca, acao.quem, diario);
   }
 
   if (acao.tipo === 'passarTurno') {
@@ -1142,6 +1230,32 @@ export function agir(partida: Partida, acao: Acao): Partida {
   }
 
   return partida;
+}
+
+/** Regras de chefe que disparam quando o ataque passa do bloqueio (mutam a cópia da Ameaça, o jogador e o descarte). */
+function aplicarChefeAoFerir(ameaca: AmeacaAtiva, j: Jogador, dano: number, descarte: CartaAcao[], diario: string[]): void {
+  if (ameaca.chefe === 'drena' && ameaca.vidaAtual < ameaca.vidaMax) {
+    const antes = ameaca.vidaAtual;
+    ameaca.vidaAtual = Math.min(ameaca.vidaMax, ameaca.vidaAtual + dano * CHEFE.drena);
+    diario.push(`${codigoFigura(ameaca.figura)} bebe o seu sangue (+${ameaca.vidaAtual - antes} PV).`);
+  }
+  if (ameaca.chefe !== 'abordagem') return;
+  for (let i = 0; i < CHEFE.abordagem && j.mao.length > 0; i++) {
+    const [levada] = j.mao.splice(Math.floor(Math.random() * j.mao.length), 1);
+    descarte.push(levada);
+    diario.push(`${codigoFigura(ameaca.figura)} levou ${codigoCarta(levada)} da mão de ${j.nome}.`);
+  }
+}
+
+export const EXPLICACAO_PONTUACAO = `A pontuação do Solo soma Troféus, PV restantes, metade do valor dos Aliados, +${PONTUACAO.vitoria} por vencer e +${PONTUACAO.porRodadaPoupada} por rodada abaixo de ${PONTUACAO.rodadasParaBonus}.`;
+
+/** Pontuação do Solo: Domínio (Troféus + PV + Aliados), bônus por vencer e por vencer rápido. */
+export function pontuacaoSolo(partida: Partida): number {
+  const j = partida.jogadores[0];
+  if (!j || partida.modo !== 'solo') return 0;
+  const vitoria = partida.resultado === 'vitoria';
+  const rapidez = vitoria ? Math.max(0, PONTUACAO.rodadasParaBonus - partida.rodada) * PONTUACAO.porRodadaPoupada : 0;
+  return pontosDeDominio(j) + (vitoria ? PONTUACAO.vitoria : 0) + rapidez;
 }
 
 export function linhaDeStatus(partida: Partida): string {

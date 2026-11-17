@@ -8,6 +8,7 @@ export const ARCANA_BLUEPRINT: ThemeBlueprint = {
   tagline: 'Na academia sobre a colina, a prova é um feitiço, o café é uma poção e arrumar a estante acorda a biblioteca.',
   tom: 'leve, aconchegante',
   chefe: {
+    regra: 'detencao',
     nome: 'O Diretor Que Ninguém Viu',
     descricao: 'Assina todas as advertências sem nunca aparecer, e dizem que, no dia em que a cadeira vazia do salão se virar, a academia inteira fará a prova final dele.',
   },
@@ -195,7 +196,7 @@ export const ARCANA_BLUEPRINT: ThemeBlueprint = {
         topWatcherTrigger: '4 de valor + 2 de bônus ♠ = 6 de dano.',
         topWatcherEvent: 'Dois aprendizes se curvam no pátio e trocam faíscas cor-de-rosa e azuis. Quem perder paga o chocolate quente da tarde.',
         bottomEchoPrompt: 'Total de 6 de dano bruto contra Ameaça ou rival.',
-        bottomEchoEffect: 'Se tiver afinidade ♠ na classe, chega a 7 de impacto imediato.',
+        bottomEchoEffect: 'Com Especialização em ♠ (Atirador), chega a 8 de impacto imediato.',
         dailyIdea: 'Forte opção para punir um oponente no modo Competitivo PvP.',
         flavorText: 'No pátio, perder bem vale tanto quanto ganhar.',
       },

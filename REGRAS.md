@@ -31,8 +31,14 @@ Você também precisa de um jeito de marcar vida (dado, clipe ou papel).
    | **Veterano** (padrão) | **15 PV** | A regra normal |
    | **Lenda** | **12 PV** | Quem já vence com frequência |
 
-4. **Escolha uma Especialização** (um naipe por jogador). Sempre que sua jogada tiver ao menos uma carta desse naipe, ela causa **+1 de dano**:
-   - `♠` **Atirador** · `♥` **Médico / Diplomata** · `♦` **Engenheiro / Hacker** · `♣` **Sabotador**
+4. **Escolha uma Especialização** (um naipe por jogador). Sempre que sua jogada tiver ao menos uma carta desse naipe, o efeito do naipe fica mais forte:
+
+   | Especialização | Bônus na jogada com o naipe |
+   | :--- | :--- |
+   | `♠` **Atirador** | **+2 de dano** |
+   | `♥` **Médico / Diplomata** | **cura +2 PV** |
+   | `♦` **Engenheiro / Hacker** | **compra +1 carta** |
+   | `♣` **Sabotador** | **a Ameaça perde +2 de ataque** neste turno |
 5. **Compre 5 cartas.** A mão nunca passa de **6 cartas**.
 6. **Revele a primeira Figura** do Horizonte no centro da mesa. Ela é a **Ameaça Ativa**.
 
@@ -61,7 +67,28 @@ O naipe da Figura dá a ela um traço. A força do traço cresce com o posto.
 | `♦` | **Blindada** | Cada golpe que ela recebe causa menos dano (também o dano de Aliado). | −1 · −2 · −3 | Golpes pequenos quase não passam: use cartas altas e combos. |
 | `♣` | **Imune a armadilhas** | Nada reduz o ataque dela: `♣`, `★` e Aliados de `♣` não funcionam. | — | Você vai ter que bloquear com cartas ou com o Escudo de um Aliado. |
 
-### 3.3. Abater ou Recrutar
+### 3.3. O chefe do tema
+
+A **última Figura** do Horizonte (a 12ª, sempre um Rei) é o chefe do tema. Além do traço do naipe, ela ganha a regra do chefe, que vale enquanto ela estiver em jogo. Cada tema tem uma regra diferente, então o fim da partida muda de tema para tema.
+
+| Tema | Chefe | Regra | O que faz |
+| :--- | :--- | :--- | :--- |
+| Cinzas do Horizonte | O Soberano da Cratera | **Racionamento** | ♦, ★ e Aliados de ♦ não compram cartas. |
+| Zona de Quarentena | O Paciente Zero | **Levanta de Novo** | Ao cair pela 1ª vez, volta com metade da Vida; só então pode ser recrutado. |
+| Neon e Silício | A Corporação | **Firewall** | Golpes de 8 ou menos de dano não passam. |
+| O Último Eclipse | O Devorador do Sol | **Fome Crescente** | Ganha +2 de Ataque no fim de cada turno. |
+| Sangue & Néon | O Antediluviano | **Sede** | Recupera 2× o dano que te causa depois do bloqueio. |
+| Expedição ao Desconhecido | O Coração da Selva | **A Trilha Se Fecha** | Recupera 3 PV no fim de cada turno (soma com o traço ♥). |
+| Noir de Cidade Chuvosa | O Homem que Não Aparece nas Fotos | **Sem Retrato** | Golpe de dano ímpar não acerta: só dano par passa. |
+| Estação Orbital | A Inteligência da Nave | **Portas Seladas** | Só dá para bloquear com 1 carta por ataque (o Escudo de Aliado vale). |
+| Academia de Artes Arcanas | O Diretor Que Ninguém Viu | **Detenção** | Ninguém compra cartas além de 3 na mão. |
+| Mar de Corsários | O Navio Fantasma do Almirante | **Abordagem** | Sempre que ele te causa dano, leva 2 cartas aleatórias da sua mão. |
+| Kaiju na Cidade | O Titã Adormecido | **Colossal** | Tem +20 PV. |
+| Contos da Floresta Antiga | A Rainha do Inverno Sem Fim | **Geada** | Ninguém cura, e cada carta de bloqueio absorve 1 a menos. |
+
+Na simulação com um robô que joga bem, o chefe derruba a vitória no Solo de cerca de 94% para algo entre 76% e 88%, conforme o tema.
+
+### 3.4. Abater ou Recrutar
 
 Quando um golpe zera a vida da Ameaça, ela é derrotada na hora e **não contra-ataca**. Você escolhe o destino dela:
 
@@ -98,10 +125,10 @@ Na sua jogada principal você escolhe **um** destes padrões:
 **Dano da jogada:**
 
 ```text
-Dano = Valor Base + (tem ♠? +2) + (tem o naipe da sua Especialização? +1)
+Dano = Valor Base + (tem ♠? +2) + (você é Atirador e tem ♠? +2)
 ```
 
-Contra uma Ameaça **Blindada**, desconte a blindagem desse total.
+Contra uma Ameaça **Blindada**, desconte a blindagem desse total. Alguns chefes também mudam o dano (seção 3.3).
 
 **Coringas** são sempre jogados sozinhos, não têm naipe e permitem Recrutar:
 
@@ -155,7 +182,7 @@ O dano que sobrar sai dos seus PV.
 
 1. **Compre 1 carta** (se tiver menos de 6 na mão).
 2. As reduções de ataque da Ameaça acabam.
-3. Se a Ameaça for **Regenera** e tiver sobrevivido, ela recupera vida.
+3. Se a Ameaça for **Regenera** e tiver sobrevivido, ela recupera vida. Chefes com Fome Crescente ou A Trilha Se Fecha aplicam a regra deles aqui.
 4. A vez passa ao próximo jogador vivo.
 
 Se o Deck de Ação acabar, embaralhe o descarte para formar um novo.
@@ -167,6 +194,15 @@ Se o Deck de Ação acabar, embaralhe o descarte para formar um novo.
 ### 7.1. Solo (1 jogador)
 
 Você enfrenta as 12 Figuras em sequência. **Vence** ao derrotar a 12ª Figura com pelo menos 1 PV; **perde** ao chegar a 0 PV.
+
+No fim, vencendo ou perdendo, anote a **pontuação** e tente bater o seu recorde em cada nível:
+
+```text
+Pontuação = Pontos de Troféu + PV atuais + metade dos pontos de cada Aliado ativo
+          + 50 se venceu + 2 por rodada abaixo de 40 (só se venceu)
+```
+
+Recrutar dá um Aliado forte, mas vale menos pontos que Abater; bloquear tudo poupa PV, mas gasta rodadas. A pontuação torna essas escolhas mais interessantes.
 
 ### 7.2. Cooperativo (2 a 4 jogadores)
 
@@ -196,7 +232,10 @@ Todos dividem a mesma Ameaça, mas competem entre si. Atacar um rival tira PV de
 - **A ordem das Figuras muda.** Cada onda tem um Valete, uma Dama e um Rei de cada naipe, mas a ordem é sorteada. Pegar a Dama Blindada logo depois do Valete que Regenera pede uma mão diferente de pegar a Dama Imune.
 - **O traço decide o que guardar.** Contra uma Ameaça Regenera, você junta cartas para um golpe só; contra uma Blindada, cartas baixas viram bloqueio; contra uma Imune, `♣` vale só como dano.
 - **Recrutar muda o jogo seguinte.** Um Rei de `♣` recrutado protege contra as Ameaças seguintes; um Rei de `♠` acelera as mortes. Abater dá cartas e pontos agora.
-- **Especialização e nível.** Quatro Especializações, três níveis e três modos mudam o ritmo da partida.
+- **O chefe muda com o tema.** Cada um dos 12 temas termina com um chefe de regra própria (seção 3.3): contra o Firewall você guarda combos; contra a Sede você bloqueia tudo; contra a Detenção você entra com a mão já cheia.
+- **Especializações com papéis.** O Atirador bate mais forte, o Médico cura mais, o Engenheiro compra mais e o Sabotador segura o ataque. No Cooperativo, cada pessoa cobre uma parte do problema.
+- **Pontuação no Solo.** Vencer não é tudo: dá para vencer melhor (mais rápido, com mais PV e mais Troféus) e bater o próprio recorde.
+- **Nível e modo.** Três níveis e três modos mudam o ritmo da partida.
 - **12 temas.** As regras são as mesmas; o mundo, os nomes e a arte mudam.
 
 ---
@@ -253,6 +292,7 @@ As regras são as mesmas em todos os temas; cada um muda o que é o Horizonte, q
 - **O que é o Horizonte neste mundo:** A Terra Devastada e as rodovias de ferrugem. Cada Figura revelada no centro da mesa é um saqueador blindado, mutante radioativo, drone autômato ou profeta da cisterna disputando a última refinaria.
 - **Dinâmica Tática dos Naipes:** ♠ Chumbo & Lâmina perfura blindagens; ♣ Sucata & Armadilha ergue barricadas e reduz ataques; ♦ Tecnologia compra peças extras; ♥ Água & Soro cura PV e recruta sobreviventes.
 - **Chefe Supremo (Clímax da 3ª Onda):** **O Soberano da Cratera** — *Senhor supremo dos comboios blindados que controla a última refinaria e as reservas de água limpa.*
+- **Regra do chefe:** **Racionamento** — ♦, ★ e Aliados de ♦ não compram cartas.
 - **As 4 Facções / Pilares no Tema:**
   - **`♠` Espadas (Chumbo & Lâmina):** Chumbo & Lâmina · Comboio da Ferrugem
   - **`♥` Copas (Suprimento & Carisma):** Suprimento & Carisma · Ordem da Água Pura
@@ -266,6 +306,7 @@ As regras são as mesmas em todos os temas; cada um muda o que é o Horizonte, q
 - **O que é o Horizonte neste mundo:** A Zona de Quarentena cercada por bloqueios sanitários. As Figuras representam líderes da horda, sobreviventes hostis, equipamentos militares e cepas letais.
 - **Dinâmica Tática dos Naipes:** Abata hordas com ♠/♣ para limpar a quarentena ou use ♥/♦ para resgatar especialistas e hackear equipamentos de campo antes da mordida.
 - **Chefe Supremo (Clímax da 3ª Onda):** **O Paciente Zero** — *O primeiro infectado ainda pensa. Ele guia a horda até vocês.*
+- **Regra do chefe:** **Levanta de Novo** — Ao cair pela 1ª vez, volta com metade da Vida; só então pode ser recrutado.
 - **As 4 Facções / Pilares no Tema:**
   - **`♠` Espadas (Chumbo & Lâmina):** Patrulha & Lâmina
   - **`♥` Copas (Suprimento & Carisma):** Triagem & Vínculo
@@ -279,6 +320,7 @@ As regras são as mesmas em todos os temas; cada um muda o que é o Horizonte, q
 - **O que é o Horizonte neste mundo:** A rede corporativa e os becos sob chuva ácida. As Figuras são protocolos ICE, mercenários cibernéticos, hackers e diretores de megacorporação.
 - **Dinâmica Tática dos Naipes:** Rompa firewalls com ♠/♣ ou invada e recrute sistemas autônomos e informantes usando ♦ Tecnologia e ♥ Contatos.
 - **Chefe Supremo (Clímax da 3ª Onda):** **A Corporação** — *Uma marca sem rosto, dona das torres, da chuva artificial e dos contratos de todos, que agora quer também as suas lembranças.*
+- **Regra do chefe:** **Firewall** — Golpes de 8 ou menos de dano não passam.
 - **As 4 Facções / Pilares no Tema:**
   - **`♠` Espadas (Chumbo & Lâmina):** Drone & Segurança
   - **`♥` Copas (Suprimento & Carisma):** Contatos & Código
@@ -292,6 +334,7 @@ As regras são as mesmas em todos os temas; cada um muda o que é o Horizonte, q
 - **O que é o Horizonte neste mundo:** A Coroa Negra fechando o sol e distorcendo a gravidade. As Figuras são sentinelas, relíquias e aberrações nascidas da penumbra.
 - **Dinâmica Tática dos Naipes:** Contenha as anomalias com ♠/♣ ou harmonize os sobreviventes da cidade escurecida com ♥/♦ antes que a luz se apague.
 - **Chefe Supremo (Clímax da 3ª Onda):** **O Devorador do Sol** — *A coroa negra ganhou forma e fome. Quando terminar o sol, virá a terra.*
+- **Regra do chefe:** **Fome Crescente** — Ganha +2 de Ataque no fim de cada turno.
 - **As 4 Facções / Pilares no Tema:**
   - **`♠` Espadas (Chumbo & Lâmina):** Vigília & Farol
   - **`♥` Copas (Suprimento & Carisma):** Memória & Despedida
@@ -305,6 +348,7 @@ As regras são as mesmas em todos os temas; cada um muda o que é o Horizonte, q
 - **O que é o Horizonte neste mundo:** As cortes imortais sob os letreiros da metrópole. Cada Figura é um ancião, caçador, relíquia de sangue ou pacto noturno.
 - **Dinâmica Tática dos Naipes:** Cace rivais da noite com ♠/♣ ou negocie alianças e favores de sangue com ♥/♦ no jogo político do PvP.
 - **Chefe Supremo (Clímax da 3ª Onda):** **O Antediluviano** — *O ancião desperto que bebe cidades inteiras numa única noite.*
+- **Regra do chefe:** **Sede** — Recupera 2× o dano que te causa depois do bloqueio.
 - **As 4 Facções / Pilares no Tema:**
   - **`♠` Espadas (Chumbo & Lâmina):** Lâmina & Inquisição
   - **`♥` Copas (Suprimento & Carisma):** Sedução & Elísio
@@ -318,6 +362,7 @@ As regras são as mesmas em todos os temas; cada um muda o que é o Horizonte, q
 - **O que é o Horizonte neste mundo:** A selva viva cheia de ruínas antigas e rios móveis. As Figuras são predadores, guias nativos, armadilhas de pedra e guardiões do templo.
 - **Dinâmica Tática dos Naipes:** Abra trilha na força bruta (♠/♣) ou conquiste aliados e mapas do tesouro (♥/♦).
 - **Chefe Supremo (Clímax da 3ª Onda):** **O Coração da Selva** — *A floresta inteira pulsa num só ritmo e fecha as trilhas atrás de quem ousou chegar ao centro.*
+- **Regra do chefe:** **A Trilha Se Fecha** — Recupera 3 PV no fim de cada turno (soma com o traço ♥).
 - **As 4 Facções / Pilares no Tema:**
   - **`♠` Espadas (Chumbo & Lâmina):** Selva & Correnteza
   - **`♥` Copas (Suprimento & Carisma):** Companheiros de Trilha
@@ -331,6 +376,7 @@ As regras são as mesmas em todos os temas; cada um muda o que é o Horizonte, q
 - **O que é o Horizonte neste mundo:** As ruas chuvosas de Porto Bruma. As Figuras são detetives corruptos, informantes, dossiês secretos e chefões do submundo.
 - **Dinâmica Tática dos Naipes:** Neutralize capangas e armadilhas (♠/♣) ou compre testemunhas e recupere pistas decisivas (♥/♦).
 - **Chefe Supremo (Clímax da 3ª Onda):** **O Homem que Não Aparece nas Fotos** — *Ele está em todos os crimes da cidade, mas cada retrato dele revela só uma cadeira vazia e um cigarro ainda aceso.*
+- **Regra do chefe:** **Sem Retrato** — Golpe de dano ímpar não acerta: só dano par passa.
 - **As 4 Facções / Pilares no Tema:**
   - **`♠` Espadas (Chumbo & Lâmina):** Capangas & Ameaças
   - **`♥` Copas (Suprimento & Carisma):** Informantes & Testemunhas
@@ -344,6 +390,7 @@ As regras são as mesmas em todos os temas; cada um muda o que é o Horizonte, q
 - **O que é o Horizonte neste mundo:** Os setores pressurizados da Estação Vigia em órbita. As Figuras são falhas críticas, drones de manutenção e módulos de comando.
 - **Dinâmica Tática dos Naipes:** Sele brechas no casco (♠/♣) ou reprograme sistemas vitais e suporte de oxigênio (♦/♥).
 - **Chefe Supremo (Clímax da 3ª Onda):** **A Inteligência da Nave** — *O computador central decidiu que a tripulação é a falha a corrigir, e controla cada porta, válvula e luz da estação.*
+- **Regra do chefe:** **Portas Seladas** — Só dá para bloquear com 1 carta por ataque (o Escudo de Aliado vale).
 - **As 4 Facções / Pilares no Tema:**
   - **`♠` Espadas (Chumbo & Lâmina):** Casco & Contenção
   - **`♥` Copas (Suprimento & Carisma):** Tripulação & Terra
@@ -357,6 +404,7 @@ As regras são as mesmas em todos os temas; cada um muda o que é o Horizonte, q
 - **O que é o Horizonte neste mundo:** Os salões mutantes da Academia na Colina. As Figuras são duelos de feitiços, grimórios vivos e mestres das casas arcanas.
 - **Dinâmica Tática dos Naipes:** Contra-ataque encantamentos com ♠/♣ ou conjure familiares e poções restauradoras com ♥/♦.
 - **Chefe Supremo (Clímax da 3ª Onda):** **O Diretor Que Ninguém Viu** — *Assina todas as advertências sem nunca aparecer, e dizem que, no dia em que a cadeira vazia do salão se virar, a academia inteira fará a prova final dele.*
+- **Regra do chefe:** **Detenção** — Ninguém compra cartas além de 3 na mão.
 - **As 4 Facções / Pilares no Tema:**
   - **`♠` Espadas (Chumbo & Lâmina):** Duelos & Exames
   - **`♥` Copas (Suprimento & Carisma):** Colegas & Mestres
@@ -370,6 +418,7 @@ As regras são as mesmas em todos os temas; cada um muda o que é o Horizonte, q
 - **O que é o Horizonte neste mundo:** As águas tempestuosas ao redor do Convés Torto. As Figuras são piratas rivais, canhões, monstros marinhos e navios fantasmas.
 - **Dinâmica Tática dos Naipes:** Derrube navios rivais com qualquer carta ou recrute tripulações com ♥/♦ no golpe final.
 - **Chefe Supremo (Clímax da 3ª Onda):** **O Navio Fantasma do Almirante** — *Um almirante que nunca aceitou a aposentadoria patrulha o mar com velas de neblina e quer recrutar todo mundo para o turno eterno.*
+- **Regra do chefe:** **Abordagem** — Sempre que ele te causa dano, leva 2 cartas aleatórias da sua mão.
 - **As 4 Facções / Pilares no Tema:**
   - **`♠` Espadas (Chumbo & Lâmina):** Tempestade & Motim
   - **`♥` Copas (Suprimento & Carisma):** Tripulação & Cantoria
@@ -383,6 +432,7 @@ As regras são as mesmas em todos os temas; cada um muda o que é o Horizonte, q
 - **O que é o Horizonte neste mundo:** A baía metropolitana em alerta máximo. As Figuras são enxames de parasitas, esquadrões de contenção e colossos abissais.
 - **Dinâmica Tática dos Naipes:** Segure o avanço urbano com ♠/♣ ou evacue civis e mobilize tecnologia pesada (♥/♦).
 - **Chefe Supremo (Clímax da 3ª Onda):** **O Titã Adormecido** — *Dormia sob a baía desde antes da primeira rua ser aberta e agora acordou com fome de barulho, sem saber onde fica a saída.*
+- **Regra do chefe:** **Colossal** — Tem +20 PV.
 - **As 4 Facções / Pilares no Tema:**
   - **`♠` Espadas (Chumbo & Lâmina):** Sirene & Escombro
   - **`♥` Copas (Suprimento & Carisma):** Vizinhança & Resgate
@@ -396,6 +446,7 @@ As regras são as mesmas em todos os temas; cada um muda o que é o Horizonte, q
 - **O que é o Horizonte neste mundo:** O bosque encantado ameaçado pela geada eterna. As Figuras são espíritos das árvores, feitiços de inverno e guardiões das estações.
 - **Dinâmica Tática dos Naipes:** Afaste o frio cortante com ♠/♣ ou desperte aliados silvestres com ♥/♦.
 - **Chefe Supremo (Clímax da 3ª Onda):** **A Rainha do Inverno Sem Fim** — *Ela quer que a floresta durma para sempre sob a geada, sem brotos, sem cantos e sem primavera.*
+- **Regra do chefe:** **Geada** — Ninguém cura, e cada carta de bloqueio absorve 1 a menos.
 - **As 4 Facções / Pilares no Tema:**
   - **`♠` Espadas (Chumbo & Lâmina):** Trolls & Espinheiros
   - **`♥` Copas (Suprimento & Carisma):** Bichos que Falam

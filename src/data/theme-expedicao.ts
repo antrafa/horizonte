@@ -8,6 +8,7 @@ export const EXPEDICAO_BLUEPRINT: ThemeBlueprint = {
   tagline: 'Além do último posto avançado, os rios mudam de curso e as ruínas guardam caminhos que nenhum mapa terminou.',
   tom: 'aventura, exploração',
   chefe: {
+    regra: 'pulsa',
     nome: 'O Coração da Selva',
     descricao: 'A floresta inteira pulsa num só ritmo e fecha as trilhas atrás de quem ousou chegar ao centro.',
   },
@@ -195,7 +196,7 @@ export const EXPEDICAO_BLUEPRINT: ThemeBlueprint = {
         topWatcherTrigger: '4 de valor + 2 de bônus ♠ = 6 de dano.',
         topWatcherEvent: 'Ao cair da tarde, uma nuvem de mosquitos sobe do brejo. Nada grave, mas é impossível pensar com tanto zumbido.',
         bottomEchoPrompt: 'Total de 6 de dano bruto contra Ameaça ou rival.',
-        bottomEchoEffect: 'Se tiver afinidade ♠ na classe, chega a 7 de impacto imediato.',
+        bottomEchoEffect: 'Com Especialização em ♠ (Atirador), chega a 8 de impacto imediato.',
         dailyIdea: 'Forte opção para punir um oponente no modo Competitivo PvP.',
         flavorText: 'O menor bicho da selva é o que mais fala.',
       },

@@ -1,3 +1,5 @@
+import type { RegraChefe } from '../core/partida';
+
 export type Suit = 'spades' | 'hearts' | 'diamonds' | 'clubs' | 'joker';
 
 export type Rank =
@@ -65,6 +67,8 @@ export interface GameCard {
 }
 
 export interface ThemeBoss {
+  /** Regra do chefe final no motor (a última Figura do Horizonte). */
+  regra: RegraChefe;
   nome: string;
   descricao: string;
 }

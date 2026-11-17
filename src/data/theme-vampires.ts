@@ -8,6 +8,7 @@ export const VAMPIRES_BLUEPRINT: ThemeBlueprint = {
   tagline: 'Sob os letreiros de néon, pactos antigos cobram seu preço em sangue e segredos.',
   tom: 'horror urbano, gótico',
   chefe: {
+    regra: 'drena',
     nome: 'O Antediluviano',
     descricao: 'O ancião desperto que bebe cidades inteiras numa única noite.',
   },
@@ -195,7 +196,7 @@ export const VAMPIRES_BLUEPRINT: ThemeBlueprint = {
         topWatcherTrigger: '4 de valor + 2 de bônus ♠ = 6 de dano.',
         topWatcherEvent: 'O servo mortal que guardava o refúgio diurno foi subornado por um clã rival e destrancou as janelas voltadas para o leste.',
         bottomEchoPrompt: 'Total de 6 de dano bruto contra Ameaça ou rival.',
-        bottomEchoEffect: 'Se tiver afinidade ♠ na classe, chega a 7 de impacto imediato.',
+        bottomEchoEffect: 'Com Especialização em ♠ (Atirador), chega a 8 de impacto imediato.',
         dailyIdea: 'Forte opção para punir um oponente no modo Competitivo PvP.',
         flavorText: 'Dar seu sangue a um mortal cria um escravo leal, até o dia em que a inveja supera o vício.',
       },

@@ -10,6 +10,10 @@ import {
   NIVEIS,
   type Nivel,
   danoNaAmeaca,
+  golpeDerruba,
+  pontuacaoSolo,
+  REGRA_CHEFE,
+  EXPLICACAO_PONTUACAO,
   TRACO_AMEACA,
   NAIPES,
   type Naipe,
@@ -23,7 +27,7 @@ import {
   valorBloqueioCarta,
 } from '../core/partida';
 import type { PreparoSala } from '../core/online-sync';
-import { syncEstadoDoMundo } from '../core/storage';
+import { lerRecordeSolo, syncEstadoDoMundo } from '../core/storage';
 import type { ThemeDeck } from '../types/card';
 import { cartaDoTemaPorAcao, cartaDoTemaPorFigura, escapeHtml, renderMagicCardHtml } from './card-renderer';
 import { NUANCES_DO_TEMA } from './temas-view';
@@ -170,6 +174,7 @@ function renderPreparacao(
         <div>
           <span class="field-label">Onda Final · ${escapeHtml(deck.chefe.nome)}</span>
           <p>${escapeHtml(deck.chefe.descricao)} ${escapeHtml(nuance.chefeFinal)}</p>
+          <p><strong>Regra do chefe · ${escapeHtml(REGRA_CHEFE[deck.chefe.regra].nome)}:</strong> a última Figura do Horizonte ganha esta regra. ${escapeHtml(REGRA_CHEFE[deck.chefe.regra].descricao)}</p>
         </div>
       </div>
 
@@ -264,6 +269,11 @@ function renderPainelHorizonte(deck: ThemeDeck, partida: Partida): string {
         <h3>${escapeHtml(cartaTema?.title ?? codigoFigura(ameaca.figura))} <span class="muted">${escapeHtml(codigoFigura(ameaca.figura))}</span></h3>
         <p class="muted">${escapeHtml(cartaTema?.artSubtitle ?? '')}</p>
         <p><span class="chip chip-strong">${TRACO_AMEACA[ameaca.figura.naipe].nome}</span> ${escapeHtml(TRACO_AMEACA[ameaca.figura.naipe].descricao(ameaca.figura.posto))}</p>
+        ${
+          ameaca.chefe
+            ? `<p><span class="chip chip-strong">Chefe · ${escapeHtml(REGRA_CHEFE[ameaca.chefe].nome)}</span> ${escapeHtml(REGRA_CHEFE[ameaca.chefe].descricao)}</p>`
+            : ''
+        }
 
         <div class="horizon-bars">
           <div class="horizon-vital">
@@ -471,7 +481,7 @@ function renderAreaDeAcao(deck: ThemeDeck, partida: Partida, selectedIndices: nu
   const ameaca = partida.ameacaAtiva;
   const podeAbater = previa.valida && !!ameaca;
   const danoNoHorizonte = ameaca ? danoNaAmeaca(ameaca, previa.poderTotal) : 0;
-  const podeRecrutar = previa.valida && !!ameaca && previa.habilitaRecrutar && danoNoHorizonte >= ameaca.vidaAtual;
+  const podeRecrutar = previa.valida && !!ameaca && previa.habilitaRecrutar && golpeDerruba(ameaca, previa.poderTotal);
   const podeCiclar = selectedIndices.length <= REGRA.maxDescarteCiclo;
 
   const efeitos: string[] = [];
@@ -517,7 +527,7 @@ function renderAreaDeAcao(deck: ThemeDeck, partida: Partida, selectedIndices: nu
 
       <div class="threat-actions">
         <button type="button" class="btn-primary" data-acao="jogarCartas" data-quem="${quem}" data-alvo="horizonte_abater" ${podeAbater ? '' : 'disabled'}>
-          ⚔ Abater no Horizonte ${previa.valida ? `(${danoNoHorizonte} dano${danoNoHorizonte < previa.poderTotal ? ', blindada' : ''})` : ''}
+          ⚔ Abater no Horizonte ${previa.valida ? `(${danoNoHorizonte} dano${danoNoHorizonte < previa.poderTotal ? ', reduzido' : ''})` : ''}
         </button>
         <button type="button" class="btn-secondary" data-acao="jogarCartas" data-quem="${quem}" data-alvo="horizonte_recrutar" ${podeRecrutar ? '' : 'disabled'}>
           🤝 Recrutar ${podeRecrutar ? '' : '(precisa zerar a Vida e ter ♥/♦/Coringa)'}
@@ -528,6 +538,14 @@ function renderAreaDeAcao(deck: ThemeDeck, partida: Partida, selectedIndices: nu
         </button>
       </div>
     </section>`;
+}
+
+function renderRecordeSolo(partida: Partida): string {
+  const nivel = partida.nivel ?? 'veterano';
+  const pontos = pontuacaoSolo(partida);
+  const recorde = lerRecordeSolo(nivel);
+  const frase = recorde === null || pontos >= recorde ? 'Novo recorde!' : `Recorde: ${recorde}.`;
+  return `<p>Nível ${NIVEIS[nivel].nome} · ${frase} ${escapeHtml(EXPLICACAO_PONTUACAO)}</p>`;
 }
 
 function renderPartida(
@@ -548,6 +566,7 @@ function renderPartida(
       <div class="result ${partida.resultado === 'vitoria' ? 'is-win' : 'is-loss'}">
         <span class="eyebrow">${partida.resultado === 'vitoria' ? 'Vitória na Zona de Conflito' : 'Derrota no Horizonte'}</span>
         <h2>${escapeHtml(partida.motivoFim)}</h2>
+        ${partida.modo === 'solo' ? renderRecordeSolo(partida) : ''}
         <div class="inline wrap">
           <button type="button" class="btn-primary" data-acao-mesa="novaMesa">Jogar novamente</button>
           <button type="button" class="btn-secondary" data-acao-mesa="encerrarMesa">Voltar à preparação</button>

@@ -8,6 +8,7 @@ export const WASTELAND_BLUEPRINT: ThemeBlueprint = {
   tagline: 'O Velho Mundo virou ferrugem. No Horizonte, você abate seus inimigos ou os recruta para sobreviver.',
   tom: 'sobrevivência tática, pó e ferrugem',
   chefe: {
+    regra: 'racionamento',
     nome: 'O Soberano da Cratera',
     descricao: 'Senhor supremo dos comboios blindados que controla a última refinaria e as reservas de água limpa.',
   },
@@ -195,7 +196,7 @@ export const WASTELAND_BLUEPRINT: ThemeBlueprint = {
         topWatcherTrigger: '4 de valor + 2 de bônus ♠ = 6 de dano.',
         topWatcherEvent: 'Vergalhões afiados voam em linha reta para prender rodas ou blindagens.',
         bottomEchoPrompt: 'Total de 6 de dano bruto contra Ameaça ou rival.',
-        bottomEchoEffect: 'Se tiver afinidade ♠ na classe, chega a 7 de impacto imediato.',
+        bottomEchoEffect: 'Com Especialização em ♠ (Atirador), chega a 8 de impacto imediato.',
         dailyIdea: 'Forte opção para punir um oponente no modo Competitivo PvP.',
         flavorText: 'Silenciosa o bastante para não chamar o enxame do quarteirão vizinho.',
       },

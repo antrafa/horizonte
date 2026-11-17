@@ -23,7 +23,7 @@ function minutos(deck: ThemeDeck): Minuto[] {
     },
     {
       titulo: 'Prepare sua Zona',
-      faca: `Cada pessoa escolhe o modo (Solo, Coop ou PvP), escolhe 1 naipe de Especialização (+1 de força nele), marca ${REGRA.vidaInicial} PV e compra ${REGRA.maoInicial} cartas.`,
+      faca: `Cada pessoa escolhe o modo (Solo, Coop ou PvP), escolhe 1 naipe de Especialização (ela reforça o efeito daquele naipe), marca ${REGRA.vidaInicial} PV e compra ${REGRA.maoInicial} cartas.`,
       pronto: `${REGRA.maoInicial} cartas na mão e ${REGRA.vidaInicial} PV marcados.`,
     },
     {

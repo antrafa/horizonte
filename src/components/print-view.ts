@@ -1,4 +1,4 @@
-import { CLASSES, FUNCAO_DO_NAIPE, NIVEIS, REGRA, STATUS_FIGURA } from '../core/partida';
+import { CLASSES, FUNCAO_DO_NAIPE, NIVEIS, PONTUACAO, REGRA, REGRA_CHEFE, STATUS_FIGURA } from '../core/partida';
 import type { GameCard, ThemeDeck } from '../types/card';
 import { getGeneratedCardBackPath } from './card-art';
 import { escapeHtml, isFigure, renderMagicCardHtml } from './card-renderer';
@@ -185,8 +185,8 @@ export function gerarCartasDeDinamismo(deck: ThemeDeck): GameCard[] {
       'Regras de Solo & Cooperativo',
       '🤝',
       'Contra o Deck de Ameaças',
-      'Superem todas as 12 Figuras juntos. No Coop, cartas de ♥ curam o aliado mais ferido.',
-      'Se alguém cair a 0 PV, a expedição fracassa.',
+      `Chefe · ${REGRA_CHEFE[deck.chefe.regra].nome}: ${REGRA_CHEFE[deck.chefe.regra].descricao}`,
+      `Solo: Troféus + PV + Aliados/2, +${PONTUACAO.vitoria} se vencer, +${PONTUACAO.porRodadaPoupada} por rodada abaixo de ${PONTUACAO.rodadasParaBonus}.`,
     ),
     base(
       9,

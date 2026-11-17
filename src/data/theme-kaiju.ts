@@ -8,6 +8,7 @@ export const KAIJU_BLUEPRINT: ThemeBlueprint = {
   tagline: 'Algo enorme dormia sob a baía desde antes da cidade existir. Hoje de manhã, ele se espreguiçou.',
   tom: 'épico com humor',
   chefe: {
+    regra: 'colossal',
     nome: 'O Titã Adormecido',
     descricao: 'Dormia sob a baía desde antes da primeira rua ser aberta e agora acordou com fome de barulho, sem saber onde fica a saída.',
   },
@@ -195,7 +196,7 @@ export const KAIJU_BLUEPRINT: ThemeBlueprint = {
         topWatcherTrigger: '4 de valor + 2 de bônus ♠ = 6 de dano.',
         topWatcherEvent: 'O barulho da obra ao lado bate num ritmo pesado demais. A cada batida, cai um pouco de poeira do teto.',
         bottomEchoPrompt: 'Total de 6 de dano bruto contra Ameaça ou rival.',
-        bottomEchoEffect: 'Se tiver afinidade ♠ na classe, chega a 7 de impacto imediato.',
+        bottomEchoEffect: 'Com Especialização em ♠ (Atirador), chega a 8 de impacto imediato.',
         dailyIdea: 'Forte opção para punir um oponente no modo Competitivo PvP.',
         flavorText: 'O pedreiro desligou a britadeira. As batidas continuaram.',
       },

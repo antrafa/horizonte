@@ -40,6 +40,7 @@ import {
   NAIPES,
   type Naipe,
   type Partida,
+  pontuacaoSolo,
   REGRA,
 } from './core/partida';
 import {
@@ -48,6 +49,7 @@ import {
   loadPartida,
   loadThemeId,
   loadThemeWithOverrides,
+  registrarRecordeSolo,
   resetThemeOverrides,
   saveCardOverride,
   savePartida,
@@ -647,6 +649,9 @@ export function mountHorizonteApp(root: HTMLElement): void {
           showToast('Jogada inválida para este momento ou seleção.');
           return;
         }
+        if (proxima.modo === 'solo' && proxima.resultado !== null) {
+          registrarRecordeSolo(proxima.nivel ?? 'veterano', pontuacaoSolo(proxima));
+        }
         setPartida(proxima);
       });
     });
@@ -671,7 +676,7 @@ export function mountHorizonteApp(root: HTMLElement): void {
     if (nome === 'comecar' || nome === 'novaMesa') {
       const nomeados = jogadores.map((j, i) => ({ ...j, nome: j.nome.trim() || `Sobrevivente ${i + 1}` }));
       state.preparo = { ...state.preparo, jogadores: nomeados };
-      setPartida(criarPartida({ modo: state.preparo.modo, nivel: state.preparo.nivel, jogadores: nomeados }), true);
+      setPartida(criarPartida({ modo: state.preparo.modo, nivel: state.preparo.nivel, jogadores: nomeados, chefe: THEMES[state.activeThemeId].chefe.regra }), true);
       if (nome === 'novaMesa') showToast('Nova partida iniciada!');
       return;
     }

@@ -8,6 +8,7 @@ export const NEON_BLUEPRINT: ThemeBlueprint = {
   tagline: 'Na cidade onde a chuva nunca para, cada senha é uma porta, cada implante é uma voz e cada crédito deixa rastro.',
   tom: 'urbano, rápido',
   chefe: {
+    regra: 'firewall',
     nome: 'A Corporação',
     descricao: 'Uma marca sem rosto, dona das torres, da chuva artificial e dos contratos de todos, que agora quer também as suas lembranças.',
   },
@@ -195,7 +196,7 @@ export const NEON_BLUEPRINT: ThemeBlueprint = {
         topWatcherTrigger: '4 de valor + 2 de bônus ♠ = 6 de dano.',
         topWatcherEvent: 'Na portaria do arranha-céu, um segurança de terno cinza confere o crachá holográfico três vezes e ainda pede outro documento.',
         bottomEchoPrompt: 'Total de 6 de dano bruto contra Ameaça ou rival.',
-        bottomEchoEffect: 'Se tiver afinidade ♠ na classe, chega a 7 de impacto imediato.',
+        bottomEchoEffect: 'Com Especialização em ♠ (Atirador), chega a 8 de impacto imediato.',
         dailyIdea: 'Forte opção para punir um oponente no modo Competitivo PvP.',
         flavorText: 'Na torre, ninguém é alguém até o sistema dizer que é.',
       },

@@ -8,6 +8,7 @@ export const CORSARIOS_BLUEPRINT: ThemeBlueprint = {
   tagline: 'Todo dia zarpa um navio: o trabalho vira convés, o almoço vira butim e cada recado chega numa garrafa.',
   tom: 'aventura com humor',
   chefe: {
+    regra: 'abordagem',
     nome: 'O Navio Fantasma do Almirante',
     descricao: 'Um almirante que nunca aceitou a aposentadoria patrulha o mar com velas de neblina e quer recrutar todo mundo para o turno eterno.',
   },
@@ -195,7 +196,7 @@ export const CORSARIOS_BLUEPRINT: ThemeBlueprint = {
         topWatcherTrigger: '4 de valor + 2 de bônus ♠ = 6 de dano.',
         topWatcherEvent: 'Pendurado no mastro, um marujo resmunga sem parar sobre a comida, o vento e o capitão. O resmungo começa a contagiar o convés.',
         bottomEchoPrompt: 'Total de 6 de dano bruto contra Ameaça ou rival.',
-        bottomEchoEffect: 'Se tiver afinidade ♠ na classe, chega a 7 de impacto imediato.',
+        bottomEchoEffect: 'Com Especialização em ♠ (Atirador), chega a 8 de impacto imediato.',
         dailyIdea: 'Forte opção para punir um oponente no modo Competitivo PvP.',
         flavorText: 'Ele reclama do sol, da chuva e, nos dias bons, da falta de assunto.',
       },

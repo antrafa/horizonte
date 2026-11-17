@@ -10,6 +10,7 @@ import {
   criarPartida,
   linhaDeStatus,
   pontosDeDominio,
+  pontuacaoSolo,
   simularJogada,
   type CartaAcao,
   type FiguraHorizonte,
@@ -48,8 +49,8 @@ describe('Motor PvPvE de HORIZONTE — Zona de Conflito', () => {
       horizonteDeck: [figura('J', 'clubs')],
       maosIniciais: [
         [
-          { valor: 6, naipe: 'spades' }, // 0: +2 ♠ +1 classe = 9
-          { valor: 6, naipe: 'clubs' }, // 1: Par de 6 (base 12, -6 atq, +2 ♠ +1 afin = 15)
+          { valor: 6, naipe: 'spades' }, // 0: +2 ♠ +2 Atirador = 10
+          { valor: 6, naipe: 'clubs' }, // 1: Par de 6 (base 12, -6 atq, +2 ♠ +2 Atirador = 16)
           { valor: 1, naipe: 'hearts' }, // 2: Ás solo = 5 (base 5, +3 cura)
           { valor: 4, naipe: 'diamonds' }, // 3: Carta 4 ♦ + Ás ♥ -> base 4+4=8, compra +2, cura +4
           { coringa: 'estrela' }, // 4: ★ = 5, cura 4, compra 2, -3 ataque
@@ -65,8 +66,8 @@ describe('Motor PvPvE de HORIZONTE — Zona de Conflito', () => {
     expect(s0.valida).toBe(true);
     expect(s0.valorBase).toBe(6);
     expect(s0.bonusEspadas).toBe(REGRA.bonusEspadas);
-    expect(s0.bonusAfinidade).toBe(1);
-    expect(s0.poderTotal).toBe(9);
+    expect(s0.bonusAfinidade).toBe(2);
+    expect(s0.poderTotal).toBe(10);
     expect(s0.habilitaRecrutar).toBe(false);
 
     const par = simularJogada(p, 0, [0, 1]);
@@ -74,7 +75,7 @@ describe('Motor PvPvE de HORIZONTE — Zona de Conflito', () => {
     expect(par.tipoCombo).toContain('Par');
     expect(par.valorBase).toBe(12);
     expect(par.reducaoAtaque).toBe(6);
-    expect(par.poderTotal).toBe(15);
+    expect(par.poderTotal).toBe(16);
 
     const trinca = simularJogada(p, 0, [0, 1, 6]);
     expect(trinca.valida).toBe(true);
@@ -122,11 +123,11 @@ describe('Motor PvPvE de HORIZONTE — Zona de Conflito', () => {
   it('aplica efeitos de ataque, bloqueio tático com descarte/aliado e compra 1 carta ao fim do turno', () => {
     const p0 = criarPartida({
       modo: 'solo',
-      jogadores: [{ nome: 'Solo', classe: 'clubs' }],
+      jogadores: [{ nome: 'Solo', classe: 'diamonds' }],
       horizonteDeck: [figura('J', 'hearts'), figura('K', 'hearts')],
       maosIniciais: [
         [
-          { valor: 4, naipe: 'clubs' }, // 0: poder 4+1(afinidade)=5, -2 ataque J♥ (4->2)
+          { valor: 4, naipe: 'clubs' }, // 0: poder 4, -2 ataque J♥ (4->2)
           { valor: 2, naipe: 'hearts' }, // 1: usado p/ bloqueio
           { valor: 3, naipe: 'diamonds' }, // 2
           { valor: 5, naipe: 'spades' }, // 3
@@ -139,7 +140,7 @@ describe('Motor PvPvE de HORIZONTE — Zona de Conflito', () => {
 
     const p1 = agir(p0, { tipo: 'jogarCartas', quem: 0, indicesMao: [0], alvo: 'horizonte_abater' });
     expect(p1).not.toBe(p0);
-    expect(p1.ameacaAtiva?.vidaAtual).toBe(STATUS_FIGURA.J.vida - 5);
+    expect(p1.ameacaAtiva?.vidaAtual).toBe(STATUS_FIGURA.J.vida - 4);
     expect(ataqueEfetivoAmeaca(p1.ameacaAtiva)).toBe(2);
     expect(p1.fase).toBe('bloqueio');
     expect(p1.danoPendente).toBe(2);
@@ -152,7 +153,7 @@ describe('Motor PvPvE de HORIZONTE — Zona de Conflito', () => {
     // Tinha 3 cartas na mão após jogar 1 e bloquear com 1 -> compra só 1 no fim do turno
     expect(p2.jogadores[0].mao).toHaveLength(3 + REGRA.compraFimTurno);
     // J♥ sobreviveu ao turno e se regenera (traço ♥)
-    expect(p2.ameacaAtiva?.vidaAtual).toBe(STATUS_FIGURA.J.vida - 5 + STATUS_FIGURA.J.regeneracao);
+    expect(p2.ameacaAtiva?.vidaAtual).toBe(STATUS_FIGURA.J.vida - 4 + STATUS_FIGURA.J.regeneracao);
   });
 
   it('diferencia Abater (♠/♣) e Recrutar (♥/♦/Coringa), respeitando limite de 2 aliados e uso com cargas', () => {
@@ -162,7 +163,7 @@ describe('Motor PvPvE de HORIZONTE — Zona de Conflito', () => {
       horizonteDeck: [figura('J', 'spades'), figura('Q', 'spades'), figura('K', 'clubs')],
       maosIniciais: [
         [
-          { valor: 9, naipe: 'hearts' }, // 0: com o Ás ♦ (índice 3): 9+4+1 = 14 -> mata J (12 vida)
+          { valor: 9, naipe: 'hearts' }, // 0: com o Ás ♦ (índice 3): 9+4 = 13 -> mata J (12 vida)
           { valor: 10, naipe: 'spades' }, // 1: poder 10+2=12 (não mata Q=14)
           { valor: 9, naipe: 'clubs' }, // 2: só preta
           { valor: 1, naipe: 'diamonds' }, // 3
@@ -252,7 +253,7 @@ describe('Motor PvPvE de HORIZONTE — Zona de Conflito', () => {
       horizonteDeck: [figura('K', 'spades')],
       maosIniciais: [
         [
-          { valor: 6, naipe: 'hearts' }, // poder 7, cura 3
+          { valor: 6, naipe: 'hearts' }, // poder 6, cura 3 +2 do Médico
           { valor: 2, naipe: 'clubs' },
           { valor: 3, naipe: 'diamonds' },
           { valor: 4, naipe: 'spades' },
@@ -270,9 +271,9 @@ describe('Motor PvPvE de HORIZONTE — Zona de Conflito', () => {
     };
 
     const pCurado = agir(pFerido, { tipo: 'jogarCartas', quem: 0, indicesMao: [0], alvo: 'horizonte_abater' });
-    // Beto estava mais ferido (5 PV -> 8 PV) e K♠ (com +PV por jogador extra no Coop) levou 7
-    expect(pCurado.jogadores[1].vida).toBe(8);
-    expect(pCurado.ameacaAtiva?.vidaAtual).toBe(STATUS_FIGURA.K.vida + STATUS_FIGURA.K.vidaPorJogadorExtra - 7);
+    // Beto estava mais ferido (5 PV -> 10 PV) e K♠ (com +PV por jogador extra no Coop) levou 6
+    expect(pCurado.jogadores[1].vida).toBe(10);
+    expect(pCurado.ameacaAtiva?.vidaAtual).toBe(STATUS_FIGURA.K.vida + STATUS_FIGURA.K.vidaPorJogadorExtra - 6);
 
     // Agora coloca Beto em 2 PV na fase de bloqueio com 7 de dano pendente -> cai -> Coop perde
     const pQuaseFim: typeof pCurado = {
@@ -468,5 +469,72 @@ describe('Motor PvPvE de HORIZONTE — Zona de Conflito', () => {
     expect(aposAliado.turnoDe).toBe(0);
     expect(aposAliado.aliadoUsadoNoTurno).toBe(true);
     expect(aposAliado.jogadores[0].pontosTrofeu).toBe(STATUS_FIGURA.J.trofeus);
+  });
+
+  it('só a última Figura vira o chefe do tema, com a regra própria', () => {
+    const mao: CartaAcao[] = [
+      { valor: 9, naipe: 'clubs' },
+      { valor: 4, naipe: 'clubs' },
+      { valor: 5, naipe: 'spades' },
+      { valor: 6, naipe: 'diamonds' },
+      { valor: 3, naipe: 'diamonds' },
+    ];
+    const criar = (chefe: 'firewall' | 'renasce' | 'portas' | 'colossal', horizonte = [figura('K', 'clubs')]) =>
+      criarPartida({ modo: 'solo', chefe, jogadores: [{ nome: 'S', classe: 'diamonds' }], horizonteDeck: horizonte, maosIniciais: [mao], embaralhar: false });
+
+    // Com mais de uma Figura, a primeira não é chefe
+    expect(criar('colossal', [figura('J', 'clubs'), figura('K', 'clubs')]).ameacaAtiva?.chefe).toBeUndefined();
+
+    // A Figura revelada por último ganha a regra: Colossal soma PV
+    const antes = criar('colossal', [figura('J', 'clubs'), figura('K', 'clubs')]);
+    const quase = { ...antes, ameacaAtiva: { ...antes.ameacaAtiva!, vidaAtual: 1 } };
+    const revelou = agir(quase, { tipo: 'jogarCartas', quem: 0, indicesMao: [0], alvo: 'horizonte_abater' });
+    expect(revelou.ameacaAtiva?.chefe).toBe('colossal');
+    expect(revelou.ameacaAtiva!.vidaMax).toBeGreaterThan(STATUS_FIGURA.K.vida);
+
+    // Quando o chefe é a única Figura, ele já começa como chefe. Firewall: golpe de 4 não passa
+    const firewall = agir(criar('firewall'), { tipo: 'jogarCartas', quem: 0, indicesMao: [1], alvo: 'horizonte_abater' });
+    expect(firewall.ameacaAtiva?.vidaAtual).toBe(STATUS_FIGURA.K.vida);
+
+    // Portas Seladas: bloquear com 2 cartas é recusado
+    const bloqueio = agir(criar('portas'), { tipo: 'jogarCartas', quem: 0, indicesMao: [0], alvo: 'horizonte_abater' });
+    expect(bloqueio.fase).toBe('bloqueio');
+    expect(agir(bloqueio, { tipo: 'bloquear', quem: 0, indicesMao: [0, 1] })).toBe(bloqueio);
+    expect(agir(bloqueio, { tipo: 'bloquear', quem: 0, indicesMao: [0] })).not.toBe(bloqueio);
+
+    // Levanta de Novo: o golpe que zera não pode recrutar e o chefe volta com metade da Vida
+    const zumbi = criar('renasce');
+    const quaseZumbi = { ...zumbi, ameacaAtiva: { ...zumbi.ameacaAtiva!, vidaAtual: 2 } };
+    expect(agir(quaseZumbi, { tipo: 'jogarCartas', quem: 0, indicesMao: [3], alvo: 'horizonte_recrutar' })).toBe(quaseZumbi);
+    const levantou = agir(quaseZumbi, { tipo: 'jogarCartas', quem: 0, indicesMao: [3], alvo: 'horizonte_abater' });
+    expect(levantou.ameacaAtiva?.vidaAtual).toBe(Math.ceil(STATUS_FIGURA.K.vida / 2));
+    expect(levantou.ameacaAtiva?.renasceu).toBe(true);
+  });
+
+  it('cada Especialização reforça o efeito do próprio naipe', () => {
+    const mao: CartaAcao[] = [
+      { valor: 6, naipe: 'spades' },
+      { valor: 6, naipe: 'hearts' },
+      { valor: 6, naipe: 'diamonds' },
+      { valor: 6, naipe: 'clubs' },
+      { valor: 2, naipe: 'clubs' },
+    ];
+    const previa = (classe: 'spades' | 'hearts' | 'diamonds' | 'clubs', carta: number) =>
+      simularJogada(criarPartida({ modo: 'solo', jogadores: [{ nome: 'S', classe }], maosIniciais: [mao], embaralhar: false }), 0, [carta]);
+    expect(previa('spades', 0).poderTotal).toBe(6 + REGRA.bonusEspadas + 2);
+    expect(previa('hearts', 1).cura).toBe(3 + 2);
+    expect(previa('hearts', 1).poderTotal).toBe(6);
+    expect(previa('diamonds', 2).cartasComprar).toBe(1 + 1);
+    expect(previa('clubs', 3).reducaoAtaque).toBe(3 + 2);
+    expect(previa('spades', 3).reducaoAtaque).toBe(3);
+  });
+
+  it('pontua o Solo com Domínio, bônus de vitória e rapidez', () => {
+    const p = criarPartida({ modo: 'solo', jogadores: [{ nome: 'S', classe: 'spades' }], embaralhar: false });
+    const vitoria = { ...p, resultado: 'vitoria' as const, fase: 'fim' as const, rodada: 30 };
+    const derrota = { ...vitoria, resultado: 'derrota' as const };
+    expect(pontuacaoSolo(derrota)).toBe(pontosDeDominio(p.jogadores[0]));
+    expect(pontuacaoSolo(vitoria)).toBe(pontosDeDominio(p.jogadores[0]) + 50 + (40 - 30) * 2);
+    expect(pontuacaoSolo({ ...vitoria, rodada: 50 })).toBe(pontosDeDominio(p.jogadores[0]) + 50);
   });
 });

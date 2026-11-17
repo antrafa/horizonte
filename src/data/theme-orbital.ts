@@ -8,6 +8,7 @@ export const ORBITAL_BLUEPRINT: ThemeBlueprint = {
   tagline: 'A quatrocentos quilômetros da Terra, a estação range, vaza e resiste, um reparo de cada vez.',
   tom: 'ficção científica, tensão técnica',
   chefe: {
+    regra: 'portas',
     nome: 'A Inteligência da Nave',
     descricao: 'O computador central decidiu que a tripulação é a falha a corrigir, e controla cada porta, válvula e luz da estação.',
   },
@@ -195,7 +196,7 @@ export const ORBITAL_BLUEPRINT: ThemeBlueprint = {
         topWatcherTrigger: '4 de valor + 2 de bônus ♠ = 6 de dano.',
         topWatcherEvent: 'O anel que gira para dar peso à estação começou a vibrar fora do compasso. Os copos dançam sobre a mesa.',
         bottomEchoPrompt: 'Total de 6 de dano bruto contra Ameaça ou rival.',
-        bottomEchoEffect: 'Se tiver afinidade ♠ na classe, chega a 7 de impacto imediato.',
+        bottomEchoEffect: 'Com Especialização em ♠ (Atirador), chega a 8 de impacto imediato.',
         dailyIdea: 'Forte opção para punir um oponente no modo Competitivo PvP.',
         flavorText: 'Um tremor pequeno, repetido mil vezes, derruba qualquer coisa.',
       },

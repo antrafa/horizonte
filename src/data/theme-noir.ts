@@ -8,6 +8,7 @@ export const NOIR_BLUEPRINT: ThemeBlueprint = {
   tagline: 'Em Porto Bruma chove há quarenta dias, e cada pessoa que cruza o seu caminho sabe um pouco mais do que diz.',
   tom: 'mistério, investigação',
   chefe: {
+    regra: 'sombra',
     nome: 'O Homem que Não Aparece nas Fotos',
     descricao: 'Ele está em todos os crimes da cidade, mas cada retrato dele revela só uma cadeira vazia e um cigarro ainda aceso.',
   },
@@ -195,7 +196,7 @@ export const NOIR_BLUEPRINT: ThemeBlueprint = {
         topWatcherTrigger: '4 de valor + 2 de bônus ♠ = 6 de dano.',
         topWatcherEvent: 'A porta de grade se fecha e dois homens largos ocupam o elevador inteiro. Ninguém aperta botão nenhum.',
         bottomEchoPrompt: 'Total de 6 de dano bruto contra Ameaça ou rival.',
-        bottomEchoEffect: 'Se tiver afinidade ♠ na classe, chega a 7 de impacto imediato.',
+        bottomEchoEffect: 'Com Especialização em ♠ (Atirador), chega a 8 de impacto imediato.',
         dailyIdea: 'Forte opção para punir um oponente no modo Competitivo PvP.',
         flavorText: 'O ascensorista desceu no segundo andar. Sábio ele.',
       },

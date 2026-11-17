@@ -1,12 +1,13 @@
 import { DEFAULT_THEME_ID, getDefaultTheme } from '../data/index';
 import type { GameCard, ThemeDeck, ThemeId } from '../types/card';
-import { linhaDeStatus, type ModoDeJogo, type Partida } from './partida';
+import { linhaDeStatus, type ModoDeJogo, type Nivel, type Partida } from './partida';
 
 const OVERRIDES_KEY_PREFIX = 'horizonte_overrides_v1_';
 const PARTIDA_KEY = 'horizonte_partida_v1';
 const ESTADO_MUNDO_KEY_PREFIX = 'horizonte_estado_mundo_v1_';
 const THEME_KEY = 'horizonte_tema';
 const SALA_ONLINE_KEY = 'horizonte_sala_online_id';
+const RECORDE_SOLO_KEY_PREFIX = 'horizonte_recorde_solo_v1_';
 
 export interface EstadoDoMundo {
   themeId: ThemeId;
@@ -123,6 +124,18 @@ export function savePartida(partida: Partida | null): void {
   if (!store) return;
   if (partida) store.setItem(PARTIDA_KEY, JSON.stringify(partida));
   else store.removeItem(PARTIDA_KEY);
+}
+
+/** Recorde do Solo por nível, porque a vida inicial muda a pontuação possível. */
+export function lerRecordeSolo(nivel: Nivel): number | null {
+  const raw = getStorage()?.getItem(`${RECORDE_SOLO_KEY_PREFIX}${nivel}`);
+  return raw ? Number(raw) : null;
+}
+
+export function registrarRecordeSolo(nivel: Nivel, pontos: number): void {
+  const atual = lerRecordeSolo(nivel);
+  if (atual !== null && atual >= pontos) return;
+  getStorage()?.setItem(`${RECORDE_SOLO_KEY_PREFIX}${nivel}`, String(pontos));
 }
 
 export function loadSalaOnlineId(): string | null {

@@ -1,4 +1,4 @@
-import { CLASSES, FUNCAO_DO_NAIPE, NAIPES, NIVEIS, REGRA, SIMBOLO, STATUS_FIGURA, TRACO_AMEACA } from '../core/partida';
+import { CLASSES, EXPLICACAO_PONTUACAO, FUNCAO_DO_NAIPE, NAIPES, NIVEIS, REGRA, REGRA_CHEFE, SIMBOLO, STATUS_FIGURA, TRACO_AMEACA } from '../core/partida';
 import type { ThemeDeck } from '../types/card';
 import { escapeHtml, renderMagicCardHtml } from './card-renderer';
 import { NUANCES_DO_TEMA } from './temas-view';
@@ -6,11 +6,11 @@ import { NUANCES_DO_TEMA } from './temas-view';
 const PASSOS = [
   {
     titulo: 'Separe o baralho em dois montes',
-    texto: 'Tire as 12 Figuras (J, Q, K) e empilhe em 3 ondas: 4 Valetes em cima, 4 Damas no meio, 4 Reis por último. Esse é o Deck de Ameaças (O Horizonte). Embaralhe as 42 cartas restantes (A–10 + ★ e 💀) para o Deck de Ação.',
+    texto: 'Tire as 12 Figuras (J, Q, K) e empilhe em 3 ondas: 4 Valetes em cima, 4 Damas no meio, 4 Reis por último. Esse é o Deck de Ameaças (O Horizonte); a última Figura dele é o chefe do tema e ganha uma regra própria. Embaralhe as 42 cartas restantes (A–10 + ★ e 💀) para o Deck de Ação.',
   },
   {
     titulo: 'Compre 5 cartas e revele o Horizonte',
-    texto: `Cada jogador começa com ${REGRA.vidaInicial} Pontos de Vida (PV) no nível Veterano (${NIVEIS.recruta.vida} no Recruta, ${NIVEIS.lenda.vida} no Lenda), escolhe sua Especialização de Naipe (+1 de força nesse naipe) e compra ${REGRA.maoInicial} cartas. Vire a primeira Figura no centro da mesa: o naipe dela define o seu traço (♠ Feroz, ♥ Regenera, ♦ Blindada, ♣ Imune a armadilhas).`,
+    texto: `Cada jogador começa com ${REGRA.vidaInicial} Pontos de Vida (PV) no nível Veterano (${NIVEIS.recruta.vida} no Recruta, ${NIVEIS.lenda.vida} no Lenda), escolhe sua Especialização de Naipe (ela reforça o efeito daquele naipe) e compra ${REGRA.maoInicial} cartas. Vire a primeira Figura no centro da mesa: o naipe dela define o seu traço (♠ Feroz, ♥ Regenera, ♦ Blindada, ♣ Imune a armadilhas).`,
   },
   {
     titulo: 'Ative 1 Aliado recrutado (opcional)',
@@ -196,6 +196,8 @@ export function renderQuickstartGuideHtml(deck: ThemeDeck): string {
           <h3>Valetes, Damas e Reis (+ Carta de Ação)</h3>
           <p class="lede">Valetes têm ${STATUS_FIGURA.J.vida} PV / ${STATUS_FIGURA.J.ataque} Atq; Damas têm ${STATUS_FIGURA.Q.vida} PV / ${STATUS_FIGURA.Q.ataque} Atq; Reis têm ${STATUS_FIGURA.K.vida} PV / ${STATUS_FIGURA.K.ataque} Atq. Combine 2–4 cartas iguais (ex.: 6♠+6♥) ou qualquer carta com um Ás (+${REGRA.bonusAsCombo}) para explodir o dano!</p>
           <p class="lede">Cada Figura tem um traço pelo naipe, e a ordem muda a cada partida: ${NAIPES.map((n) => `<strong>${SIMBOLO[n]} ${TRACO_AMEACA[n].nome}</strong> — ${TRACO_AMEACA[n].descricao('J').replace(/\d+/, 'N')}`).join(' · ')} (N cresce de Valete para Rei).</p>
+          <p class="lede"><strong>Chefe final de ${escapeHtml(deck.name)} · ${escapeHtml(REGRA_CHEFE[deck.chefe.regra].nome)}:</strong> ${escapeHtml(REGRA_CHEFE[deck.chefe.regra].descricao)} Cada tema tem um chefe com regra diferente.</p>
+          <p class="lede">${escapeHtml(EXPLICACAO_PONTUACAO)} Bata o seu recorde em cada nível.</p>
         </header>
         <div class="trio-cards">${[...trio, exemploAcao].map((c) => (c ? renderMagicCardHtml(c, { interactive: true }) : '')).join('')}</div>
         <div class="class-list">${classes}</div>

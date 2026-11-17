@@ -8,6 +8,7 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
   tagline: 'Cada ruído na rua pode atrair a horda. Cada silêncio esconde uma mordida.',
   tom: 'sobrevivência, tenso',
   chefe: {
+    regra: 'renasce',
     nome: 'O Paciente Zero',
     descricao: 'O primeiro infectado ainda pensa. Ele guia a horda até vocês.',
   },
@@ -195,7 +196,7 @@ export const ZOMBIES_BLUEPRINT: ThemeBlueprint = {
         topWatcherTrigger: '4 de valor + 2 de bônus ♠ = 6 de dano.',
         topWatcherEvent: 'Um sobrevivente hostil controla o cruzamento com um rifle de caça e exige pedágio de quem quiser passar.',
         bottomEchoPrompt: 'Total de 6 de dano bruto contra Ameaça ou rival.',
-        bottomEchoEffect: 'Se tiver afinidade ♠ na classe, chega a 7 de impacto imediato.',
+        bottomEchoEffect: 'Com Especialização em ♠ (Atirador), chega a 8 de impacto imediato.',
         dailyIdea: 'Forte opção para punir um oponente no modo Competitivo PvP.',
         flavorText: 'Os vivos aprenderam a ser piores que os mortos na segunda semana do surto.',
       },

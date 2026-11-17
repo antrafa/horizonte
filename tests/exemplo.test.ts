@@ -13,9 +13,9 @@ describe('Turno de exemplo encenado pelo motor real', () => {
       expect(cena.statusDepois.trim().length).toBeGreaterThan(0);
     }
 
-    // Turno 1 (-3 PV) e Turno 3 (-4 PV) reduzem Mara de 15 para 8 PV; Kael sofreu 11 de dano (4 PV)
+    // Turno 1 (-3 PV) e Turno 3 (-4 PV) reduzem Mara de 15 para 8 PV; Kael sofreu 12 de dano (3 PV)
     expect(encenado.final.jogadores[0].vida).toBe(8);
-    expect(encenado.final.jogadores[1].vida).toBe(4);
+    expect(encenado.final.jogadores[1].vida).toBe(3);
     expect(encenado.final.jogadores[1].aliados).toHaveLength(1);
     expect(encenado.final.jogadores[1].aliados[0].cargas).toBe(1);
     expect(encenado.final.ameacaAtiva?.vidaAtual).toBe(10);

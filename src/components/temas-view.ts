@@ -1,4 +1,4 @@
-import { FUNCAO_DO_NAIPE, NAIPES, REGRA, SIMBOLO, STATUS_FIGURA } from '../core/partida';
+import { FUNCAO_DO_NAIPE, NAIPES, REGRA, REGRA_CHEFE, SIMBOLO, STATUS_FIGURA } from '../core/partida';
 import type { ThemeDeck, ThemeId } from '../types/card';
 import { THEME_VISUALS, gerarPromptUnicoDoTema } from './card-art';
 import { escapeHtml } from './card-renderer';
@@ -149,6 +149,7 @@ function renderTema(deck: ThemeDeck, ativo: boolean): string {
               <span class="chip">Vida ${STATUS_FIGURA.K.vida} · Atq ${STATUS_FIGURA.K.ataque}</span>
             </div>
             <p>${escapeHtml(deck.chefe.descricao)} ${escapeHtml(nuance.chefeFinal)}</p>
+            <p><strong>Regra do chefe · ${escapeHtml(REGRA_CHEFE[deck.chefe.regra].nome)}:</strong> a última Figura do Horizonte ganha esta regra. ${escapeHtml(REGRA_CHEFE[deck.chefe.regra].descricao)}</p>
           </dd>
         </div>
         <div class="theme-dossier-row">

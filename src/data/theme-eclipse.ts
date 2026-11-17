@@ -8,6 +8,7 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
   tagline: 'O sol está sendo engolido pela coroa negra. As leis da gravidade e da memória começam a falhar.',
   tom: 'fim do mundo, melancólico',
   chefe: {
+    regra: 'fome',
     nome: 'O Devorador do Sol',
     descricao: 'A coroa negra ganhou forma e fome. Quando terminar o sol, virá a terra.',
   },
@@ -195,7 +196,7 @@ export const ECLIPSE_BLUEPRINT: ThemeBlueprint = {
         topWatcherTrigger: '4 de valor + 2 de bônus ♠ = 6 de dano.',
         topWatcherEvent: 'Uma tempestade geomagnética faz os postes da rua cantarem como harpas de alta tensão. O ar cheira a ozônio puro.',
         bottomEchoPrompt: 'Total de 6 de dano bruto contra Ameaça ou rival.',
-        bottomEchoEffect: 'Se tiver afinidade ♠ na classe, chega a 7 de impacto imediato.',
+        bottomEchoEffect: 'Com Especialização em ♠ (Atirador), chega a 8 de impacto imediato.',
         dailyIdea: 'Forte opção para punir um oponente no modo Competitivo PvP.',
         flavorText: 'As auroras boreais desceram até a linha do equador para assistir ao fim do espetáculo.',
       },
