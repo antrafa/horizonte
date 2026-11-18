@@ -109,6 +109,7 @@ describe('Renderização de cartas, impressão 63×88mm / 57×87mm e escaneador 
     expect(svgRei).toContain('viewBox="0 0 252 352"');
     expect(svgAcao).toContain('mtg-art-conceptual-svg');
     expect(svgAcao).toContain('viewBox="0 0 252 352"');
+    expect(svgAcao).toContain('href="./cards/wasteland/');
     expect(svgAcao).not.toEqual(svgRei);
 
     const prompts = gerarPromptsNanoBanana(deck, acao);
@@ -149,10 +150,17 @@ describe('Renderização de cartas, impressão 63×88mm / 57×87mm e escaneador 
     expect(todas).toHaveLength(63);
     expect(todas.slice(54).map((c) => c.id)).toEqual(apoio.map((c) => c.id));
 
+    for (const cartaApoio of apoio) {
+      expect(cartaApoio.artUrl).toBe('/cards/wasteland/10-clubs.jpg');
+    }
+
     const htmlApoio = renderMagicCardHtml(apoio[0]);
     expect(htmlApoio).toContain('Carta de Apoio · Kit de Mesa');
     expect(htmlApoio).toContain('KIT 01/09');
     expect(htmlApoio).toContain(apoio[0].flavorText);
+    expect(htmlApoio).toContain('has-art');
+    expect(htmlApoio).toContain('src="./cards/wasteland/10-clubs.jpg"');
+    expect(htmlApoio).not.toContain('mtg-art-conceptual-svg');
     expect(htmlApoio).not.toContain('Valor 8');
     expect(htmlApoio).not.toContain('55/54');
   });

@@ -607,9 +607,10 @@ function renderConceptualCardDiagramSvg(card: GameCard, vis: ThemeVisualSpec): s
   const artPath = getGeneratedCardArtPath(card);
 
   if (artPath) {
+    const relativeArtPath = artPath.startsWith('/cards/') ? `.${artPath}` : artPath;
     return `
       <svg class="mtg-art-engraving mtg-art-scene-svg mtg-art-conceptual-svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" role="img" aria-hidden="true">
-        <image href="${escapeXml(artPath)}" x="0" y="0" width="${w}" height="${h}" preserveAspectRatio="xMidYMid slice" />
+        <image href="${escapeXml(relativeArtPath)}" x="0" y="0" width="${w}" height="${h}" preserveAspectRatio="xMidYMid slice" />
       </svg>`;
   }
 

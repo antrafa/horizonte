@@ -84,6 +84,9 @@ const ESTAMPAS: Array<{ id: EstampaDoVerso; nome: string; descricao: string }> =
 ];
 
 export function gerarCartasDeDinamismo(deck: ThemeDeck): GameCard[] {
+  const dezDePaus = deck.cards.find((c) => c.rank === '10' && c.suit === 'clubs');
+  const artUrlFundo = dezDePaus?.artUrl ?? `/cards/${deck.id}/10-clubs.jpg`;
+
   const base = (
     idx: number,
     code: string,
@@ -98,13 +101,14 @@ export function gerarCartasDeDinamismo(deck: ThemeDeck): GameCard[] {
     collectorNumber: 54 + idx,
     themeId: deck.id,
     suit,
-    rank: '8',
+    rank: '10',
     playingCardCode: code,
     kind: 'journey',
     typeLine: 'Carta de Apoio · Kit de Mesa',
     title,
     artGlyph: glyph,
     artSubtitle: subtitulo,
+    artUrl: artUrlFundo,
     topWatcherEvent: cenario,
     flavorText: flavor,
   });
