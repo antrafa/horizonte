@@ -88,6 +88,7 @@ interface AppState {
   parceiroOnline: boolean;
   ehHostDaSala: boolean;
   versaoSala: number;
+  exemploPasso: number;
 }
 
 export function mountHorizonteApp(root: HTMLElement): void {
@@ -113,6 +114,7 @@ export function mountHorizonteApp(root: HTMLElement): void {
     parceiroOnline: false,
     ehHostDaSala: false,
     versaoSala: 0,
+    exemploPasso: 0,
   };
 
   function sincronizarSala(): void {
@@ -290,7 +292,7 @@ export function mountHorizonteApp(root: HTMLElement): void {
       case 'quickstart':
         return renderQuickstartGuideHtml(deck);
       case 'exemplo':
-        return renderExemploHtml(deck);
+        return renderExemploHtml(deck, state.exemploPasso);
       case 'temas':
         return renderTemasHtml(ALL_THEME_IDS.map((id) => loadThemeWithOverrides(id)), state.activeThemeId);
       case 'studio':
@@ -461,6 +463,17 @@ export function mountHorizonteApp(root: HTMLElement): void {
         el.addEventListener('click', () => {
           const found = deck.cards.find((c) => c.id === el.dataset.cardId);
           if (found) openCardZoomModal(found);
+        });
+      });
+    }
+
+    if (state.activeTab === 'exemplo') {
+      root.querySelectorAll<HTMLElement>('[data-exemplo-step]').forEach((el) => {
+        el.addEventListener('click', () => {
+          const passo = Number(el.dataset.exemploStep);
+          if (!Number.isInteger(passo)) return;
+          state.exemploPasso = passo;
+          render();
         });
       });
     }

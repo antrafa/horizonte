@@ -18,16 +18,23 @@ describe('Integração das views HTML de HORIZONTE', () => {
     expect(qs).toContain('Solo');
     expect(qs).toContain('Cooperativo');
     expect(qs).toContain('Competitivo PvP');
+    expect(qs).toContain('VALOR NUMÉRICO');
+    expect(qs).toContain('Traço passivo');
 
     const ex = renderExemploHtml(wasteland);
     expect(ex).toContain('Divida as 54 cartas');
     expect(ex).toContain('Mara');
     expect(ex).toContain('Kael');
+    expect(ex).toContain('Card de Guia Rápido 1');
+    expect(ex).toContain('Card de Guia Rápido 2');
+    expect(ex).toContain('data-exemplo-step=');
+    expect(ex).not.toContain('compre até ter 5 cartas');
 
     const oracle = renderOracleGuideHtml(wasteland);
     expect(oracle).toContain('Compêndio / Livreto Guia');
     expect(oracle).toContain('Regras de Bolso');
     expect(oracle).toContain('Combos');
+    expect(oracle).toContain('Bônus por Naipe nas Figuras (Ameaça vs. Aliado)');
 
     const studio = renderStudioGalleryHtml(wasteland, wasteland.cards[0], 'all');
     expect(studio).toContain('Todas (54)');

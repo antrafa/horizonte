@@ -1,4 +1,4 @@
-import { CLASSES, EXPLICACAO_PONTUACAO, FUNCAO_DO_NAIPE, NAIPES, NIVEIS, REGRA, REGRA_CHEFE, SIMBOLO, STATUS_FIGURA, TRACO_AMEACA } from '../core/partida';
+import { CLASSES, EXPLICACAO_PONTUACAO, FUNCAO_DO_NAIPE, NAIPES, NIVEIS, REGRA, REGRA_CHEFE, SIMBOLO, STATUS_FIGURA } from '../core/partida';
 import type { ThemeDeck } from '../types/card';
 import { escapeHtml, renderMagicCardHtml } from './card-renderer';
 import { NUANCES_DO_TEMA } from './temas-view';
@@ -6,27 +6,27 @@ import { NUANCES_DO_TEMA } from './temas-view';
 const PASSOS = [
   {
     titulo: 'Separe o baralho em dois montes',
-    texto: 'Tire as 12 Figuras (J, Q, K) e empilhe em 3 ondas: 4 Valetes em cima, 4 Damas no meio, 4 Reis por último. Esse é o Deck de Ameaças (O Horizonte); a última Figura dele é o chefe do tema e ganha uma regra própria. Embaralhe as 42 cartas restantes (A–10 + ★ e 💀) para o Deck de Ação.',
+    texto: 'Tire as 12 Figuras (J, Q, K) e empilhe em 3 ondas: 4 Valetes em cima, 4 Damas no meio, 4 Reis por último. Esse é o Deck de Ameaças (O Horizonte); somente a 12ª e última Figura (o último Rei) é o chefe do tema e ganha uma regra própria. Embaralhe as 42 cartas restantes (A–10 + ★ e 💀) para o Deck de Ação.',
   },
   {
     titulo: 'Compre 5 cartas e revele o Horizonte',
-    texto: `Cada jogador começa com ${REGRA.vidaInicial} Pontos de Vida (PV) no nível Veterano (${NIVEIS.recruta.vida} no Recruta, ${NIVEIS.lenda.vida} no Lenda), escolhe sua Especialização de Naipe (ela reforça o efeito daquele naipe) e compra ${REGRA.maoInicial} cartas. Vire a primeira Figura no centro da mesa: o naipe dela define o seu traço (♠ Feroz, ♥ Regenera, ♦ Blindada, ♣ Imune a armadilhas).`,
+    texto: `Cada jogador começa com ${REGRA.vidaInicial} Pontos de Vida (PV) no nível Veterano (${NIVEIS.recruta.vida} no Recruta, ${NIVEIS.lenda.vida} no Lenda), escolhe sua Especialização de Naipe (reforça o efeito daquele naipe ao jogar) e compra ${REGRA.maoInicial} cartas (máx. ${REGRA.maoMaxima}). Vire a primeira Figura no centro: o naipe dela define o Traço passivo como Ameaça (e, se recrutada, o poder como Aliado).`,
   },
   {
     titulo: 'Ative 1 Aliado recrutado (opcional)',
-    texto: 'Se você já recrutou uma Figura para o seu lado da mesa, pode gastar 1 uso dela antes da sua jogada principal (para causar dano, reduzir ataque, comprar cartas ou curar PV). É 1 uso de Aliado por turno, contando o Escudo no bloqueio.',
+    texto: `Você pode manter até ${REGRA.maxAliados} Aliados. Antes da jogada principal, pode gastar 1 uso de 1 Aliado pelo poder do naipe dele (dano, redução de ataque, compra ou cura). É no máximo 1 uso de Aliado por turno, contando o Escudo (+${REGRA.escudoAliado}) no bloqueio.`,
   },
   {
     titulo: 'Jogue 1 carta ou um Combo',
-    texto: `Jogue 1 carta, ou 2–4 cartas de mesmo valor (Par/Trinca/Quadra), ou 1 carta + 1 Ás (+${REGRA.bonusAsCombo} de Combo de Comando). O naipe ativa efeitos extras de dano, defesa, saque ou cura.`,
+    texto: `Jogue 1 carta, ou 2–4 cartas de mesmo valor (Par/Trinca/Quadra), ou 1 carta + 1 Ás (+${REGRA.bonusAsCombo} de Combo de Comando). Você pode atacar qualquer Figura com qualquer naipe; os naipes jogados disparam seus efeitos de dano, redução, compra imediata (♦/★) ou cura.`,
   },
   {
     titulo: 'Escolha: Abater, Recrutar ou PvP',
-    texto: 'Ataque a Ameaça do Horizonte. Se o golpe zerar a Vida dela, você a Abate (vira Troféu, com qualquer carta) ou, se a jogada tiver uma carta Vermelha (♥/♦/Coringa), pode Recrutá-la como Aliado. No modo PvP, você também pode atacar direto um rival.',
+    texto: 'Se o golpe zerar a Vida da Figura: Abater (qualquer carta) manda para Troféus e compra +1 carta (J) ou +2 (Q/K); Recrutar (exige ♥, ♦, ★ ou 💀 no golpe final) traz como Aliado com 2 ou 3 usos, sem compra extra. No PvP, você também pode atacar direto um rival.',
   },
   {
-    titulo: 'Bloqueio Tático e Reposição',
-    texto: `Se a Ameaça central sobreviver ao seu ataque, ela contra-ataca. Você decide: recebe o dano nos seus PV ou descarta cartas da mão para bloquear pelo valor delas. Depois, compre só ${REGRA.compraFimTurno} carta (máximo ${REGRA.maoMaxima} na mão): cada carta gasta no bloqueio faz falta no próximo ataque.`,
+    titulo: 'Bloqueio Tático e Reposição (+1 carta)',
+    texto: `Se a Ameaça sobreviver, ela contra-ataca. Você pode descartar quantas cartas quiser (inclusive a mão toda, salvo sob Portas Seladas) e cada carta bloqueia o seu VALOR NUMÉRICO (2–10 = número, A=${REGRA.valorAsSolo}, ★=${REGRA.valorEstrela}, 💀=${REGRA.valorCaveira} — não 1 ponto por carta). Depois, no fim do turno, compra apenas ${REGRA.compraFimTurno} carta (não volta para 5): cada carta gasta no bloqueio faz falta!`,
   },
 ];
 
@@ -168,9 +168,9 @@ export function renderQuickstartGuideHtml(deck: ThemeDeck): string {
           <span class="eyebrow">Setup & Combate · ${escapeHtml(deck.name)}</span>
           <h3>Abater (qualquer carta) vs. Recrutar (♥/♦)</h3>
           <p>${escapeHtml(nuance.oQueEOHorizonte)}</p>
-          <p><strong>Abater (qualquer carta):</strong> é o resultado padrão. Quando o seu golpe zera a Vida da Figura, ela vai para o seu monte de Troféus (10/15/25 pts) e você compra cartas extras. Não precisa de naipe específico.</p>
-          <p><strong>Recrutar (precisa de ♥, ♦ ou Coringa):</strong> se a jogada que zera a Vida da Figura incluir pelo menos uma carta Vermelha (ou Coringa), você pode escolher <strong>Recrutar</strong> em vez de Abater. Ela vira seu Aliado com alguns <strong>usos</strong> (2 ou 3): em cada turno você pode gastar 1 uso para ativar o poder dela, ou gastar 1 uso como escudo de +${REGRA.escudoAliado} no Bloqueio.</p>
-          <p class="muted"><strong>Bloqueio Tático:</strong> sempre que a Ameaça sobrevive e contra-ataca, você escolhe entre receber nos seus PV ou descartar cartas da mão pelo valor delas para bloquear.</p>
+          <p><strong>Abater (qualquer carta):</strong> é o resultado padrão. Quando o seu golpe zera a Vida da Figura, ela vai para o seu monte de Troféus (10/15/25 pts) e você compra <strong>+1 carta (Valete) ou +2 (Dama/Rei)</strong> na hora. Você pode atacar e abater qualquer Figura com qualquer naipe.</p>
+          <p><strong>Recrutar (precisa de ♥, ♦ ou Coringa no golpe final):</strong> em vez de Abater, traz a Figura para o seu lado (máx. <strong>${REGRA.maxAliados} Aliados</strong>) com 2 ou 3 <strong>usos</strong>, sem compra de abate. No seu turno você tem <strong>1 único uso de Aliado</strong>: ou ativa o poder do naipe no início, ou usa o <strong>Escudo (+${REGRA.escudoAliado})</strong> no bloqueio.</p>
+          <p class="muted"><strong>Bloqueio & Compra de Cartas:</strong> cada carta descartada bloqueia pelo <strong>valor numérico dela</strong> (2–10 = número · A=${REGRA.valorAsSolo} · ★=${REGRA.valorEstrela} · 💀=${REGRA.valorCaveira} — não 1 ponto por carta). Você pode bloquear com quantas cartas quiser (até a mão toda, salvo sob Portas Seladas), mas no fim do turno você compra <strong>apenas +${REGRA.compraFimTurno} carta</strong> (não volta a 5; máx. ${REGRA.maoMaxima}). Compras extras acontecem com <strong>♦ Ouros</strong> (+1/+2), <strong>★</strong> (+2), Aliado de <strong>♦</strong> (+1/+2/+3) ou ao <strong>Abater</strong>.</p>
         </div>
         <div class="scene-card">${renderMagicCardHtml(exemploFigura, { interactive: true })}</div>
       </section>
@@ -195,8 +195,8 @@ export function renderQuickstartGuideHtml(deck: ThemeDeck): string {
           <span class="eyebrow">Escala de Poder & Combos</span>
           <h3>Valetes, Damas e Reis (+ Carta de Ação)</h3>
           <p class="lede">Valetes têm ${STATUS_FIGURA.J.vida} PV / ${STATUS_FIGURA.J.ataque} Atq; Damas têm ${STATUS_FIGURA.Q.vida} PV / ${STATUS_FIGURA.Q.ataque} Atq; Reis têm ${STATUS_FIGURA.K.vida} PV / ${STATUS_FIGURA.K.ataque} Atq. Combine 2–4 cartas iguais (ex.: 6♠+6♥) ou qualquer carta com um Ás (+${REGRA.bonusAsCombo}) para explodir o dano!</p>
-          <p class="lede">Cada Figura tem um traço pelo naipe, e a ordem muda a cada partida: ${NAIPES.map((n) => `<strong>${SIMBOLO[n]} ${TRACO_AMEACA[n].nome}</strong> — ${TRACO_AMEACA[n].descricao('J').replace(/\d+/, 'N')}`).join(' · ')} (N cresce de Valete para Rei).</p>
-          <p class="lede"><strong>Chefe final de ${escapeHtml(deck.name)} · ${escapeHtml(REGRA_CHEFE[deck.chefe.regra].nome)}:</strong> ${escapeHtml(REGRA_CHEFE[deck.chefe.regra].descricao)} Cada tema tem um chefe com regra diferente.</p>
+          <p class="lede"><strong>Como funciona o naipe nas Figuras (J · Q · K):</strong> enquanto é <strong>Ameaça</strong> no centro, o naipe dá um <strong>Traço passivo</strong> que cresce com o posto: <strong>♠ Feroz</strong> (+1/+2/+3 de Ataque já somado → bate 5/8/11) · <strong>♥ Regenera</strong> (+2/+3/+4 PV no fim do turno se sobreviver) · <strong>♦ Blindada</strong> (−1/−2/−3 de dano em todo golpe recebido) · <strong>♣ Imune a armadilhas</strong> (ignora redução de ♣, ★ e Aliado ♣). Se você <strong>Recrutar</strong> a Figura, o mesmo naipe vira o poder ativo do Aliado (♠ 2/4/6 dano · ♣ −2/−4/−6 Atq · ♦ +1/+2/+3 cartas · ♥ +2/+4/+6 PV).</p>
+          <p class="lede"><strong>Chefe final de ${escapeHtml(deck.name)} (somente a 12ª e última Figura) · ${escapeHtml(REGRA_CHEFE[deck.chefe.regra].nome)}:</strong> ${escapeHtml(REGRA_CHEFE[deck.chefe.regra].descricao)} Os 3 Reis anteriores não têm regra de chefe; cada tema termina com um chefe diferente.</p>
           <p class="lede">${escapeHtml(EXPLICACAO_PONTUACAO)} Bata o seu recorde em cada nível.</p>
         </header>
         <div class="trio-cards">${[...trio, exemploAcao].map((c) => (c ? renderMagicCardHtml(c, { interactive: true }) : '')).join('')}</div>

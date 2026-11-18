@@ -56,20 +56,24 @@ Você também precisa de um jeito de marcar vida (dado, clipe ou papel).
 
 **No modo Cooperativo**, cada Ameaça tem vida extra por jogador além do primeiro: **+2** (Valete), **+3** (Dama) ou **+4** (Rei). Exemplo: com 3 jogadores, um Rei tem 26 + 2×4 = **34 PV**. O motivo: o grupo soma o dano de todos, mas a Ameaça só ataca quem está jogando.
 
-### 3.2. O traço de cada Ameaça
+### 3.2. O traço de cada Ameaça — e como o naipe da Figura funciona
 
-O naipe da Figura dá a ela um traço. A força do traço cresce com o posto.
+Cada Figura do Horizonte (`J`, `Q`, `K`) tem um **naipe** que define **dois papéis distintos** conforme o lado da mesa em que ela está, e o bônus desse naipe cresce com o posto (`Valete → Dama → Rei`):
 
-| Naipe | Traço | O que faz | Valete · Dama · Rei | Como lidar |
+1. **Como Ameaça no centro da mesa (Traço passivo):** o naipe dá à Figura uma habilidade defensiva ou ofensiva automática enquanto você a enfrenta (`♠ Feroz` soma +1/+2/+3 ao Ataque base 4/6/8, batendo com **5/8/11**; `♥ Regenera` recupera 2/3/4 PV no fim do turno se sobreviver; `♦ Blindada` desconta 1/2/3 de cada golpe recebido, inclusive de Aliado; `♣ Imune a armadilhas` ignora reduções de ataque de `♣`, `★` e Aliado `♣`).
+2. **Quando recrutada como seu Aliado (Poder ativo no Passo 1):** o mesmo naipe passa a definir o efeito que ela gera quando você gasta 1 uso dela no início do turno (`♠` causa 2/4/6 de dano; `♣` tira 2/4/6 de ataque da Ameaça; `♦` compra 1/2/3 cartas; `♥` cura 2/4/6 PV).
+3. **Sem restrição elemental para atacar:** você pode atacar e **Abater** qualquer Figura usando cartas de qualquer naipe (uma carta `♠` ou `♣` acerta normalmente uma Ameaça `♠` ou `♦`). Apenas para **Recrutar** no golpe fatal é exigido que a jogada tenha `♥`, `♦`, `★` ou `💀`.
+
+| Naipe | Traço (como Ameaça) | O que faz | Valete · Dama · Rei | Como lidar |
 | :---: | :--- | :--- | :---: | :--- |
-| `♠` | **Feroz** | Ataca com força extra (já somada ao Ataque dela). | +1 · +2 · +3 | Derrube rápido, ou guarde cartas para bloquear. |
+| `♠` | **Feroz** | Ataca com força extra (já somada ao Ataque base 4/6/8 → total **5 · 8 · 11**). | +1 · +2 · +3 | Derrube rápido, ou guarde cartas para bloquear. |
 | `♥` | **Regenera** | No fim de cada turno em que sobrevive, recupera vida (até o máximo dela). | 2 · 3 · 4 | Dano picado não adianta: junte um combo e acabe com ela de uma vez. |
 | `♦` | **Blindada** | Cada golpe que ela recebe causa menos dano (também o dano de Aliado). | −1 · −2 · −3 | Golpes pequenos quase não passam: use cartas altas e combos. |
 | `♣` | **Imune a armadilhas** | Nada reduz o ataque dela: `♣`, `★` e Aliados de `♣` não funcionam. | — | Você vai ter que bloquear com cartas ou com o Escudo de um Aliado. |
 
 ### 3.3. O chefe do tema
 
-A **última Figura** do Horizonte (a 12ª, sempre um Rei) é o chefe do tema. Além do traço do naipe, ela ganha a regra do chefe, que vale enquanto ela estiver em jogo. Cada tema tem uma regra diferente, então o fim da partida muda de tema para tema.
+Somente a **12ª e última Figura** do Horizonte (o 4º e último **Rei**, no fundo da 3ª onda) é o chefe do tema. Além do traço passivo do próprio naipe, ele ganha a regra do chefe abaixo, que vale enquanto ele estiver em jogo. Os outros 3 Reis anteriores não têm regra de chefe. Cada tema tem uma regra diferente, então o clímax da partida muda de tema para tema.
 
 | Tema | Chefe | Regra | O que faz |
 | :--- | :--- | :--- | :--- |
@@ -141,7 +145,9 @@ Contra uma Ameaça **Blindada**, desconte a blindagem desse total. Alguns chefes
 
 ### Passo 1 — Usar um Aliado (opcional)
 
-Você pode gastar **1 uso de 1 Aliado**. Esse é o **único uso de Aliado do turno**: se usar aqui, não poderá usar o Escudo no Passo 3.
+Você pode ter no máximo **2 Aliados** ao mesmo tempo (se recrutar um 3º, o mais antigo vai para os seus Troféus valendo metade dos pontos: **5, 7 ou 12**).
+
+No início do seu turno, você pode gastar **1 uso de 1 Aliado** para ativar o poder do naipe dele. Esse é o **único uso de Aliado do turno**: ou você ativa o poder do naipe aqui no Passo 1, ou guarda o uso para o **Escudo (+4)** no Passo 3 — **nunca os dois no mesmo turno**.
 
 | Naipe do Aliado | Valete (2 usos) | Dama (2 usos) | Rei (3 usos) |
 | :---: | :--- | :--- | :--- |
@@ -150,7 +156,7 @@ Você pode gastar **1 uso de 1 Aliado**. Esse é o **único uso de Aliado do tur
 | `♦` | Compra 1 carta | compra 2 | compra 3 |
 | `♥` | Cura 2 PV (no Coop, quem tem menos PV) | cura 4 | cura 6 |
 
-- Quando os usos acabam, o Aliado vai para os seus Troféus valendo metade dos pontos.
+- Quando os usos acabam, o Aliado vai para os seus Troféus valendo metade dos pontos (5 pts para `J`, 7 pts para `Q`, 12 pts para `K`).
 - **Se o disparo de um Aliado de `♠` zerar a vida da Ameaça**, ela é Abatida (Troféu + cartas de recompensa), a próxima Figura é revelada e **você continua o seu turno** no Passo 2, já contra a nova Ameaça.
 
 ### Passo 2 — Ação principal
@@ -173,19 +179,30 @@ Ataque efetivo = Ataque da Ameaça − reduções do turno (♣, ★, Aliado de 
 
 Contra uma Ameaça Imune a armadilhas, não há reduções. Se o ataque efetivo for maior que 0, você pode:
 
-- **Descartar cartas da mão** para bloquear: cada uma bloqueia o próprio valor (`2`–`10` = o número; `A` = 5; `★` = 5; `💀` = 8).
-- **Usar o Escudo de um Aliado** (+4 de bloqueio, gasta 1 uso), **se ainda não usou Aliado neste turno**.
+- **Descartar cartas da mão para bloquear — vale o NÚMERO da carta, não 1 ponto por carta:** cada carta descartada absorve dano igual ao seu **valor numérico** (`2`–`10` = o próprio número; `A` = 5; `★` = 5; `💀` = 8). Exemplo: descartar um `7♦` bloqueia **7 de dano** (e não 1 ponto).
+- **Posso bloquear com a mão toda?** Sim, você pode descartar quantas cartas quiser da mão (inclusive a mão inteira, exceto contra o chefe *Portas Seladas*, que limita o bloqueio a 1 carta). **Porém, atenção:** no Passo 4 você **não** reabastece até 5 cartas — você compra **apenas 1 carta**. Se torrar a mão inteira para bloquear, entrará no próximo turno com **1 única carta**.
+- **Usar o Escudo de um Aliado** (+4 de bloqueio, gasta 1 uso), **se ainda não usou Aliado no Passo 1**.
 
 O dano que sobrar sai dos seus PV.
 
 ### Passo 4 — Fim do turno
 
-1. **Compre 1 carta** (se tiver menos de 6 na mão).
+1. **Compre 1 carta** (se tiver menos de 6 na mão — ou 3 sob o chefe *Detenção*). Essa compra fixa acontece **sempre no fim do seu turno**, tanto se você derrotou a Ameaça no Passo 2 quanto se bloqueou no Passo 3.
 2. As reduções de ataque da Ameaça acabam.
 3. Se a Ameaça for **Regenera** e tiver sobrevivido, ela recupera vida. Chefes com Fome Crescente ou A Trilha Se Fecha aplicam a regra deles aqui.
 4. A vez passa ao próximo jogador vivo.
 
 Se o Deck de Ação acabar, embaralhe o descarte para formar um novo.
+
+> **Quando compro novas cartas? (Resumo completo)**
+>
+> 1. **Preparação (início do jogo):** **5 cartas** iniciais (limite máximo na mão: **6 cartas**, ou **3** sob o chefe *Detenção*).
+> 2. **Fim do seu turno (Passo 4):** compra fixa de **+1 carta** — sempre, após atacar/derrotar ou bloquear.
+> 3. **Compras bônus imediatas durante o turno:**
+>    - Jogar **`♦` Ouros** no ataque: **+1 carta** (ou **+2** se o Valor Base da jogada for **7+**; +1 extra se sua Especialização for Engenheiro `♦`).
+>    - Jogar **`★` Coringa Claro**: **+2 cartas**.
+>    - Ativar **Aliado de `♦` Ouros** (Passo 1): **+1 (`J♦`), +2 (`Q♦`) ou +3 (`K♦`) cartas**.
+>    - **Abater** a Ameaça (recompensa de Abate): **+1 carta (Valete)** ou **+2 cartas (Dama/Rei)** na hora, além da +1 do fim do turno. *(Se escolher **Recrutar**, você não ganha a compra de Abate — só a +1 normal do fim do turno).*
 
 ---
 

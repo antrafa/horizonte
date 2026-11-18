@@ -75,17 +75,19 @@ export const ROTEIRO_EXEMPLO: PassoDoExemplo[] = [
     titulo: 'Mara abre fogo contra o Batedor de Arpão (J♠)',
     quem: 'Mara',
     narrativa:
-      'Mara joga 6♠ (Escopeta de Cano Cerrado). Com +2 de bônus de Espadas e +2 da sua Especialização de Atirador, causa 10 de dano direto e deixa J♠ com apenas 2 PV.',
-    notaMecanica: '6 (base) + 2 (♠) + 2 (Atirador) = 10 de dano. Como J♠ sobreviveu com 2 PV, ele contra-ataca com 5 (4 de Ataque + 1 por ser Feroz).',
+      'Mara joga 6♠. Com +2 de bônus de Espadas e +2 da sua Especialização de Atirador (♠), causa 10 de dano direto e deixa J♠ com 2 PV. Como J♠ sobreviveu, ele contra-ataca com 5 (4 base + 1 do traço ♠ Feroz).',
+    notaMecanica:
+      'Dano: 6 (base) + 2 (♠) + 2 (Atirador) = 10. O naipe ♠ do J♠ dá a ele o traço passivo Feroz (+1 de ataque na onda dos Valetes: 4 + 1 = 5). Ainda não há compra de carta: a compra fixa só ocorre no Passo 4 (fim do turno), após o bloqueio.',
     acao: { tipo: 'jogarCartas', quem: 0, indicesMao: [0], alvo: 'horizonte_abater' },
   },
   {
     hora: 'Turno 1 · Bloqueio',
-    titulo: 'Mara usa sucata leve para amortecer o contra-ataque',
+    titulo: 'Mara bloqueia pelo valor da carta e compra +1 no fim do turno',
     quem: 'Mara',
     narrativa:
-      'Para não perder vida cheia, Mara descarta 2♣ (Estrepes) da mão para bloquear 2 dos 5 pontos de dano, sofre 3 (vai a 12 PV) e compra 1 carta no fim do turno.',
-    notaMecanica: 'Bloqueio Tático: 5 de dano pendente - 2 bloqueados = 3 PV perdidos. No fim do turno, compra 1 carta: a carta gasta no bloqueio vai fazer falta.',
+      'Para amortecer o contra-ataque de 5, Mara descarta 2♣ da mão: cada carta absorve o próprio valor numérico (2 pontos, e não 1 por carta), então ela sofre 3 de dano (15 → 12 PV). Só agora, no fim do turno, ela compra +1 carta (3♦).',
+    notaMecanica:
+      'Bloqueio = valor da carta (5 pendente − 2 do 2♣ = 3 PV perdidos). Mara poderia descartar mais cartas (até a mão toda), mas no Passo 4 se compra APENAS 1 carta (não volta a 5): cada carta gasta na defesa faz falta depois.',
     acao: { tipo: 'bloquear', quem: 0, indicesMao: [0] },
   },
   {
@@ -93,8 +95,9 @@ export const ROTEIRO_EXEMPLO: PassoDoExemplo[] = [
     titulo: 'Kael recruta o Batedor de Arpão (J♠) para o seu lado',
     quem: 'Kael',
     narrativa:
-      'Kael vê o J♠ quase derrotado (2 PV) e joga 3♥ (Atadura Esterilizada). Como usou uma carta vermelha e zerou a vida da Ameaça, ele o recruta como Aliado!',
-    notaMecanica: '3 de dano zeram os 2 PV (a Especialização de Médico reforça a cura, não o dano). Como o golpe final tem ♥, Kael pode Recrutar: J♠ vira Aliado com 2 usos (cada um causa 2 de dano) e não contra-ataca!',
+      'Kael vê o J♠ com 2 PV e joga 3♥. Os 3 de dano zeram a vida da Ameaça e, como o golpe fatal tem ♥, ele escolhe Recrutar em vez de Abater: J♠ vira Aliado de Kael com 2 usos e não contra-ataca! No fim do turno, Kael compra +1 carta (8♥).',
+    notaMecanica:
+      'A Especialização Médico (♥) de Kael dá +2 na cura (ele já está com 15/15 PV), não no dano. Recrutar (♥/♦/★/💀) traz o J♠ como Aliado com 2 usos (causa 2 de dano por uso no Passo 1 ou dá Escudo +4 no Passo 3), mas sem as cartas bônus de Abate — Kael compra só a +1 fixa do Passo 4.',
     acao: { tipo: 'jogarCartas', quem: 1, indicesMao: [0], alvo: 'horizonte_recrutar' },
   },
   {
@@ -102,26 +105,29 @@ export const ROTEIRO_EXEMPLO: PassoDoExemplo[] = [
     titulo: 'Mara monta um Combo de Comando e atira em Kael!',
     quem: 'Mara',
     narrativa:
-      'Vendo Kael ganhar um aliado forte, Mara combina 4♣ + A♠ contra o rival! Além de 12 de dano direto em Kael, o golpe pesado de Paus arranca 1 carta da mão dele, puxada às cegas.',
-    notaMecanica: 'Combo (4 + 4 do Ás = 8) + 2 (♠) + 2 (Atirador) = 12 de dano em Kael + descarte de 1 carta (♣ ≥ 6). Depois disso, o novo Rastejador (J♣) ataca Mara por 4 — e, Imune a armadilhas, ignora o ♣ que ela jogou.',
+      'Com Kael armado com um Aliado, Mara combina 4♣ + A♠ contra o rival! Kael leva 12 de dano direto nos PV (sem direito a bloqueio) e perde 1 carta aleatória pelo golpe pesado de ♣. Porém, o novo Rastejador (J♣) no centro contra-ataca Mara por 4.',
+    notaMecanica:
+      'Combo de Comando: 4 + 4 (Ás em combo) = 8 base + 2 (♠) + 2 (Atirador) = 12 de dano em Kael (15 → 3 PV) + descarte de 1 carta (♣ ≥ 6). Como atacou o rival e J♣ tem Imune a armadilhas, o 4♣ não reduz o contra-ataque de 4 do Rastejador.',
     acao: { tipo: 'jogarCartas', quem: 0, indicesMao: [0, 1], alvo: { rival: 1 } },
   },
   {
     hora: 'Turno 3 · Bloqueio',
-    titulo: 'Mara absorve o golpe no corpo para guardar cartas altas',
+    titulo: 'Mara absorve 4 de dano no corpo para não zerar a mão',
     quem: 'Mara',
     narrativa:
-      'Com só 2 cartas na mão (5♦, 3♦), Mara prefere guardá-las e aceita os 4 de dano direto nos PV (12 → 8 PV).',
-    notaMecanica: 'Receber no Corpo (0 cartas descartadas): troca vida por cartas, porque a reposição é de só 1 carta por turno.',
+      'Com só 2 cartas na mão (5♦, 3♦), Mara decide aceitar os 4 de dano direto nos PV (12 → 8 PV) em vez de descartá-las no bloqueio. No Passo 4, compra +1 carta (6♥) e fica com 3 cartas para o próximo turno.',
+    notaMecanica:
+      'Por que não bloquear com a mão toda? Poder ela até pode, mas a reposição de fim de turno é de apenas +1 carta. Guardar 5♦ e 3♦ permite um combo ou compra extra (♦) depois, trocando PV por fôlego ofensivo.',
     acao: { tipo: 'bloquear', quem: 0, indicesMao: [] },
   },
   {
     hora: 'Turno 4 · Aliado',
-    titulo: 'Kael aciona o Batedor recrutado (J♠) antes da jogada',
+    titulo: 'Kael aciona o Batedor recrutado (J♠) no Passo 1 do turno',
     quem: 'Kael',
     narrativa:
-      'Agora é a vez de Kael: ele gasta 1 uso do J♠ recrutado para causar +2 de dano no Rastejador Ácido (J♣), abrindo caminho para sua ação principal.',
-    notaMecanica: 'Uso de Aliado (1× por turno, fase de ação): J♠ cai de 2 para 1 uso e reduz J♣ de 12 para 10 PV.',
+      'Antes de jogar cartas da mão, Kael gasta 1 uso do seu Aliado J♠ (2 → 1 uso) para causar 2 de dano no Rastejador Ácido (J♣: 12 → 10 PV) e segue para sua ação principal!',
+    notaMecanica:
+      'Regra de Aliado: 1 único uso de Aliado por turno! Como Kael ativou o poder de ♠ no Passo 1 (que agora funciona pelo naipe do Aliado, 2 de dano no Valete), ele não poderá usar o Escudo +4 desse Aliado no Passo 3 deste mesmo turno.',
     acao: { tipo: 'usarAliado', quem: 1, indiceAliado: 0 },
   },
 ];

@@ -139,7 +139,7 @@ export function regraDaCarta(card: GameCard): RegraDaCarta {
       ],
       blocos: [
         {
-          rotulo: `Traço · ${TRACO_AMEACA[naipe].nome}`,
+          rotulo: `Traço como Ameaça · ${TRACO_AMEACA[naipe].nome}`,
           texto: TRACO_AMEACA[naipe].descricao(posto),
         },
         {
@@ -148,7 +148,7 @@ export function regraDaCarta(card: GameCard): RegraDaCarta {
         },
         {
           rotulo: 'Recrutar · golpe final com ♥, ♦ ou Coringa',
-          texto: `Em vez de Troféu, ela vira seu Aliado com ${st.cargas} usos. Na sua vez (1 uso de Aliado por turno, Escudo incluído), gaste 1 uso: ${efeitoDoUsoDoAliado(posto, naipe)}. Na defesa, 1 uso bloqueia ${REGRA.escudoAliado}.`,
+          texto: `Em vez de Troféu, vira seu Aliado com ${st.cargas} usos (máx. ${REGRA.maxAliados}). 1 uso/turno (ou Escudo): ${efeitoDoUsoDoAliado(posto, naipe)}; na defesa, bloqueia ${REGRA.escudoAliado}.`,
         },
       ],
     };
@@ -191,8 +191,8 @@ export function regraDaCarta(card: GameCard): RegraDaCarta {
       {
         rotulo: ehAs ? 'Ás · Combo de Comando' : 'Defesa e Combo',
         texto: ehAs
-          ? `Sozinho vale ${REGRA.valorAsSolo}. Jogado com 1 carta numérica, soma +${REGRA.bonusAsCombo} a ela (ex.: 7 + Ás = 11). Na defesa, bloqueia ${valor}.`
-          : `Na defesa, descarte para bloquear ${valor} de dano. No ataque, junte 2–4 cartas de valor ${card.rank} (soma tudo) ou 1 Ás (+${REGRA.bonusAsCombo}).`,
+          ? `Sozinho vale ${REGRA.valorAsSolo}. Jogado com 1 carta numérica, soma +${REGRA.bonusAsCombo} a ela (ex.: 7 + Ás = 11). No bloqueio, absorve ${valor} de dano (valor da carta).`
+          : `No bloqueio, descarte para absorver ${valor} de dano (vale o número, não 1 ponto). No ataque, junte 2–4 cartas de valor ${card.rank} (soma tudo) ou 1 Ás (+${REGRA.bonusAsCombo}).`,
       },
     ],
   };
@@ -316,7 +316,7 @@ export function renderCardModalContentHtml(card: GameCard): string {
           <h4>Como funciona nos 3 modos</h4>
           <span class="chip">Carta de Ameaça / Aliado</span>
         </div>
-        <p><strong>Solo & Cooperativo:</strong> entra no centro da mesa como inimigo do Horizonte. Quando o seu golpe zera a Vida dela, você a Abate (com qualquer carta): vira Troféu e você compra cartas. Se esse golpe final tiver ♥, ♦ ou Coringa, você pode Recrutá-la: ela entra como Aliado no seu lado da mesa!</p>
+        <p><strong>Naipe como Ameaça vs. Aliado:</strong> no centro da mesa, o naipe define o <strong>Traço passivo</strong> (${card.suit !== 'joker' ? escapeHtml(TRACO_AMEACA[card.suit as Naipe].nome) : ''}). Qualquer naipe pode atacá-la e <strong>Abater</strong> (vira Troféu + compra cartas). Se o golpe final tiver ♥, ♦ ou Coringa, você pode <strong>Recrutá-la</strong> (máx. ${REGRA.maxAliados} Aliados): o mesmo naipe vira o poder ativo dela (1 uso/turno no Passo 1, ou Escudo +${REGRA.escudoAliado} no bloqueio). Ao esgotar os usos, vira Troféu pela metade dos pontos.</p>
         <p><strong>Competitivo PvP:</strong> além de valer pontos de Domínio no final, quando recrutada gasta seus usos para ajudar você (Aliados de ♠ podem atirar direto no oponente).</p>
       </div>`
     : `
@@ -327,7 +327,7 @@ export function renderCardModalContentHtml(card: GameCard): string {
         </div>
         ${card.topWatcherEvent ? `<p>${escapeHtml(card.topWatcherEvent)}</p>` : ''}
         <p class="zoom-usage-hint muted">
-          <strong>Na mesa:</strong> jogue esta carta pelo valor numérico contra o Horizonte ou contra um rival (no PvP), combine-a em Pares/Trincas ou com um Ás (+${REGRA.bonusAsCombo}), ou descarte-a durante o Bloqueio Tático para absorver dano.
+          <strong>Na mesa:</strong> jogue esta carta pelo valor numérico contra o Horizonte ou contra um rival (no PvP), combine-a em Pares/Trincas ou com um Ás (+${REGRA.bonusAsCombo}), ou descarte-a no Bloqueio Tático para absorver o <strong>valor numérico dela</strong> (não 1 ponto por carta). Lembre-se: no fim do turno você compra só ${REGRA.compraFimTurno} carta.
         </p>
       </div>`;
 

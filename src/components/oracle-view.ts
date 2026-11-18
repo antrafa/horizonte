@@ -1,4 +1,4 @@
-import { CLASSES, FUNCAO_DO_NAIPE, NAIPES, REGRA, SIMBOLO, STATUS_FIGURA } from '../core/partida';
+import { CLASSES, FUNCAO_DO_NAIPE, NAIPES, REGRA, REGRA_CHEFE, SIMBOLO, STATUS_FIGURA } from '../core/partida';
 import type { ThemeDeck } from '../types/card';
 import { escapeHtml, isFigure } from './card-renderer';
 
@@ -64,13 +64,28 @@ export function renderOracleGuideHtml(deck: ThemeDeck): string {
           <dl class="glossary">
             <dt>Setup</dt><dd>12 Figuras no Horizonte (4 J em cima, 4 Q no meio, 4 K embaixo). 42 cartas no Deck de Ação.</dd>
             <dt>Mão & Vida</dt><dd>${REGRA.vidaInicial} PV iniciais · compra ${REGRA.maoInicial} cartas (máximo ${REGRA.maoMaxima}).</dd>
-            <dt>Combos</dt><dd>1 carta · OU 2–4 cartas iguais (Par/Trinca/Quadra) · OU 1 numérica + Ás (+${REGRA.bonusAsCombo}).</dd>
+            <dt>Combos</dt><dd>1 carta · OU 2–4 cartas iguais (Par/Trinca/Quadra) · OU 1 numérica + Ás (+${REGRA.bonusAsCombo}). Qualquer naipe ataca qualquer Figura.</dd>
             <dt>Ás (A)</dt><dd>Sozinho vale ${REGRA.valorAsSolo} (de poder ou bloqueio). Em combo com outra carta adiciona +${REGRA.bonusAsCombo}.</dd>
-            <dt>Abater</dt><dd>Derrotar a Ameaça e guardá-la como Troféu (pontos) + comprar cartas. Acontece com qualquer carta: é o padrão quando o seu golpe zera a Vida dela.</dd>
-            <dt>Recrutar (♥/♦)</dt><dd>Alternativa ao Abater: se o golpe final zerar a Ameaça e incluir ♥, ♦ ou Coringa, você pode trazê-la como Aliado (máx. ${REGRA.maxAliados}).</dd>
-            <dt>Usos do Aliado</dt><dd>Cada Aliado chega com 2 ou 3 usos. Na sua vez, gaste 1 uso para ativar o poder dele — no máximo 1 uso de Aliado por turno, contando o Escudo. Sem usos, ele vira Troféu valendo metade dos pontos.</dd>
-            <dt>Bloqueio</dt><dd>Quando a Ameaça sobrevive, ela ataca você. Descarte cartas da mão para reduzir o dano pelo valor delas, ou gaste 1 uso de Aliado para bloquear ${REGRA.escudoAliado} (se ainda não usou Aliado no turno). No fim do turno, compre ${REGRA.compraFimTurno} carta.</dd>
+            <dt>Abater</dt><dd>Padrão ao zerar a Vida da Figura com qualquer carta: vira Troféu (10/15/25 pts) e você compra +1 (J) ou +2 (Q/K) cartas.</dd>
+            <dt>Recrutar (♥/♦)</dt><dd>Alternativa ao Abater se o golpe fatal incluir ♥, ♦ ou Coringa: vira seu Aliado (máx. ${REGRA.maxAliados}; se pegar um 3º, o mais antigo vai para Troféus pela metade dos pontos). Não dá compra de abate.</dd>
+            <dt>Aliado (1 uso/turno)</dt><dd>Chega com 2 usos (J/Q) ou 3 usos (K). Por turno, você escolhe <strong>1 uso</strong>: ou ativa o poder do naipe no início do turno, ou usa o Escudo (+${REGRA.escudoAliado}) no bloqueio — nunca os dois. Sem usos, vira Troféu pela metade dos pontos (5/7/12).</dd>
+            <dt>Bloqueio (Valor)</dt><dd>Cada carta descartada bloqueia pelo <strong>valor numérico dela</strong> (2–10 = número · A=${REGRA.valorAsSolo} · ★=${REGRA.valorEstrela} · 💀=${REGRA.valorCaveira} — não 1 ponto por carta). Pode bloquear até com a mão toda (exceto chefe Portas Seladas), mas cuidado: a reposição vem depois e dá só +${REGRA.compraFimTurno} carta!</dd>
+            <dt>Quando comprar</dt><dd>Início: ${REGRA.maoInicial} cartas · Fim de todo turno (Passo 4): <strong>+${REGRA.compraFimTurno} carta</strong> (não volta a 5) · Bônus na hora: ♦ (+1, ou +2 se base ≥ 7; +1 se Engenheiro), ★ (+2), Aliado ♦ (+1/+2/+3) ou Abater Figura (+1/+2).</dd>
+            <dt>Regra do Chefe</dt><dd>Vale <strong>só para a 12ª e última Figura</strong> (o último Rei, no fundo da 3ª onda), somando ao traço do naipe dele. Em ${escapeHtml(deck.name)}: <strong>${escapeHtml(REGRA_CHEFE[deck.chefe.regra].nome)}</strong> — ${escapeHtml(REGRA_CHEFE[deck.chefe.regra].descricao)}</dd>
           </dl>
+
+          <h3 class="spaced">Bônus por Naipe nas Figuras (Ameaça vs. Aliado)</h3>
+          <table class="data-table">
+            <thead>
+              <tr><th>Naipe</th><th>Como Ameaça (Traço J · Q · K)</th><th>Como Aliado (1 uso · J · Q · K)</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row" class="suit-spades big-suit">♠</th><td><strong>Feroz:</strong> +1 · +2 · +3 Atq (bate 5 · 8 · 11)</td><td>Causa 2 · 4 · 6 de dano (Ameaça ou rival PvP)</td></tr>
+              <tr><th scope="row" class="suit-hearts big-suit">♥</th><td><strong>Regenera:</strong> cura +2 · +3 · +4 PV no fim do turno</td><td>Cura 2 · 4 · 6 PV (no Coop, quem tem menos PV)</td></tr>
+              <tr><th scope="row" class="suit-diamonds big-suit">♦</th><td><strong>Blindada:</strong> sofre −1 · −2 · −3 dano por golpe</td><td>Compra 1 · 2 · 3 cartas extras</td></tr>
+              <tr><th scope="row" class="suit-clubs big-suit">♣</th><td><strong>Imune:</strong> nada reduz o ataque dela (♣/★)</td><td>Ameaça perde 2 · 4 · 6 de ataque no turno</td></tr>
+            </tbody>
+          </table>
 
           <h3 class="spaced">Especializações de Naipe</h3>
           <table class="data-table">

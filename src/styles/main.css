@@ -1136,6 +1136,51 @@ textarea {
   border-radius: var(--radius);
 }
 
+.quick-guide-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.quick-guide-card {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+  padding: 20px 22px;
+  background: var(--surface);
+  border: 1px solid var(--accent-line);
+  border-top: 3px solid var(--accent);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lift);
+}
+
+.quick-guide-head {
+  display: grid;
+  gap: 4px;
+}
+
+.quick-guide-list {
+  grid-template-columns: minmax(120px, max-content) minmax(0, 1fr);
+  gap: 10px 14px;
+}
+
+.quick-guide-list code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--sunken);
+  border: 1px solid var(--line);
+  font-size: 0.84em;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.quick-guide-bullets {
+  display: grid;
+  gap: 5px;
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
+
 .note {
   max-width: 820px;
   padding: 14px 16px;
@@ -1281,6 +1326,271 @@ textarea {
 
 .example-end .btn-primary {
   justify-self: start;
+}
+
+/* ---------- Exemplo Interativo PvPvE ---------- */
+
+.exemplo-player {
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+  background: var(--sunken);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+.exemplo-nav {
+  display: grid;
+  gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.exemplo-nav-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.exemplo-step-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.filter-pill.is-done {
+  border-color: var(--accent-line);
+  color: var(--ink);
+}
+
+.exemplo-spotlight {
+  display: grid;
+  gap: 12px;
+  padding: 18px 20px;
+  background: var(--surface);
+  border: 1px solid var(--accent-line);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+}
+
+.exemplo-spotlight-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.exemplo-spotlight-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: start;
+}
+
+.exemplo-spotlight-copy {
+  display: grid;
+  gap: 10px;
+}
+
+.exemplo-xray {
+  padding: 10px 14px;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-line);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.exemplo-log-delta {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 8px 12px 8px 28px;
+  background: var(--sunken);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  color: var(--ink-2);
+}
+
+.exemplo-played-cards {
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+  padding: 12px;
+  background: var(--sunken);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.exemplo-live-table {
+  display: grid;
+  gap: 16px;
+}
+
+.exemplo-delta {
+  font-weight: 800;
+}
+
+.exemplo-pending-alert {
+  padding: 10px 12px;
+  background: var(--warn-soft);
+  border: 1px solid var(--warn);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font-size: 0.88rem;
+}
+
+.exemplo-hand-box {
+  display: grid;
+  gap: 8px;
+}
+
+.exemplo-hand-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.exemplo-mini-hand {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pcard.exemplo-pcard {
+  width: 72px;
+  height: 100px;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.pcard.exemplo-pcard:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.pcard.exemplo-pcard.is-drawn {
+  border-color: var(--ok);
+  box-shadow: 0 0 0 2px var(--ok-soft), 0 6px 14px rgb(0 0 0 / 0.25);
+}
+
+.exemplo-card-badge {
+  position: absolute;
+  top: -7px;
+  right: -5px;
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: var(--ok);
+  color: #0b190f;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.exemplo-timeline-wrap {
+  display: grid;
+  gap: 12px;
+}
+
+.exemplo-timeline-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.msgs.exemplo-timeline {
+  max-width: none;
+  gap: 8px;
+}
+
+.exemplo-timeline-item {
+  grid-template-columns: 118px minmax(0, 1fr);
+  transition: border-color 0.15s ease, background-color 0.15s ease, opacity 0.15s ease;
+}
+
+.exemplo-timeline-item.is-active {
+  border-color: var(--accent);
+  background: linear-gradient(0deg, var(--accent-soft), var(--accent-soft)), var(--surface);
+  box-shadow: var(--shadow-lift);
+}
+
+.exemplo-timeline-item.is-done {
+  border-color: var(--line-strong);
+}
+
+.exemplo-timeline-item.is-future {
+  opacity: 0.78;
+}
+
+.msg-time-btn {
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.exemplo-timeline-item.is-active .msg-time-btn {
+  color: var(--accent);
+}
+
+.exemplo-step-num {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--sunken);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 0.78rem;
+}
+
+.exemplo-timeline-item.is-active .exemplo-step-num {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.exemplo-timeline-item.is-done .exemplo-step-num {
+  background: var(--ok-soft);
+  border-color: var(--ok);
+  color: var(--ok);
+}
+
+.msg-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.msg-title-btn {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.msg-title-btn:hover {
+  color: var(--accent);
 }
 
 /* ---------- Mesa: cena ---------- */
@@ -2898,7 +3208,8 @@ dialog::backdrop {
 @media (max-width: 1100px) {
   .fronts-2,
   .ref-grid,
-  .studio-layout {
+  .studio-layout,
+  .quick-guide-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -2931,8 +3242,14 @@ dialog::backdrop {
   .mode-grid,
   .horizon-panel,
   .horizon-bars,
-  .zoom-modal-body {
+  .zoom-modal-body,
+  .exemplo-spotlight-body,
+  .quick-guide-list {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .exemplo-player {
+    padding: 14px;
   }
 
   .scene {
@@ -2946,9 +3263,10 @@ dialog::backdrop {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .msg {
+  .msg,
+  .exemplo-timeline-item {
     grid-template-columns: minmax(0, 1fr);
-    gap: 4px;
+    gap: 6px;
   }
 
   .zoom-card-visual {
