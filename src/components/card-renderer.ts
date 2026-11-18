@@ -349,7 +349,14 @@ export function renderMagicCardHtml(card: GameCard, options: RenderCardOptions =
   `;
 }
 
-export function renderCardModalContentHtml(card: GameCard): string {
+export interface RenderCardModalOptions {
+  showDetails?: boolean;
+  fromScanner?: boolean;
+}
+
+export function renderCardModalContentHtml(card: GameCard, options: RenderCardModalOptions = {}): string {
+  const showDetails = Boolean(options.showDetails);
+  const fromScanner = Boolean(options.fromScanner);
   const regra = regraDaCarta(card);
   const figure = isFigure(card);
 
@@ -380,19 +387,27 @@ export function renderCardModalContentHtml(card: GameCard): string {
     .join('');
 
   return `
-    <div class="zoom-modal-inner">
+    <div class="zoom-modal-inner ${showDetails ? 'is-with-details' : 'is-card-only'}" data-zoom-card-id="${escapeHtml(card.id)}">
       <header class="zoom-modal-header">
         <div>
           <span class="eyebrow">${escapeHtml(card.playingCardCode)} · ${escapeHtml(regra.tipo)}</span>
           <h2 id="zoom-dialog-title">${escapeHtml(card.title)}</h2>
         </div>
-        <form method="dialog">
-          <button type="submit" class="btn-secondary" autofocus>Fechar</button>
-        </form>
+        <div class="zoom-modal-actions">
+          ${fromScanner ? `<button type="button" class="btn-ghost btn-sm" data-zoom-voltar-escaneador>Outra carta</button>` : ''}
+          <button type="button" class="btn-secondary btn-sm" data-zoom-toggle-details aria-expanded="${showDetails}">
+            ${showDetails ? 'Só a carta' : 'Detalhes'}
+          </button>
+          <form method="dialog">
+            <button type="submit" class="btn-secondary btn-sm" autofocus>Fechar</button>
+          </form>
+        </div>
       </header>
       <div class="zoom-modal-body">
-        <div class="zoom-card-visual">${renderMagicCardHtml(card)}</div>
-        <div class="zoom-reading-section">
+        <div class="zoom-card-visual">
+          <div class="zoom-card-scale">${renderMagicCardHtml(card)}</div>
+        </div>
+        <div class="zoom-reading-section" ${showDetails ? '' : 'hidden'}>
           ${numerosHtml(regra)}
           ${contexto}
           ${blocos}

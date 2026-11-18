@@ -431,22 +431,37 @@ export function mountHorizonteApp(root: HTMLElement): void {
 
   let pararEscaneador: (() => void) | null = null;
 
-  function openCardZoomModal(card: GameCard): void {
+  function openCardZoomModal(
+    card: GameCard,
+    options: { showDetails?: boolean; fromScanner?: boolean; deck?: ThemeDeck } = {},
+  ): void {
     const dialog = root.querySelector<HTMLDialogElement>('#card-zoom-dialog');
     if (!dialog) return;
     pararEscaneador?.();
-    dialog.innerHTML = renderCardModalContentHtml(card);
+    const showDetails = Boolean(options.showDetails);
+    const fromScanner = Boolean(options.fromScanner);
+    dialog.classList.toggle('is-card-only', !showDetails);
+    dialog.classList.toggle('is-with-details', showDetails);
+    dialog.innerHTML = renderCardModalContentHtml(card, { showDetails, fromScanner });
+    dialog.querySelector<HTMLButtonElement>('[data-zoom-toggle-details]')?.addEventListener('click', () => {
+      openCardZoomModal(card, { ...options, showDetails: !showDetails });
+    });
+    dialog.querySelector<HTMLButtonElement>('[data-zoom-voltar-escaneador]')?.addEventListener('click', () => {
+      const deckAtual = options.deck ?? loadThemeWithOverrides(state.activeThemeId);
+      abrirEscaneador(deckAtual);
+    });
     if (typeof dialog.showModal === 'function' && !dialog.open) dialog.showModal();
   }
 
   function abrirEscaneador(deck: ThemeDeck): void {
     const dialog = root.querySelector<HTMLDialogElement>('#card-zoom-dialog');
     if (!dialog) return;
+    dialog.classList.remove('is-card-only', 'is-with-details');
     dialog.innerHTML = renderEscaneadorHtml(deck.name);
     if (typeof dialog.showModal === 'function' && !dialog.open) dialog.showModal();
     const abrirPeloCodigo = (texto: string): void => {
       const carta = cartaPeloCodigo(deck.cards, texto);
-      if (carta) openCardZoomModal(carta);
+      if (carta) openCardZoomModal(carta, { fromScanner: true, deck });
     };
     pararEscaneador = iniciarEscaneador(dialog, abrirPeloCodigo);
     dialog.addEventListener('close', () => pararEscaneador?.(), { once: true });

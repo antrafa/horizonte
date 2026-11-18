@@ -125,7 +125,19 @@ describe('Renderização de cartas, impressão 63×88mm / 57×87mm e escaneador 
 
     const modalHtml = renderCardModalContentHtml(rei);
     expect(modalHtml).toContain('zoom-modal-inner');
-    expect(modalHtml).toContain('Carta de Ameaça / Aliado');
+    expect(modalHtml).toContain('is-card-only');
+    expect(modalHtml).toContain('zoom-card-scale');
+    expect(modalHtml).toContain('data-zoom-toggle-details');
+    expect(modalHtml).toContain('aria-expanded="false"');
+    expect(modalHtml).toContain('class="zoom-reading-section" hidden');
+
+    const modalComDetalhesHtml = renderCardModalContentHtml(rei, { showDetails: true, fromScanner: true });
+    expect(modalComDetalhesHtml).toContain('is-with-details');
+    expect(modalComDetalhesHtml).toContain('aria-expanded="true"');
+    expect(modalComDetalhesHtml).toContain('Só a carta');
+    expect(modalComDetalhesHtml).toContain('data-zoom-voltar-escaneador');
+    expect(modalComDetalhesHtml).toContain('Carta de Ameaça / Aliado');
+    expect(modalComDetalhesHtml).not.toContain('class="zoom-reading-section" hidden');
   });
 
   it('gera código QR HORIZONTE:<código> e reconhece prefixos HORIZONTE: e LIMIAR:', () => {

@@ -2819,12 +2819,43 @@ dialog::backdrop {
   box-shadow: 0 30px 80px -20px rgb(24 24 27 / 0.5);
 }
 
+.card-zoom-dialog.is-card-only[open],
+.card-zoom-dialog[open]:has(.zoom-modal-inner.is-card-only) {
+  width: min(960px, calc(100vw - 16px));
+  max-height: calc(100dvh - 16px);
+  padding: 12px 14px 16px;
+  overflow: hidden;
+}
+
 .zoom-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 16px;
+  gap: 12px;
   margin-bottom: 20px;
+}
+
+.zoom-modal-inner.is-card-only .zoom-modal-header {
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.zoom-modal-inner.is-card-only .zoom-modal-header h2 {
+  font-size: 1.05rem;
+  margin-top: 2px;
+}
+
+.zoom-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.zoom-modal-actions form {
+  margin: 0;
 }
 
 .zoom-modal-header h2 {
@@ -2836,6 +2867,42 @@ dialog::backdrop {
   grid-template-columns: auto minmax(0, 1fr);
   gap: 28px;
   align-items: start;
+}
+
+.zoom-modal-inner.is-card-only .zoom-modal-body {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  align-items: center;
+  gap: 0;
+}
+
+.zoom-modal-inner.is-card-only .zoom-card-visual {
+  width: 100%;
+  height: calc(100dvh - 96px);
+  max-height: 780px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  container-type: size;
+}
+
+.zoom-modal-inner.is-card-only .zoom-card-scale {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  --zoom-factor: min(calc(98cqw / 252px), calc(98cqh / 352px), 2.35);
+}
+
+.zoom-modal-inner.is-card-only .zoom-card-scale .mtg-card {
+  zoom: var(--zoom-factor, 1.5);
+  box-shadow:
+    inset 0 0 0 3.5px var(--card-paper),
+    inset 0 0 0 4.5px var(--card-accent-line),
+    0 18px 44px rgb(0 0 0 / 0.35);
+}
+
+.zoom-reading-section[hidden] {
+  display: none !important;
 }
 
 .zoom-reading-section {
