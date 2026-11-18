@@ -69,6 +69,24 @@ describe('Renderização de cartas, impressão 63×88mm / 57×87mm e escaneador 
     expect(acaoSoArte).toContain('mtg-corner-badge--tl');
     expect(acaoSoArte).toContain('mtg-corner-badge--br');
 
+    // Modo carta vazada / sleeve (só textos, sem imagem de fundo)
+    const reiSoTexto = renderMagicCardHtml(rei, { textOnly: true });
+    expect(reiSoTexto).toContain('is-text-only');
+    expect(reiSoTexto).toContain('mtg-art-frame--cutout');
+    expect(reiSoTexto).toContain('mtg-cutout-window');
+    expect(reiSoTexto).toContain(rei.title);
+    expect(reiSoTexto).toContain('Traço como Ameaça');
+    expect(reiSoTexto).not.toContain('mtg-art-img');
+    expect(reiSoTexto).not.toContain('has-art');
+    expect(reiSoTexto).not.toContain('mtg-art-illustration-svg');
+
+    const acaoSemArtSoTexto = renderMagicCardHtml({ ...acao, artUrl: undefined }, { textOnly: true });
+    expect(acaoSemArtSoTexto).toContain('is-text-only');
+    expect(acaoSemArtSoTexto).toContain('mtg-art-frame--cutout');
+    expect(acaoSemArtSoTexto).toContain(acao.title);
+    expect(acaoSemArtSoTexto).not.toContain('mtg-art-conceptual-svg');
+    expect(acaoSemArtSoTexto).not.toContain('mtg-art-illustration-svg');
+
     // Todos os 12 temas com baralho gerado populam 54 URLs únicas (todos os 4 naipes + 2 Coringas)
     expect(ALL_THEME_IDS).toHaveLength(12);
     for (const themeId of ALL_THEME_IDS) {
@@ -126,7 +144,17 @@ describe('Renderização de cartas, impressão 63×88mm / 57×87mm e escaneador 
     expect(filterCardsForPrint(deck, 'figures')).toHaveLength(12);
     expect(filterCardsForPrint(deck, 'mission')).toHaveLength(42);
     expect(filterCardsForPrint(deck, 'dinamismo')).toHaveLength(9);
-    expect(filterCardsForPrint(deck, 'all')).toHaveLength(54);
+
+    const todas = filterCardsForPrint(deck, 'all');
+    expect(todas).toHaveLength(63);
+    expect(todas.slice(54).map((c) => c.id)).toEqual(apoio.map((c) => c.id));
+
+    const htmlApoio = renderMagicCardHtml(apoio[0]);
+    expect(htmlApoio).toContain('Carta de Apoio · Kit de Mesa');
+    expect(htmlApoio).toContain('KIT 01/09');
+    expect(htmlApoio).toContain(apoio[0].flavorText);
+    expect(htmlApoio).not.toContain('Valor 8');
+    expect(htmlApoio).not.toContain('55/54');
   });
 
   it('gera folhas A4 3×3 e Card-a-Card nos formatos Poker e Bridge', () => {
@@ -152,8 +180,25 @@ describe('Renderização de cartas, impressão 63×88mm / 57×87mm e escaneador 
       verso: 'tema',
       apenasArte: true,
     });
+    expect(convencionalHtml).toContain('63 cartas · 7 folhas');
+    expect(convencionalHtml).toContain('página 14 de 14');
     expect(convencionalHtml).toContain('is-art-only');
+    expect(convencionalHtml.match(/\bis-art-only\b/g)).toHaveLength(54);
+    expect(convencionalHtml).toContain('KIT 01/09');
+    expect(convencionalHtml).toContain('Foco letal em cada disparo.');
     expect(convencionalHtml).toContain('/cards/expedicao/back.jpg');
     expect(convencionalHtml).toContain('verso-img');
+
+    const vazadasHtml = renderPrintSheetsHtml(deckExp, {
+      ...base,
+      conjunto: 'all',
+      apenasTexto: true,
+    });
+    expect(vazadasHtml).toContain('id="print-apenas-texto" checked');
+    expect(vazadasHtml.match(/\bis-text-only\b/g)).toHaveLength(63);
+    expect(vazadasHtml.match(/\bmtg-cutout-window\b/g)).toHaveLength(63);
+    expect(vazadasHtml).not.toContain('mtg-art-img');
+    expect(vazadasHtml).not.toContain('mtg-art-illustration-svg');
+    expect(vazadasHtml).not.toContain('mtg-art-conceptual-svg');
   });
 });

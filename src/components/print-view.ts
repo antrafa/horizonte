@@ -16,6 +16,7 @@ export interface ConfigDeImpressao {
   escala: number; // 1 = tamanho real; 1.0363 compensa impressoras que reduzem para 96,5%
   codigo: boolean;
   apenasArte?: boolean;
+  apenasTexto?: boolean;
   tamanho?: TamanhoDaCarta;
   formato?: FormatoDeImpressao;
 }
@@ -28,6 +29,7 @@ export function configDeImpressaoPadrao(): ConfigDeImpressao {
     escala: 1,
     codigo: true,
     apenasArte: false,
+    apenasTexto: false,
     tamanho: 'poker',
     formato: 'a4',
   };
@@ -60,7 +62,7 @@ const CONJUNTOS: Array<{ id: PrintFilterMode; label: string }> = [
   { id: 'mission', label: 'Deck de Ação e Coringas (42 cartas · 5 folhas)' },
   { id: 'figures', label: 'Deck do Horizonte J/Q/K (12 cartas · 2 folhas)' },
   { id: 'dinamismo', label: 'Kit de Mesa: Modos, Combos & Marcadores (9 cartas · 1 folha)' },
-  { id: 'all', label: 'Tudo (54 cartas · 6 folhas)' },
+  { id: 'all', label: 'Tudo: Baralho + Kit de Mesa (63 cartas · 7 folhas)' },
 ];
 
 const TAMANHOS: Array<{ id: TamanhoDaCarta; label: string }> = [
@@ -205,7 +207,7 @@ export function filterCardsForPrint(deck: ThemeDeck, filterMode: PrintFilterMode
   if (filterMode === 'figures') return deck.cards.filter(isFigure);
   if (filterMode === 'mission') return deck.cards.filter((c) => !isFigure(c));
   if (filterMode === 'dinamismo') return gerarCartasDeDinamismo(deck);
-  return deck.cards;
+  return [...deck.cards, ...gerarCartasDeDinamismo(deck)];
 }
 
 interface Geometria {
@@ -332,18 +334,21 @@ interface Folha {
 function montarFolhas(deck: ThemeDeck, config: ConfigDeImpressao): Folha[] {
   const cartas = filterCardsForPrint(deck, config.conjunto);
   const verso = renderVersoHtml(deck, config.verso);
-  const artOnly = Boolean(config.apenasArte);
+  const textOnly = Boolean(config.apenasTexto);
+  const artOnly = !textOnly && Boolean(config.apenasArte);
   const folhas: Folha[] = [];
   for (let i = 0; i < cartas.length; i += POR_FOLHA) {
     const pagina = cartas.slice(i, i + POR_FOLHA);
-    const frentes = Array.from({ length: POR_FOLHA }, (_, k) =>
-      pagina[k]
-        ? renderMagicCardHtml(pagina[k], {
-            qr: config.codigo ? qrDaCartaSvg(pagina[k]) : undefined,
-            artOnly,
+    const frentes = Array.from({ length: POR_FOLHA }, (_, k) => {
+      const carta = pagina[k];
+      return carta
+        ? renderMagicCardHtml(carta, {
+            qr: config.codigo ? qrDaCartaSvg(carta) : undefined,
+            artOnly: artOnly && carta.collectorNumber <= 54,
+            textOnly,
           })
-        : null,
-    );
+        : null;
+    });
     folhas.push({ lado: 'frente', slots: frentes });
     if (!config.frenteEVerso) continue;
     const versos = frentes.map((_, k) => {
@@ -390,14 +395,16 @@ function renderCartasEmpilhadas(deck: ThemeDeck, config: ConfigDeImpressao): str
   const formato = config.formato ?? 'card-intercalado';
   const cartas = filterCardsForPrint(deck, config.conjunto);
   const verso = renderVersoHtml(deck, config.verso);
-  const artOnly = Boolean(config.apenasArte);
+  const textOnly = Boolean(config.apenasTexto);
+  const artOnly = !textOnly && Boolean(config.apenasArte);
   const paginas: string[] = [];
   let numPagina = 1;
 
   for (const carta of cartas) {
     const htmlFrente = renderMagicCardHtml(carta, {
       qr: config.codigo ? qrDaCartaSvg(carta) : undefined,
-      artOnly,
+      artOnly: artOnly && carta.collectorNumber <= 54,
+      textOnly,
     });
     paginas.push(`
       <section class="folha-card-grafica folha-card-grafica--frente" data-pagina="${numPagina++}" data-card-id="${escapeHtml(carta.id)}" style="width:${g.carta.largura}mm;height:${g.carta.altura}mm;padding:${g.sangriaMm}mm">
@@ -495,6 +502,7 @@ export function renderPrintSheetsHtml(deck: ThemeDeck, config: ConfigDeImpressao
           <label class="check"><input type="checkbox" id="print-duplex" ${config.frenteEVerso ? 'checked' : ''} /> Frente e verso (${isCardACard ? (formato === 'card-lote' ? '1 verso no final do lote' : 'verso intercalado após cada carta') : 'folha de fundos espelhada após cada frente'})</label>
           <label class="check"><input type="checkbox" id="print-codigo" ${config.codigo ? 'checked' : ''} /> Código QR para o escaneador</label>
           <label class="check"><input type="checkbox" id="print-apenas-arte" ${config.apenasArte ? 'checked' : ''} /> Baralho convencional (ocultar textos do jogo — só arte)</label>
+          <label class="check"><input type="checkbox" id="print-apenas-texto" ${config.apenasTexto ? 'checked' : ''} /> Carta vazada / sleeve (só textos, sem imagem de fundo)</label>
           <button id="btn-trigger-print" type="button" class="btn-primary">${isCardACard ? 'Exportar PDF Card-a-Card (Ctrl+P)' : 'Imprimir ou salvar PDF'}</button>
         </div>
         <div class="print-backs">

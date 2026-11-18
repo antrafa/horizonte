@@ -47,72 +47,132 @@
   --card-accent: #b45309;
   --card-accent-soft: #fef3c7;
   --card-accent-line: #e7c68b;
+  --art-frame-bg: #261409;
+  --art-badge-bg: rgb(38 20 9 / 0.86);
+  --art-badge-border: #fbbf24;
+  --art-suit-dark: #fef3c7;
+  --art-suit-red: #fb923c;
 }
 
 .mtg-card.theme-eclipse {
   --card-accent: #b4690e;
   --card-accent-soft: #fbf0d9;
   --card-accent-line: #e4c384;
+  --art-frame-bg: #0d0907;
+  --art-badge-bg: rgb(13 9 7 / 0.88);
+  --art-badge-border: #fcd34d;
+  --art-suit-dark: #fef3c7;
+  --art-suit-red: #f97316;
 }
 
 .mtg-card.theme-zombies {
   --card-accent: #4d7c0f;
   --card-accent-soft: #eef6e0;
   --card-accent-line: #bdd694;
+  --art-frame-bg: #0d140e;
+  --art-badge-bg: rgb(13 20 14 / 0.86);
+  --art-badge-border: #a3e635;
+  --art-suit-dark: #ecfccb;
+  --art-suit-red: #fb923c;
 }
 
 .mtg-card.theme-vampires {
   --card-accent: #be123c;
   --card-accent-soft: #fce8ed;
   --card-accent-line: #e8a9b8;
+  --art-frame-bg: #0b0d14;
+  --art-badge-bg: rgb(18 8 14 / 0.88);
+  --art-badge-border: #f43f5e;
+  --art-suit-dark: #f1f5f9;
+  --art-suit-red: #fb7185;
 }
 
 .mtg-card.theme-expedicao {
   --card-accent: #24633e;
   --card-accent-soft: #e6f2eb;
   --card-accent-line: #a3cbb2;
+  --art-frame-bg: #071a13;
+  --art-badge-bg: rgb(7 26 19 / 0.86);
+  --art-badge-border: #fde68a;
+  --art-suit-dark: #faf5e8;
+  --art-suit-red: #fb923c;
 }
 
 .mtg-card.theme-noir {
   --card-accent: #9a4708;
   --card-accent-soft: #f8ece1;
   --card-accent-line: #dcba9c;
+  --art-frame-bg: #100e0c;
+  --art-badge-bg: rgb(16 14 12 / 0.88);
+  --art-badge-border: #fbbf24;
+  --art-suit-dark: #f5f5f4;
+  --art-suit-red: #f87171;
 }
 
 .mtg-card.theme-orbital {
   --card-accent: #0e647d;
   --card-accent-soft: #e4f2f6;
   --card-accent-line: #9ec8d5;
+  --art-frame-bg: #030816;
+  --art-badge-bg: rgb(3 8 22 / 0.86);
+  --art-badge-border: #7dd3fc;
+  --art-suit-dark: #e0f2fe;
+  --art-suit-red: #fb7185;
 }
 
 .mtg-card.theme-arcana {
   --card-accent: #5846a3;
   --card-accent-soft: #eeebf9;
   --card-accent-line: #bdb4e3;
+  --art-frame-bg: #100826;
+  --art-badge-bg: rgb(16 8 38 / 0.86);
+  --art-badge-border: #fde047;
+  --art-suit-dark: #ede9fe;
+  --art-suit-red: #f472b6;
 }
 
 .mtg-card.theme-corsarios {
   --card-accent: #0c637a;
   --card-accent-soft: #e5f2f5;
   --card-accent-line: #9bc6d1;
+  --art-frame-bg: #082032;
+  --art-badge-bg: rgb(8 32 50 / 0.86);
+  --art-badge-border: #f59e0b;
+  --art-suit-dark: #f0f9ff;
+  --art-suit-red: #fb923c;
 }
 
 .mtg-card.theme-kaiju {
   --card-accent: #0f6760;
   --card-accent-soft: #e4f3f1;
   --card-accent-line: #99ccc7;
+  --art-frame-bg: #041414;
+  --art-badge-bg: rgb(4 20 20 / 0.86);
+  --art-badge-border: #5eead4;
+  --art-suit-dark: #ccfbf1;
+  --art-suit-red: #fb923c;
 }
 
 .mtg-card.theme-floresta {
   --card-accent: #3f680c;
   --card-accent-soft: #ebf3e1;
   --card-accent-line: #b4ce94;
+  --art-frame-bg: #071408;
+  --art-badge-bg: rgb(7 20 8 / 0.86);
+  --art-badge-border: #bef264;
+  --art-suit-dark: #f7fee7;
+  --art-suit-red: #fb923c;
 }
 
 .mtg-card.theme-neon {
   --card-accent: #077694;
   --card-accent-soft: #e3f3f8;
   --card-accent-line: #98cde0;
+  --art-frame-bg: #080b1c;
+  --art-badge-bg: rgb(8 11 28 / 0.86);
+  --art-badge-border: #22d3ee;
+  --art-suit-dark: #cffafe;
+  --art-suit-red: #f472b6;
 }
 
 .mtg-card.is-interactive {
@@ -542,6 +602,18 @@
   display: none !important;
 }
 
+.mtg-card.is-art-only.has-clean-art,
+.mtg-card.is-art-only:not(.has-art) {
+  --card-paper: var(--art-frame-bg, #151517);
+  --card-accent-line: var(--art-badge-border, var(--card-accent));
+  background: var(--art-frame-bg, #151517);
+  border-color: var(--art-badge-border, var(--card-accent));
+  box-shadow:
+    inset 0 0 0 2.5px var(--art-frame-bg, #151517),
+    inset 0 0 0 3.75px var(--art-badge-border, var(--card-accent)),
+    0 2px 6px rgb(0 0 0 / 0.22);
+}
+
 .mtg-card.is-art-only .mtg-corner-badge {
   position: absolute;
   z-index: 3;
@@ -550,46 +622,77 @@
   align-items: center;
   justify-content: center;
   gap: 2px;
-  min-width: 24px;
-  padding: 2.5px 5px;
-  background: rgb(250 248 242 / 0.92);
-  border: 1px solid var(--card-accent-line);
-  border-radius: 5px;
-  box-shadow: 0 1px 4px rgb(0 0 0 / 0.25);
+  min-width: 36px;
+  padding: 6px 7px 5px;
+  background: var(--art-badge-bg, rgb(20 20 23 / 0.86));
+  backdrop-filter: blur(6px);
+  border: 1.5px solid var(--art-badge-border, var(--card-accent));
+  border-radius: 8px;
+  box-shadow:
+    0 4px 12px rgb(0 0 0 / 0.55),
+    inset 0 1px 0 rgb(255 255 255 / 0.16);
   font-family: var(--font-display, 'Cinzel', Georgia, serif);
-  font-size: 11px;
+  color: var(--art-suit-dark, #f8fafc);
+  text-shadow: 0 1px 3px rgb(0 0 0 / 0.85);
+}
+
+.mtg-corner-index {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.mtg-corner-rank {
+  display: block;
+  font-size: 21px;
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.mtg-corner-suit {
+  display: block;
+  font-size: 17px;
+  line-height: 0.95;
+}
+
+.mtg-corner-suit--joker {
+  font-size: 7px;
   font-weight: 800;
-  line-height: 1.05;
-  color: var(--suit-black);
+  letter-spacing: 0.08em;
+  line-height: 1.1;
 }
 
 .mtg-card.is-art-only.suit-hearts .mtg-corner-badge,
 .mtg-card.is-art-only.suit-diamonds .mtg-corner-badge {
-  color: var(--suit-red);
+  color: var(--art-suit-red, #fb7185);
 }
 
 .mtg-card.is-art-only.suit-joker .mtg-corner-badge {
-  color: var(--suit-joker);
+  color: var(--art-badge-border, #fcd34d);
 }
 
 .mtg-card.is-art-only .mtg-corner-badge--tl {
-  top: 6px;
-  left: 6px;
+  top: 9px;
+  left: 9px;
 }
 
 .mtg-card.is-art-only .mtg-corner-badge--br {
-  right: 6px;
-  bottom: 6px;
+  right: 9px;
+  bottom: 9px;
   transform: rotate(180deg);
 }
 
 .mtg-card.is-art-only .mtg-corner-qr {
   display: block;
-  width: 22px;
-  height: 22px;
-  padding: 1px;
+  width: 24px;
+  height: 24px;
+  margin-top: 2px;
+  padding: 1.5px;
   background: #ffffff;
-  border-radius: 2px;
+  border-radius: 3px;
   transform: rotate(180deg);
 }
 
@@ -599,7 +702,7 @@
   height: 100%;
 }
 
-/* Cartas já geradas em 63×88mm já carregam seus índices nos cantos: evita duplicar selo se não houver QR */
+/* Cartas já geradas em 63×88mm (legadas) já carregam seus índices nos cantos: evita duplicar selo se não houver QR */
 .mtg-card.is-art-only.has-art .mtg-corner-badge {
   display: none;
 }
@@ -608,14 +711,93 @@
   display: inline-flex;
   padding: 2px;
   min-width: 0;
-  font-size: 0;
-  line-height: 0;
   background: rgb(255 255 255 / 0.94);
+  border-width: 1px;
   transform: none;
 }
 
+.mtg-card.is-art-only.has-art .mtg-corner-badge--br:has(.mtg-corner-qr) .mtg-corner-index {
+  display: none;
+}
+
 .mtg-card.is-art-only.has-art .mtg-corner-badge--br:has(.mtg-corner-qr) .mtg-corner-qr {
+  margin-top: 0;
   transform: none;
+}
+
+/* Artes regeradas sem índices desenhados: o app volta a mostrar os seus */
+.mtg-card.is-art-only.has-art.has-clean-art .mtg-corner-badge,
+.mtg-card.is-art-only.has-art.has-clean-art .mtg-corner-badge--br:has(.mtg-corner-qr) {
+  display: inline-flex;
+  min-width: 36px;
+  padding: 6px 7px 5px;
+  background: var(--art-badge-bg, rgb(20 20 23 / 0.86));
+  border: 1.5px solid var(--art-badge-border, var(--card-accent));
+}
+
+.mtg-card.is-art-only.has-art.has-clean-art .mtg-corner-badge--br:has(.mtg-corner-qr) .mtg-corner-index {
+  display: flex;
+}
+
+.mtg-card.is-art-only.has-art.has-clean-art .mtg-corner-badge--br,
+.mtg-card.is-art-only.has-art.has-clean-art .mtg-corner-badge--br:has(.mtg-corner-qr) {
+  transform: rotate(180deg);
+}
+
+.mtg-card.is-art-only.has-art.has-clean-art .mtg-corner-badge--br:has(.mtg-corner-qr) .mtg-corner-qr {
+  margin-top: 2px;
+  transform: rotate(180deg);
+}
+
+/* ---------- Modo Carta Vazada / Sleeve (só textos, sem imagem de fundo) ---------- */
+
+.mtg-card.is-text-only {
+  --card-paper: #ffffff;
+  --card-soft: #ffffff;
+  --card-accent-soft: #ffffff;
+  background: #ffffff;
+}
+
+.mtg-card.is-text-only .mtg-titlebar,
+.mtg-card.is-text-only .mtg-art-box,
+.mtg-card.is-text-only .mtg-textbox,
+.mtg-card.is-text-only .mtg-collector-bar {
+  background: #ffffff;
+  backdrop-filter: none;
+}
+
+.mtg-card.is-text-only .mtg-art-frame--cutout {
+  position: relative;
+  inset: auto;
+  flex: 1 1 auto;
+  min-height: 24px;
+  width: 100%;
+  height: auto !important;
+  background: transparent;
+  border-radius: 0;
+  padding: 2px 0;
+}
+
+.mtg-cutout-window {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border: 1px dashed #a1a1aa;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+}
+
+.mtg-cutout-code {
+  font-family: var(--font-display, 'Cinzel', Georgia, serif);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #d4d4d8;
+}
+
+.mtg-card.is-text-only .mtg-typebar {
+  margin-top: 0;
 }
 
 /* ---------- Calibração tipográfica para o tamanho Bridge (57 × 87 mm) ---------- */
@@ -694,4 +876,23 @@
 .tamanho-bridge .mtg-flavor {
   font-size: 6.8px;
   line-height: 1.14;
+}
+
+.tamanho-bridge .mtg-card.is-art-only .mtg-corner-badge,
+.tamanho-bridge .mtg-card.is-art-only.has-art.has-clean-art .mtg-corner-badge,
+.tamanho-bridge .mtg-card.is-art-only.has-art.has-clean-art .mtg-corner-badge--br:has(.mtg-corner-qr) {
+  min-width: 31px;
+  padding: 5px 5.5px 4px;
+}
+
+.tamanho-bridge .mtg-corner-rank {
+  font-size: 18px;
+}
+
+.tamanho-bridge .mtg-corner-suit {
+  font-size: 15px;
+}
+
+.tamanho-bridge .mtg-corner-suit--joker {
+  font-size: 6.5px;
 }

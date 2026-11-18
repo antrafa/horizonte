@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { agir, criarPartida } from '../src/core/partida';
+import { construirUrlDaRota, lerRotaDaUrl, obterBasePath } from '../src/core/router';
 import { escapeHtml } from '../src/components/card-renderer';
 import { renderExemploHtml } from '../src/components/exemplo-view';
 import { renderOracleGuideHtml } from '../src/components/oracle-view';
@@ -85,5 +86,55 @@ describe('Integração das views HTML de HORIZONTE', () => {
     expect(pvpHtml).toContain('Competitivo PvP');
     expect(pvpHtml).toContain('Atacar Beta');
     expect(pvpHtml).toContain('Domínio');
+  });
+
+  it('resolve e constrói URLs navegáveis por caminho, query string e hash (local e GitHub Pages)', () => {
+    expect(obterBasePath('/')).toBe('/');
+    expect(obterBasePath('/imprimir')).toBe('/');
+    expect(obterBasePath('/horizonte/')).toBe('/horizonte/');
+    expect(obterBasePath('/horizonte/imprimir')).toBe('/horizonte/');
+    expect(obterBasePath('/horizonte/estudio.html')).toBe('/horizonte/');
+
+    expect(lerRotaDaUrl({ pathname: '/imprimir', search: '?tema=zombies', hash: '' })).toEqual({
+      tab: 'print',
+      themeId: 'zombies',
+      cardId: undefined,
+      salaId: undefined,
+    });
+
+    expect(
+      lerRotaDaUrl({
+        pathname: '/horizonte/estudio',
+        search: '?tema=vampires&carta=vampires-05',
+        hash: '',
+      }),
+    ).toEqual({
+      tab: 'studio',
+      themeId: 'vampires',
+      cardId: 'vampires-05',
+      salaId: undefined,
+    });
+
+    expect(lerRotaDaUrl({ pathname: '/', search: '?sala=ABCD', hash: '#playtest' })).toEqual({
+      tab: 'playtest',
+      themeId: undefined,
+      cardId: undefined,
+      salaId: 'ABCD',
+    });
+
+    expect(
+      construirUrlDaRota('/horizonte/como-jogar', {
+        tab: 'print',
+        themeId: 'zombies',
+      }),
+    ).toBe('/horizonte/imprimir?tema=zombies');
+
+    expect(
+      construirUrlDaRota('/estudio', {
+        tab: 'studio',
+        themeId: 'zombies',
+        cardId: 'zombies-12',
+      }),
+    ).toBe('/estudio?tema=zombies&carta=zombies-12');
   });
 });

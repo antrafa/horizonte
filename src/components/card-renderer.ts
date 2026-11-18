@@ -10,6 +10,7 @@ import {
   TRACO_AMEACA,
   valorBloqueioCarta,
 } from '../core/partida';
+import { TEMAS_COM_ARTE_LIMPA } from '../data/artes-limpas';
 import type { GameCard } from '../types/card';
 import { renderThematicCardArtSvg } from './card-art';
 
@@ -19,6 +20,7 @@ export interface RenderCardOptions {
   selected?: boolean;
   qr?: string;
   artOnly?: boolean;
+  textOnly?: boolean;
 }
 
 export function escapeHtml(str: string): string {
@@ -68,6 +70,22 @@ const NOME_NAIPE: Record<Naipe, string> = {
   diamonds: 'Ouros',
   clubs: 'Paus',
 };
+
+const SIMBOLO_NAIPE: Record<Naipe, string> = {
+  spades: '♠',
+  hearts: '♥',
+  diamonds: '♦',
+  clubs: '♣',
+};
+
+function renderCornerIndexHtml(card: GameCard): string {
+  if (card.kind === 'joker' || card.suit === 'joker') {
+    return `<span class="mtg-corner-rank">${escapeHtml(card.playingCardCode)}</span><span class="mtg-corner-suit mtg-corner-suit--joker">JOKER</span>`;
+  }
+  const rank = card.collectorNumber > 54 ? card.playingCardCode : card.rank;
+  const suit = SIMBOLO_NAIPE[card.suit];
+  return `<span class="mtg-corner-rank">${escapeHtml(rank)}</span><span class="mtg-corner-suit">${escapeHtml(suit)}</span>`;
+}
 
 function plural(qtd: number, singular: string, pluralForm: string): string {
   return `${qtd} ${qtd === 1 ? singular : pluralForm}`;
@@ -126,6 +144,18 @@ function efeitoDeAtaque(naipe: Naipe, base: number): { rotulo: string; texto: st
 }
 
 export function regraDaCarta(card: GameCard): RegraDaCarta {
+  if (card.collectorNumber > 54) {
+    return {
+      tipo: card.typeLine,
+      blocos: [
+        {
+          rotulo: card.artSubtitle ?? 'Referência de Mesa',
+          texto: card.flavorText,
+        },
+      ],
+    };
+  }
+
   if (isFigure(card) && card.suit !== 'joker') {
     const posto = card.rank as PostoFigura;
     const naipe = card.suit as Naipe;
@@ -213,7 +243,15 @@ function buildSeal(qr?: string): string {
   return `<span class="mtg-art-qr" aria-label="Código da carta">${qr}</span>`;
 }
 
-function buildArtFrame(card: GameCard): string {
+function buildArtFrame(card: GameCard, textOnly?: boolean): string {
+  if (textOnly) {
+    return `
+      <div class="mtg-art-frame mtg-art-frame--cutout" aria-hidden="true">
+        <div class="mtg-cutout-window">
+          <span class="mtg-cutout-code">${escapeHtml(card.playingCardCode)}</span>
+        </div>
+      </div>`;
+  }
   const figure = isFigure(card);
   const safeUrl = sanitizeArtUrl(card.artUrl);
   const modifier = figure ? 'mtg-art-frame--figure' : 'mtg-art-frame--scene mtg-art-frame--conceptual';
@@ -226,8 +264,8 @@ function buildArtFrame(card: GameCard): string {
     </div>`;
 }
 
-function buildArtSection(card: GameCard, tipo: string): string {
-  const quadro = buildArtFrame(card);
+function buildArtSection(card: GameCard, tipo: string, textOnly?: boolean): string {
+  const quadro = buildArtFrame(card, textOnly);
   const subtitulo = card.artSubtitle
     ? `<span class="mtg-art-subtitle">${escapeHtml(card.artSubtitle)}</span>`
     : '';
@@ -249,14 +287,18 @@ function numerosHtml(regra: RegraDaCarta): string {
 }
 
 export function renderMagicCardHtml(card: GameCard, options: RenderCardOptions = {}): string {
+  const textOnly = Boolean(options.textOnly);
+  const artOnly = !textOnly && Boolean(options.artOnly);
   const safeUrl = sanitizeArtUrl(card.artUrl);
   const classes = [
     'mtg-card',
     `suit-${card.suit}`,
     `kind-${card.kind}`,
     `theme-${card.themeId}`,
-    safeUrl ? 'has-art' : '',
-    options.artOnly ? 'is-art-only' : '',
+    safeUrl && !textOnly ? 'has-art' : '',
+    safeUrl && !textOnly && TEMAS_COM_ARTE_LIMPA.includes(card.themeId) ? 'has-clean-art' : '',
+    artOnly ? 'is-art-only' : '',
+    textOnly ? 'is-text-only' : '',
     options.interactive ? 'is-interactive' : '',
     options.tapped ? 'is-tapped' : '',
     options.selected ? 'is-selected' : '',
@@ -279,10 +321,12 @@ export function renderMagicCardHtml(card: GameCard, options: RenderCardOptions =
     )
     .join('');
 
+  const indiceCanto = renderCornerIndexHtml(card);
+
   return `
     <article class="${classes}" data-card-id="${escapeHtml(card.id)}" title="Clique para ampliar">
-      <span class="mtg-corner-badge mtg-corner-badge--tl" aria-hidden="true">${escapeHtml(card.playingCardCode)}</span>
-      <span class="mtg-corner-badge mtg-corner-badge--br" aria-hidden="true">${escapeHtml(card.playingCardCode)}${options.qr ? `<span class="mtg-corner-qr">${options.qr}</span>` : ''}</span>
+      <span class="mtg-corner-badge mtg-corner-badge--tl" aria-hidden="true">${indiceCanto}</span>
+      <span class="mtg-corner-badge mtg-corner-badge--br" aria-hidden="true"><span class="mtg-corner-index">${indiceCanto}</span>${options.qr ? `<span class="mtg-corner-qr">${options.qr}</span>` : ''}</span>
       <header class="mtg-titlebar">
         <span class="mtg-mana-pip">${escapeHtml(card.playingCardCode)}</span>
         <div class="mtg-heading">
@@ -290,7 +334,7 @@ export function renderMagicCardHtml(card: GameCard, options: RenderCardOptions =
         </div>
         ${buildSeal(options.qr)}
       </header>
-      ${buildArtSection(card, regra.tipo)}
+      ${buildArtSection(card, regra.tipo, textOnly)}
       <div class="mtg-textbox">
         ${numerosHtml(regra)}
         ${narracao}
@@ -299,7 +343,7 @@ export function renderMagicCardHtml(card: GameCard, options: RenderCardOptions =
       </div>
       <footer class="mtg-collector-bar">
         <span>HORIZONTE</span>
-        <span>${String(card.collectorNumber).padStart(2, '0')}/54</span>
+        <span>${card.collectorNumber > 54 ? `KIT ${String(card.collectorNumber - 54).padStart(2, '0')}/09` : `${String(card.collectorNumber).padStart(2, '0')}/54`}</span>
       </footer>
     </article>
   `;

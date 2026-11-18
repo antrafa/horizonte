@@ -1,14 +1,12 @@
 # HORIZONTE — Zona de Conflito
 
-![Atlas Cinzas do Horizonte](./public/baralho-54-cartas-wasteland.jpg)
-
 **HORIZONTE** é um card game tático PvPvE jogado com um baralho convencional de **54 cartas** (52 cartas nos 4 naipes `♠ ♥ ♦ ♣` + 2 Coringas `★` / `💀`). Pode ser jogado **Solo**, em modo **Cooperativo**, ou **Competitivo PvP** — localmente na mesma mesa ou em **Mesa Online sincronizada via PeerJS P2P** — além de gerar baralhos completos em **63×88 mm** prontos para impressão.
 
 ## Principais Recursos
 
 - **3 Modos de Jogo:** Solo, Cooperativo contra o Deck de Ameaças (12 Figuras `J`, `Q`, `K`) e Competitivo PvP.
 - **Mesa de Jogo & Online P2P:** partida completa passo a passo com sala compartilhável via link direto em WebRTC (`PeerJS`).
-- **12 Temas Completos com Arte Própria (660 cartas):** todos os 12 cenários possuem 54 cartas únicas ilustradas em 5:7 (`276×384`) + verso simétrico exclusivo:
+- **12 Temas Completos com Arte Própria em Alta Resolução (660 cartas):** todos os 12 cenários possuem 54 cartas únicas ilustradas em proporção de sangria (`1024×1406 px`, >300 dpi) + verso simétrico exclusivo:
   - **Cinzas do Horizonte** (`wasteland`)
   - **Zona de Quarentena** (`zombies`)
   - **Neon e Silício** (`neon`)

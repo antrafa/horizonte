@@ -57,6 +57,7 @@ import {
   saveThemeId,
   syncEstadoDoMundo,
 } from './core/storage';
+import { construirUrlDaRota, lerRotaDaUrl } from './core/router';
 import { ALL_THEME_IDS, DEFAULT_THEME_ID, THEMES } from './data/index';
 import type { GameCard, ThemeDeck, ThemeId } from './types/card';
 
@@ -92,19 +93,26 @@ interface AppState {
 }
 
 export function mountHorizonteApp(root: HTMLElement): void {
+  const rotaInicial = typeof window !== 'undefined' ? lerRotaDaUrl(window.location) : {};
   const savedTheme = loadThemeId();
-  const initialThemeId: ThemeId = savedTheme && ALL_THEME_IDS.includes(savedTheme) ? savedTheme : DEFAULT_THEME_ID;
-  const paramsIniciais = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
-  const urlSalaId = paramsIniciais.get('sala');
+  const initialThemeId: ThemeId =
+    rotaInicial.themeId ?? (savedTheme && ALL_THEME_IDS.includes(savedTheme) ? savedTheme : DEFAULT_THEME_ID);
+  if (rotaInicial.themeId) saveThemeId(rotaInicial.themeId);
+  const urlSalaId = rotaInicial.salaId ?? null;
   saveSalaOnlineId(null);
 
+  const deckInicial = loadThemeWithOverrides(initialThemeId);
+  const cartaInicial =
+    (rotaInicial.cardId ? deckInicial.cards.find((c) => c.id === rotaInicial.cardId)?.id : undefined) ??
+    deckInicial.cards[0].id;
+
   const state: AppState = {
-    activeTab: urlSalaId ? 'playtest' : 'quickstart',
+    activeTab: rotaInicial.tab ?? (urlSalaId ? 'playtest' : 'quickstart'),
     activeThemeId: initialThemeId,
     suitFilter: 'all',
     studioArtOnly: false,
     impressao: configDeImpressaoPadrao(),
-    selectedCardId: loadThemeWithOverrides(initialThemeId).cards[0].id,
+    selectedCardId: cartaInicial,
     selectedHandIndices: [],
     partida: urlSalaId ? null : loadPartida(),
     preparo: preparacaoPadrao(),
@@ -116,6 +124,48 @@ export function mountHorizonteApp(root: HTMLElement): void {
     versaoSala: 0,
     exemploPasso: 0,
   };
+
+  function atualizarUrl(empilharNoHistorico = false): void {
+    if (typeof window === 'undefined' || !window.history) return;
+    const novaUrl = construirUrlDaRota(window.location.pathname, {
+      tab: state.activeTab,
+      themeId: state.activeThemeId,
+      cardId: state.selectedCardId,
+      salaId: state.salaOnlineId,
+    });
+    const atual = `${window.location.pathname}${window.location.search}`;
+    if (novaUrl === atual && !window.location.hash) return;
+    if (empilharNoHistorico && typeof window.history.pushState === 'function') {
+      window.history.pushState({ tab: state.activeTab, themeId: state.activeThemeId }, '', novaUrl);
+    } else if (typeof window.history.replaceState === 'function') {
+      window.history.replaceState({ tab: state.activeTab, themeId: state.activeThemeId }, '', novaUrl);
+    }
+  }
+
+  function aplicarRotaDaUrl(): void {
+    if (typeof window === 'undefined') return;
+    const rota = lerRotaDaUrl(window.location);
+    if (rota.themeId && rota.themeId !== state.activeThemeId) {
+      state.activeThemeId = rota.themeId;
+      saveThemeId(rota.themeId);
+      const deckTema = loadThemeWithOverrides(rota.themeId);
+      state.selectedCardId =
+        (rota.cardId ? deckTema.cards.find((c) => c.id === rota.cardId)?.id : undefined) ?? deckTema.cards[0].id;
+    } else if (rota.cardId) {
+      const deckTema = loadThemeWithOverrides(state.activeThemeId);
+      const achada = deckTema.cards.find((c) => c.id === rota.cardId);
+      if (achada) state.selectedCardId = achada.id;
+    }
+    if (rota.tab) {
+      state.activeTab = rota.tab;
+    }
+    render();
+  }
+
+  if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+    window.addEventListener('popstate', aplicarRotaDaUrl);
+    window.addEventListener('hashchange', aplicarRotaDaUrl);
+  }
 
   function sincronizarSala(): void {
     if (!state.salaOnlineId) return;
@@ -182,19 +232,14 @@ export function mountHorizonteApp(root: HTMLElement): void {
   verificarParametrosDaUrl();
 
   function limparParametroUrlSala(): void {
-    if (typeof window === 'undefined' || !window.history?.replaceState) return;
-    const url = new URL(window.location.href);
-    if (url.searchParams.has('sala')) {
-      url.searchParams.delete('sala');
-      window.history.replaceState({}, '', `${url.pathname}${url.hash || '#playtest'}`);
-    }
+    atualizarUrl(false);
   }
 
   function verificarParametrosDaUrl(): void {
     if (typeof window === 'undefined') return;
-    const params = new URLSearchParams(window.location.search);
-    const salaId = params.get('sala');
-    if (salaId) entrarNaSalaComoCliente(salaId);
+    const rota = lerRotaDaUrl(window.location);
+    if (rota.salaId) entrarNaSalaComoCliente(rota.salaId);
+    else atualizarUrl(false);
   }
 
   function criarNovaSala(codigoSugerido: string): void {
@@ -212,6 +257,7 @@ export function mountHorizonteApp(root: HTMLElement): void {
         saveSalaOnlineId(codigoExibicao);
         state.conectandoOnline = false;
         state.activeTab = 'playtest';
+        atualizarUrl(true);
         showToast(`Sala online ${codigoExibicao} criada!`);
         render();
       },
@@ -236,6 +282,7 @@ export function mountHorizonteApp(root: HTMLElement): void {
         saveSalaOnlineId(codigoExibicao);
         state.conectandoOnline = false;
         state.activeTab = 'playtest';
+        atualizarUrl(false);
         showToast(`Conectado à sala ${codigoExibicao}!`);
         render();
       },
@@ -332,12 +379,19 @@ export function mountHorizonteApp(root: HTMLElement): void {
         <button type="button" class="btn-secondary btn-sm" data-abrir-escaneador>Escanear carta</button>
       </div>`;
 
-    const tabs = TABS.map(
-      (t) => `
-        <button type="button" class="tab ${state.activeTab === t.id ? 'is-active' : ''}" data-tab="${t.id}" ${state.activeTab === t.id ? 'aria-current="page"' : ''}>
+    const pathnameAtual = typeof window !== 'undefined' ? window.location.pathname : '/';
+    const tabs = TABS.map((t) => {
+      const href = construirUrlDaRota(pathnameAtual, {
+        tab: t.id,
+        themeId: state.activeThemeId,
+        cardId: t.id === 'studio' ? state.selectedCardId : undefined,
+        salaId: state.salaOnlineId,
+      });
+      return `
+        <a href="${escapeHtml(href)}" class="tab ${state.activeTab === t.id ? 'is-active' : ''}" data-tab="${t.id}" ${state.activeTab === t.id ? 'aria-current="page"' : ''}>
           ${t.label}${t.id === 'playtest' && state.partida && !state.partida.resultado ? ' <span class="tab-dot" aria-label="partida em andamento"></span>' : ''}
-        </button>`,
-    ).join('');
+        </a>`;
+    }).join('');
 
     if (typeof document !== 'undefined') {
       document.body.dataset.theme = state.activeThemeId;
@@ -419,6 +473,7 @@ export function mountHorizonteApp(root: HTMLElement): void {
     state.activeThemeId = next;
     saveThemeId(next);
     state.selectedCardId = loadThemeWithOverrides(next).cards[0].id;
+    atualizarUrl(true);
     sincronizarSala();
     if (keepTemasTabToast && state.activeTab === 'temas') showToast(`Tema escolhido: ${THEMES[next].name}.`);
     else render();
@@ -436,11 +491,16 @@ export function mountHorizonteApp(root: HTMLElement): void {
       });
     });
 
-    root.querySelectorAll<HTMLButtonElement>('[data-tab], [data-goto-tab]').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const tab = (btn.dataset.tab ?? btn.dataset.gotoTab) as StudioTab;
+    root.querySelectorAll<HTMLElement>('[data-tab], [data-goto-tab]').forEach((el) => {
+      el.addEventListener('click', (e) => {
+        if (e instanceof MouseEvent && (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || e.button !== 0)) {
+          return;
+        }
+        e.preventDefault();
+        const tab = (el.dataset.tab ?? el.dataset.gotoTab) as StudioTab;
         if (!tab) return;
         state.activeTab = tab;
+        atualizarUrl(true);
         render();
         if (typeof window !== 'undefined' && window.scrollTo) window.scrollTo({ top: 0 });
       });
@@ -518,6 +578,7 @@ export function mountHorizonteApp(root: HTMLElement): void {
         if (!cardId) return;
         if (cardId !== state.selectedCardId) {
           state.selectedCardId = cardId;
+          atualizarUrl(false);
           render();
           return;
         }
@@ -725,8 +786,12 @@ export function mountHorizonteApp(root: HTMLElement): void {
 
     if (acao === 'copiarLink') {
       if (!state.salaOnlineId) return;
-      const urlBase = `${window.location.origin}${window.location.pathname}`;
-      const link = `${urlBase}?sala=${encodeURIComponent(state.salaOnlineId)}#playtest`;
+      const rotaRelativa = construirUrlDaRota(window.location.pathname, {
+        tab: 'playtest',
+        themeId: state.activeThemeId,
+        salaId: state.salaOnlineId,
+      });
+      const link = `${window.location.origin}${rotaRelativa}`;
       try {
         await navigator.clipboard.writeText(link);
         showToast(`Link da sala ${state.salaOnlineId} copiado!`);
@@ -813,7 +878,19 @@ export function mountHorizonteApp(root: HTMLElement): void {
     const codigo = root.querySelector<HTMLInputElement>('#print-codigo');
     codigo?.addEventListener('change', () => mudar({ codigo: codigo.checked }));
     const apenasArte = root.querySelector<HTMLInputElement>('#print-apenas-arte');
-    apenasArte?.addEventListener('change', () => mudar({ apenasArte: apenasArte.checked }));
+    apenasArte?.addEventListener('change', () =>
+      mudar({
+        apenasArte: apenasArte.checked,
+        ...(apenasArte.checked ? { apenasTexto: false } : {}),
+      }),
+    );
+    const apenasTexto = root.querySelector<HTMLInputElement>('#print-apenas-texto');
+    apenasTexto?.addEventListener('change', () =>
+      mudar({
+        apenasTexto: apenasTexto.checked,
+        ...(apenasTexto.checked ? { apenasArte: false } : {}),
+      }),
+    );
     const duplex = root.querySelector<HTMLInputElement>('#print-duplex');
     duplex?.addEventListener('change', () => mudar({ frenteEVerso: duplex.checked }));
     root.querySelectorAll<HTMLButtonElement>('[data-print-verso]').forEach((btn) => {

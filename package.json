@@ -8,9 +8,12 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "deploy": "npm run build && touch dist/.nojekyll && git -C dist init -b gh-pages && git -C dist add -A && git -C dist commit -m 'deploy: atualiza GitHub Pages' && git -C dist push -f $(git remote get-url origin) gh-pages:gh-pages && rm -rf dist/.git"
+    "deploy": "npm run build && touch dist/.nojekyll && git -C dist init -b gh-pages && git -C dist add -A && git -C dist commit -m 'deploy: atualiza GitHub Pages' && git -C dist push -f $(git remote get-url origin) gh-pages:gh-pages && rm -rf dist/.git",
+    "artes": "vite-node scripts/gerar-artes.ts --"
   },
   "devDependencies": {
+    "@types/node": "^24.19.2",
+    "sharp": "^0.35.5",
     "typescript": "^5.6.3",
     "vite": "^5.4.10",
     "vitest": "^2.1.4"
