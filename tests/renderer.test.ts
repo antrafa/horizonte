@@ -34,6 +34,11 @@ describe('Renderização de cartas, impressão 63×88mm / 57×87mm e escaneador 
     expect(reiHtml).toContain('mtg-art-qr');
     expect(reiHtml).toContain('has-art');
     expect(reiHtml).toContain('/cards/wasteland/');
+    expect(reiHtml).toContain('mtg-head-line');
+    expect(reiHtml).toContain('<span class="mtg-typeline">Rei</span>');
+    expect(reiHtml).not.toContain('Ameaça de');
+    expect(reiHtml).not.toContain('mtg-typebar');
+    expect(reiHtml).toContain('<p><span class="mtg-rule-label">Traço como Ameaça ·');
 
     const reiFallbackSvg = renderMagicCardHtml({ ...rei, artUrl: undefined }, { interactive: true, qr: codigoDaCarta(rei) });
     expect(reiFallbackSvg).toContain('mtg-art-illustration-svg');
@@ -47,8 +52,9 @@ describe('Renderização de cartas, impressão 63×88mm / 57×87mm e escaneador 
     expect(acaoHtml).toContain('mtg-art-frame--conceptual');
     expect(acaoHtml).toContain('mtg-art-conceptual-svg');
     expect(acaoHtml).toContain(acao.playingCardCode);
-    expect(acaoHtml).toContain('Chumbo &amp; Lâmina');
-    expect(acaoHtml).toContain('Combo de Comando');
+    expect(acaoHtml).toContain('<span class="mtg-typeline">Ação</span>');
+    expect(acaoHtml).toContain(acao.artSubtitle!);
+    expect(acaoHtml).toContain('Combo de Comando:');
 
     // Cartas numéricas e coringas agora também aceitam artUrl full-card como background (mantendo fallback conceitual sem artUrl)
     const acaoComImg = renderMagicCardHtml({ ...acao, artUrl: '/cards/expedicao/A-spades.jpg' });
@@ -59,6 +65,7 @@ describe('Renderização de cartas, impressão 63×88mm / 57×87mm e escaneador 
     expect(coringaHtml).toContain('kind-joker');
     expect(coringaHtml).toContain('mtg-art-frame--conceptual');
     expect(coringaHtml).toContain('mtg-art-conceptual-svg');
+    expect(coringaHtml).toContain('<span class="mtg-typeline">Coringa ★</span>');
 
     // Modo baralho convencional (só arte) oculta textos do jogo e exibe índices nos cantos
     const acaoSoArte = renderMagicCardHtml(

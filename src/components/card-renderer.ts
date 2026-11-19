@@ -2,7 +2,6 @@ import {
   type CartaAcao,
   ehCoringa,
   type FiguraHorizonte,
-  FUNCAO_DO_NAIPE,
   type Naipe,
   type PostoFigura,
   REGRA,
@@ -63,13 +62,6 @@ interface RegraDaCarta {
   blocos: Array<{ rotulo: string; texto: string }>;
   numeros?: Array<{ rotulo: string; valor: string }>;
 }
-
-const NOME_NAIPE: Record<Naipe, string> = {
-  spades: 'Espadas',
-  hearts: 'Copas',
-  diamonds: 'Ouros',
-  clubs: 'Paus',
-};
 
 const SIMBOLO_NAIPE: Record<Naipe, string> = {
   spades: '♠',
@@ -164,7 +156,7 @@ export function regraDaCarta(card: GameCard): RegraDaCarta {
     const naipe = card.suit as Naipe;
     const st = STATUS_FIGURA[posto];
     return {
-      tipo: `${st.rotulo} · Ameaça de ${NOME_NAIPE[naipe]}`,
+      tipo: st.rotulo,
       numeros: [
         { rotulo: 'Vida', valor: String(st.vida) },
         { rotulo: 'Ataque', valor: String(st.ataque + (naipe === 'spades' ? st.ferocidade : 0)) },
@@ -191,7 +183,7 @@ export function regraDaCarta(card: GameCard): RegraDaCarta {
     const estrela = card.rank === 'JOKER_LIGHT';
     const valor = estrela ? REGRA.valorEstrela : REGRA.valorCaveira;
     return {
-      tipo: estrela ? 'Coringa ★ · Virada Tática' : 'Coringa 💀 · Impacto Crítico',
+      tipo: estrela ? 'Coringa ★' : 'Coringa 💀',
       numeros: [
         { rotulo: 'Dano', valor: String(valor) },
         { rotulo: 'Bloqueio', valor: String(valor) },
@@ -213,12 +205,11 @@ export function regraDaCarta(card: GameCard): RegraDaCarta {
 
   const carta = cartaAcaoDoMotor(card);
   const naipe = card.suit as Naipe;
-  const fn = FUNCAO_DO_NAIPE[naipe];
   const valor = carta ? valorBloqueioCarta(carta) : 0;
   const ehAs = card.rank === 'A';
 
   return {
-    tipo: `Ação · ${fn.pilar} · Valor ${valor}`,
+    tipo: 'Ação',
     blocos: [
       efeitoDeAtaque(naipe, valor),
       {
@@ -267,17 +258,12 @@ function buildArtFrame(card: GameCard, textOnly?: boolean): string {
     </div>`;
 }
 
-function buildArtSection(card: GameCard, tipo: string, textOnly?: boolean): string {
-  const quadro = buildArtFrame(card, textOnly);
-  const subtitulo = card.artSubtitle
-    ? `<span class="mtg-art-subtitle">${escapeHtml(card.artSubtitle)}</span>`
-    : '';
-  return `
-    ${quadro}
-    <div class="mtg-art-box mtg-typebar">
-      <div class="mtg-typeline">${escapeHtml(tipo)}</div>
-      ${subtitulo}
-    </div>`;
+function buildHeaderLine(card: GameCard, tipo: string): string {
+  const subtitulo =
+    card.collectorNumber > 54 || !card.artSubtitle
+      ? ''
+      : ` · <span class="mtg-art-subtitle">${escapeHtml(card.artSubtitle)}</span>`;
+  return `<div class="mtg-head-line"><span class="mtg-typeline">${escapeHtml(tipo)}</span>${subtitulo}</div>`;
 }
 
 function numerosHtml(regra: RegraDaCarta): string {
@@ -318,8 +304,7 @@ export function renderMagicCardHtml(card: GameCard, options: RenderCardOptions =
     .map(
       (b) => `
         <div class="mtg-rule">
-          <div class="mtg-rule-label">${escapeHtml(b.rotulo)}</div>
-          <p>${escapeHtml(b.texto)}</p>
+          <p><span class="mtg-rule-label">${escapeHtml(b.rotulo)}:</span> ${escapeHtml(b.texto)}</p>
         </div>`,
     )
     .join('');
@@ -334,10 +319,11 @@ export function renderMagicCardHtml(card: GameCard, options: RenderCardOptions =
         <span class="mtg-mana-pip">${escapeHtml(card.playingCardCode)}</span>
         <div class="mtg-heading">
           <span class="mtg-card-title">${escapeHtml(card.title)}</span>
+          ${buildHeaderLine(card, regra.tipo)}
         </div>
         ${buildSeal(options.qr)}
       </header>
-      ${buildArtSection(card, regra.tipo, textOnly)}
+      ${buildArtFrame(card, textOnly)}
       <div class="mtg-textbox">
         ${numerosHtml(regra)}
         ${narracao}
