@@ -25,8 +25,11 @@ import {
   criarSalaHost,
   desconectarP2P,
   entrarSalaCliente,
-  enviarEstadoParaSala,
+  enviarEstadoParaPeer,
+  enviarParaHost,
   gerarCodigoSalaAleatorio,
+  listarPeersConectados,
+  mascararPartidaParaJogador,
   registrarCallbacksP2P,
 } from './core/online-sync';
 import {
@@ -88,6 +91,10 @@ interface AppState {
   conectandoOnline: boolean;
   parceiroOnline: boolean;
   ehHostDaSala: boolean;
+  meuAssento: number | null;
+  assentosPeer: Array<string | null>;
+  assentosConectados: boolean[];
+  totalConectados: number;
   versaoSala: number;
   exemploPasso: number;
 }
@@ -121,6 +128,10 @@ export function mountHorizonteApp(root: HTMLElement): void {
     conectandoOnline: false,
     parceiroOnline: false,
     ehHostDaSala: false,
+    meuAssento: null,
+    assentosPeer: [],
+    assentosConectados: [],
+    totalConectados: 0,
     versaoSala: 0,
     exemploPasso: 0,
   };
@@ -167,67 +178,190 @@ export function mountHorizonteApp(root: HTMLElement): void {
     window.addEventListener('hashchange', aplicarRotaDaUrl);
   }
 
-  function sincronizarSala(): void {
-    if (!state.salaOnlineId) return;
-    state.versaoSala += 1;
-    enviarEstadoParaSala(state.activeThemeId, state.preparo, state.partida, state.versaoSala);
+  function ajustarAssentosHost(): void {
+    const total = state.preparo.jogadores.length;
+    while (state.assentosPeer.length < total) state.assentosPeer.push(null);
+    if (state.assentosPeer.length > total) state.assentosPeer.length = total;
+    if (state.ehHostDaSala && total > 0 && state.assentosPeer[0] !== 'host') {
+      state.assentosPeer[0] = 'host';
+    }
+    const peersAtivos = new Set(listarPeersConectados());
+    for (let i = 1; i < state.assentosPeer.length; i++) {
+      const p = state.assentosPeer[i];
+      if (p && p !== 'host' && !peersAtivos.has(p) && !state.partida) {
+        state.assentosPeer[i] = null;
+      }
+    }
+    state.assentosConectados = state.assentosPeer.map((p) => p === 'host' || (p !== null && peersAtivos.has(p)));
+    state.totalConectados = 1 + peersAtivos.size;
   }
 
-  registrarCallbacksP2P(
-    (msg) => {
+  function assentoDoPeerNoHost(peerId: string): number | null {
+    const idx = state.assentosPeer.indexOf(peerId);
+    return idx >= 0 ? idx : null;
+  }
+
+  function alocarAssentoSeLivre(peerId: string): number | null {
+    const jaTem = assentoDoPeerNoHost(peerId);
+    if (jaTem !== null) return jaTem;
+    const livre = state.assentosPeer.findIndex((p) => p === null);
+    if (livre >= 0) {
+      state.assentosPeer[livre] = peerId;
+      return livre;
+    }
+    if (!state.partida && state.preparo.jogadores.length < REGRA.maxPessoas) {
+      const usadas = new Set(state.preparo.jogadores.map((j) => j.classe));
+      const classe = NAIPES.find((n) => !usadas.has(n)) ?? 'spades';
+      const novoIdx = state.preparo.jogadores.length;
+      state.preparo.jogadores.push({ nome: `Sobrevivente ${novoIdx + 1}`, classe });
+      state.assentosPeer.push(peerId);
+      return novoIdx;
+    }
+    return null;
+  }
+
+  function sincronizarSala(avisoParaPeer?: { peerId: string; texto: string }): void {
+    if (!state.salaOnlineId || !state.ehHostDaSala) return;
+    ajustarAssentosHost();
+    state.versaoSala += 1;
+    for (const peerId of listarPeersConectados()) {
+      const assento = assentoDoPeerNoHost(peerId);
+      const partidaFiltrada = state.partida ? mascararPartidaParaJogador(state.partida, assento) : null;
+      enviarEstadoParaPeer(peerId, {
+        temaId: state.activeThemeId,
+        preparo: state.preparo,
+        partida: partidaFiltrada,
+        meuAssento: assento,
+        assentosConectados: state.assentosConectados,
+        totalConectados: state.totalConectados,
+        versao: state.versaoSala,
+        aviso: avisoParaPeer?.peerId === peerId ? avisoParaPeer.texto : undefined,
+      });
+    }
+  }
+
+  function limparEstadoOnlineLocal(): void {
+    state.salaOnlineId = null;
+    state.ehHostDaSala = false;
+    state.parceiroOnline = false;
+    state.meuAssento = null;
+    state.assentosPeer = [];
+    state.assentosConectados = [];
+    state.totalConectados = 0;
+    state.versaoSala = 0;
+    saveSalaOnlineId(null);
+    limparParametroUrlSala();
+  }
+
+  registrarCallbacksP2P({
+    onEstadoRecebido: (estado) => {
+      if (state.ehHostDaSala) return;
+      if (estado.versao < state.versaoSala) return;
+      const partidaAnterior = state.partida;
+      state.versaoSala = Math.max(state.versaoSala, estado.versao);
+      state.meuAssento = estado.meuAssento;
+      state.assentosConectados = estado.assentosConectados;
+      state.totalConectados = estado.totalConectados;
+      if (estado.temaId && ALL_THEME_IDS.includes(estado.temaId)) {
+        state.activeThemeId = estado.temaId;
+        saveThemeId(estado.temaId);
+      }
+      if (estado.preparo && Array.isArray(estado.preparo.jogadores) && estado.preparo.jogadores.length > 0) {
+        state.preparo = {
+          modo: estado.preparo.modo ?? 'coop',
+          nivel: estado.preparo.nivel ?? 'veterano',
+          jogadores: estado.preparo.jogadores.map((j) => ({ nome: j.nome, classe: j.classe })),
+        };
+      }
+      state.selectedHandIndices = [];
+      setPartida(estado.partida ?? null, false);
+      if (estado.aviso) {
+        showToast(estado.aviso);
+      } else if (!partidaAnterior && estado.partida) {
+        showToast('Partida iniciada na sala!');
+      } else if (partidaAnterior && !estado.partida) {
+        showToast('A mesa voltou para a preparação.');
+      }
+    },
+    onSalaEncerrada: () => {
+      desconectarP2P();
+      limparEstadoOnlineLocal();
+      setPartida(null, false);
+      showToast('A sala foi encerrada pelo anfitrião.');
+    },
+    onMensagemClienteNoHost: (peerId, msg) => {
+      if (!state.salaOnlineId || !state.ehHostDaSala) return;
+
       if (msg.tipo === 'pedirSync') {
-        if (state.salaOnlineId) {
-          enviarEstadoParaSala(state.activeThemeId, state.preparo, state.partida, state.versaoSala);
-        }
-        return;
-      }
-      if (msg.tipo === 'salaEncerrada') {
-        desconectarP2P();
-        state.salaOnlineId = null;
-        state.ehHostDaSala = false;
-        state.parceiroOnline = false;
-        state.versaoSala = 0;
-        saveSalaOnlineId(null);
-        limparParametroUrlSala();
-        setPartida(null, false);
-        showToast('A sala foi encerrada pelo anfitrião.');
-        return;
-      }
-      if (msg.tipo === 'parceiroSaiu') {
-        state.parceiroOnline = false;
-        showToast('O parceiro saiu da sala.');
+        alocarAssentoSeLivre(peerId);
+        sincronizarSala();
         render();
         return;
       }
-      if (msg.tipo === 'sync') {
-        if (typeof msg.versao === 'number' && msg.versao < state.versaoSala) return;
-        const partidaAnterior = state.partida;
-        state.versaoSala = Math.max(state.versaoSala, msg.versao ?? 0);
-        if (msg.temaId && ALL_THEME_IDS.includes(msg.temaId)) {
-          state.activeThemeId = msg.temaId;
-          saveThemeId(msg.temaId);
+
+      if (msg.tipo === 'parceiroSaiu') {
+        const idx = assentoDoPeerNoHost(peerId);
+        if (idx !== null && !state.partida) state.assentosPeer[idx] = null;
+        sincronizarSala();
+        showToast('Um jogador saiu da sala.');
+        return;
+      }
+
+      if (msg.tipo === 'ocuparAssento') {
+        if (state.partida) return;
+        const alvo = msg.assento;
+        if (alvo <= 0 || alvo >= state.preparo.jogadores.length) return;
+        if (state.assentosPeer[alvo] !== null && state.assentosPeer[alvo] !== peerId) {
+          sincronizarSala({ peerId, texto: 'Essa vaga já está ocupada.' });
+          return;
         }
-        if (msg.preparo && Array.isArray(msg.preparo.jogadores) && msg.preparo.jogadores.length > 0) {
-          state.preparo = {
-            modo: msg.preparo.modo ?? 'coop',
-            nivel: msg.preparo.nivel ?? 'veterano',
-            jogadores: msg.preparo.jogadores.map((j) => ({ nome: j.nome, classe: j.classe })),
-          };
+        const antigo = assentoDoPeerNoHost(peerId);
+        if (antigo !== null) state.assentosPeer[antigo] = null;
+        state.assentosPeer[alvo] = peerId;
+        sincronizarSala();
+        render();
+        return;
+      }
+
+      if (msg.tipo === 'atualizarJogador') {
+        if (state.partida) return;
+        const assento = assentoDoPeerNoHost(peerId);
+        if (assento === null || assento !== msg.assento) return;
+        const jogador = state.preparo.jogadores[assento];
+        if (!jogador) return;
+        if (typeof msg.nome === 'string') jogador.nome = msg.nome.slice(0, 28);
+        if (msg.classe && NAIPES.includes(msg.classe)) jogador.classe = msg.classe;
+        sincronizarSala();
+        render();
+        return;
+      }
+
+      if (msg.tipo === 'acao') {
+        if (!state.partida) return;
+        const assento = assentoDoPeerNoHost(peerId);
+        if (assento === null || msg.acao.quem !== assento || state.partida.turnoDe !== assento) {
+          sincronizarSala({ peerId, texto: 'Aguarde a sua vez para jogar.' });
+          return;
         }
-        state.selectedHandIndices = [];
-        setPartida(msg.partida ?? null, false);
-        if (!partidaAnterior && msg.partida) {
-          showToast('Partida iniciada na sala!');
-        } else if (partidaAnterior && !msg.partida) {
-          showToast('A mesa voltou para a preparação.');
+        const proxima = agir(state.partida, msg.acao);
+        if (proxima === state.partida) {
+          sincronizarSala({ peerId, texto: 'Jogada inválida para este momento ou seleção.' });
+          return;
         }
+        setPartida(proxima, true);
       }
     },
-    (online) => {
+    onPeersMudaram: () => {
+      if (!state.salaOnlineId || !state.ehHostDaSala) return;
+      ajustarAssentosHost();
+      sincronizarSala();
+      render();
+    },
+    onStatusConexao: (online) => {
       state.parceiroOnline = online;
       render();
     },
-  );
+  });
 
   verificarParametrosDaUrl();
 
@@ -248,17 +382,28 @@ export function mountHorizonteApp(root: HTMLElement): void {
     criarSalaHost(
       codigoSugerido,
       (codigoExibicao) => {
+        if (state.preparo.modo === 'solo') {
+          state.preparo.modo = 'coop';
+        }
+        if (state.preparo.jogadores.length < 2) {
+          const usada = state.preparo.jogadores[0]?.classe ?? 'spades';
+          const proxClasse = NAIPES.find((n) => n !== usada) ?? 'hearts';
+          state.preparo.jogadores.push({ nome: 'Sobrevivente 2', classe: proxClasse });
+        }
         state.salaOnlineId = codigoExibicao;
         state.ehHostDaSala = true;
+        state.meuAssento = 0;
+        state.assentosPeer = state.preparo.jogadores.map((_, idx) => (idx === 0 ? 'host' : null));
         state.versaoSala = 1;
         state.partida = null;
         state.selectedHandIndices = [];
+        ajustarAssentosHost();
         savePartida(null);
         saveSalaOnlineId(codigoExibicao);
         state.conectandoOnline = false;
         state.activeTab = 'playtest';
         atualizarUrl(true);
-        showToast(`Sala online ${codigoExibicao} criada!`);
+        showToast(`Sala online ${codigoExibicao} criada! Compartilhe o link.`);
         render();
       },
       (erro) => {
@@ -278,6 +423,7 @@ export function mountHorizonteApp(root: HTMLElement): void {
       (codigoExibicao) => {
         state.salaOnlineId = codigoExibicao;
         state.ehHostDaSala = false;
+        state.meuAssento = null;
         state.versaoSala = 0;
         saveSalaOnlineId(codigoExibicao);
         state.conectandoOnline = false;
@@ -345,15 +491,14 @@ export function mountHorizonteApp(root: HTMLElement): void {
       case 'studio':
         return renderStudioGalleryHtml(deck, selectedCard, state.suitFilter, state.studioArtOnly);
       case 'playtest':
-        return renderPlaytestTableHtml(
-          deck,
-          state.partida,
-          state.preparo,
-          state.selectedHandIndices,
-          state.salaOnlineId,
-          state.conectandoOnline,
-          state.parceiroOnline,
-        );
+        return renderPlaytestTableHtml(deck, state.partida, state.preparo, state.selectedHandIndices, {
+          salaId: state.salaOnlineId,
+          conectando: state.conectandoOnline,
+          ehHost: state.ehHostDaSala,
+          meuAssento: state.meuAssento,
+          assentosConectados: state.assentosConectados,
+          totalConectados: state.totalConectados,
+        });
       case 'print':
         return renderPrintSheetsHtml(deck, state.impressao);
       default:
@@ -431,18 +576,47 @@ export function mountHorizonteApp(root: HTMLElement): void {
 
   let pararEscaneador: (() => void) | null = null;
 
+  function alternarSelecaoCartaMao(idx: number): void {
+    if (!Number.isInteger(idx)) return;
+    if (state.selectedHandIndices.includes(idx)) {
+      state.selectedHandIndices = state.selectedHandIndices.filter((i) => i !== idx);
+    } else {
+      state.selectedHandIndices = [...state.selectedHandIndices, idx].sort((a, b) => a - b);
+    }
+    render();
+  }
+
+  function podeSelecionarNaMaoAtual(): boolean {
+    if (!state.partida || state.partida.resultado !== null) return false;
+    if (!state.salaOnlineId) return true;
+    return state.meuAssento !== null && state.partida.turnoDe === state.meuAssento;
+  }
+
   function openCardZoomModal(
     card: GameCard,
-    options: { showDetails?: boolean; fromScanner?: boolean; deck?: ThemeDeck } = {},
+    options: { showDetails?: boolean; fromScanner?: boolean; deck?: ThemeDeck; handIdx?: number } = {},
   ): void {
     const dialog = root.querySelector<HTMLDialogElement>('#card-zoom-dialog');
     if (!dialog) return;
     pararEscaneador?.();
     const showDetails = Boolean(options.showDetails);
     const fromScanner = Boolean(options.fromScanner);
+    const handIdx = options.handIdx;
+    const handSelect =
+      handIdx !== undefined
+        ? {
+            selecionada: state.selectedHandIndices.includes(handIdx),
+            podeSelecionar: podeSelecionarNaMaoAtual(),
+          }
+        : undefined;
     dialog.classList.toggle('is-card-only', !showDetails);
     dialog.classList.toggle('is-with-details', showDetails);
-    dialog.innerHTML = renderCardModalContentHtml(card, { showDetails, fromScanner });
+    dialog.innerHTML = renderCardModalContentHtml(card, { showDetails, fromScanner, handSelect });
+    dialog.querySelector<HTMLButtonElement>('[data-zoom-toggle-select]')?.addEventListener('click', () => {
+      if (handIdx === undefined) return;
+      dialog.close();
+      alternarSelecaoCartaMao(handIdx);
+    });
     dialog.querySelector<HTMLButtonElement>('[data-zoom-toggle-details]')?.addEventListener('click', () => {
       openCardZoomModal(card, { ...options, showDetails: !showDetails });
     });
@@ -529,12 +703,17 @@ export function mountHorizonteApp(root: HTMLElement): void {
       el.addEventListener('click', (e) => {
         e.stopPropagation();
         const found = deck.cards.find((c) => c.id === el.dataset.zoomCardId);
-        if (found) openCardZoomModal(found);
+        const handIdxRaw = el.dataset.zoomHandIdx ?? el.dataset.handIdx;
+        const handIdx = handIdxRaw !== undefined ? Number(handIdxRaw) : undefined;
+        if (found) {
+          openCardZoomModal(found, { handIdx: handIdx !== undefined && Number.isInteger(handIdx) ? handIdx : undefined });
+        }
       });
     });
 
     if (state.activeTab === 'quickstart' || state.activeTab === 'oracle' || state.activeTab === 'exemplo' || state.activeTab === 'playtest') {
       root.querySelectorAll<HTMLElement>('.mtg-card[data-card-id]').forEach((el) => {
+        if (el.closest('[data-selecionar-carta]')) return;
         el.addEventListener('click', () => {
           const found = deck.cards.find((c) => c.id === el.dataset.cardId);
           if (found) openCardZoomModal(found);
@@ -554,7 +733,7 @@ export function mountHorizonteApp(root: HTMLElement): void {
     }
 
     if (state.activeTab === 'studio') bindStudio(deck, selectedCard);
-    if (state.activeTab === 'playtest') bindMesa();
+    if (state.activeTab === 'playtest') bindMesa(deck);
     if (state.activeTab === 'print') bindPrint();
   }
 
@@ -649,9 +828,12 @@ export function mountHorizonteApp(root: HTMLElement): void {
     });
   }
 
-  function bindMesa(): void {
+  function bindMesa(deck: ThemeDeck): void {
+    const ehConvidado = Boolean(state.salaOnlineId && !state.ehHostDaSala);
+
     root.querySelectorAll<HTMLButtonElement>('[data-nivel-mesa]').forEach((btn) => {
       btn.addEventListener('click', () => {
+        if (ehConvidado) return;
         const nivel = btn.dataset.nivelMesa as Nivel;
         if (!nivel || nivel === state.preparo.nivel) return;
         state.preparo.nivel = nivel;
@@ -661,8 +843,10 @@ export function mountHorizonteApp(root: HTMLElement): void {
     });
     root.querySelectorAll<HTMLButtonElement>('[data-modo-mesa]').forEach((btn) => {
       btn.addEventListener('click', () => {
+        if (ehConvidado) return;
         const modo = btn.dataset.modoMesa as ModoDeJogo;
         if (!modo || modo === state.preparo.modo) return;
+        if (state.salaOnlineId && modo === 'solo') return;
         state.preparo.modo = modo;
         if (modo === 'solo') {
           state.preparo.jogadores = [state.preparo.jogadores[0] ?? { nome: 'Sobrevivente 1', classe: 'spades' }];
@@ -676,11 +860,28 @@ export function mountHorizonteApp(root: HTMLElement): void {
       });
     });
 
+    root.querySelectorAll<HTMLButtonElement>('[data-ocupar-assento]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const assento = Number(btn.dataset.ocuparAssento);
+        if (!Number.isInteger(assento) || !ehConvidado) return;
+        enviarParaHost({ tipo: 'ocuparAssento', assento });
+      });
+    });
+
     root.querySelectorAll<HTMLButtonElement>('[data-classe]').forEach((btn) => {
       btn.addEventListener('click', () => {
-        const jogador = state.preparo.jogadores[Number(btn.dataset.jogador)];
-        if (!jogador) return;
-        jogador.classe = btn.dataset.classe as Naipe;
+        const idx = Number(btn.dataset.jogador);
+        const classe = btn.dataset.classe as Naipe;
+        const jogador = state.preparo.jogadores[idx];
+        if (!jogador || !classe) return;
+        if (ehConvidado) {
+          if (idx !== state.meuAssento) return;
+          jogador.classe = classe;
+          enviarParaHost({ tipo: 'atualizarJogador', assento: idx, classe });
+          render();
+          return;
+        }
+        jogador.classe = classe;
         sincronizarSala();
         render();
       });
@@ -688,10 +889,20 @@ export function mountHorizonteApp(root: HTMLElement): void {
 
     root.querySelectorAll<HTMLInputElement>('[data-nome-jogador]').forEach((input) => {
       input.addEventListener('input', () => {
-        const jogador = state.preparo.jogadores[Number(input.dataset.nomeJogador)];
+        const idx = Number(input.dataset.nomeJogador);
+        const jogador = state.preparo.jogadores[idx];
         if (jogador) jogador.nome = input.value;
       });
       input.addEventListener('change', () => {
+        const idx = Number(input.dataset.nomeJogador);
+        const jogador = state.preparo.jogadores[idx];
+        if (!jogador) return;
+        if (ehConvidado) {
+          if (idx === state.meuAssento) {
+            enviarParaHost({ tipo: 'atualizarJogador', assento: idx, nome: jogador.nome });
+          }
+          return;
+        }
         sincronizarSala();
       });
     });
@@ -711,16 +922,47 @@ export function mountHorizonteApp(root: HTMLElement): void {
       btn.addEventListener('click', () => void acaoOnline(btn.dataset.acaoOnline ?? ''));
     });
 
-    root.querySelectorAll<HTMLButtonElement>('[data-selecionar-carta]').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const idx = Number(btn.dataset.selecionarCarta);
-        if (!Number.isInteger(idx)) return;
-        if (state.selectedHandIndices.includes(idx)) {
-          state.selectedHandIndices = state.selectedHandIndices.filter((i) => i !== idx);
-        } else {
-          state.selectedHandIndices = [...state.selectedHandIndices, idx].sort((a, b) => a - b);
+    root.querySelectorAll<HTMLElement>('[data-selecionar-carta]').forEach((el) => {
+      const idx = Number(el.dataset.selecionarCarta);
+      const cardId = el.dataset.handCardId;
+      let timerSegurar: ReturnType<typeof setTimeout> | null = null;
+      let abriuPorSegurar = false;
+
+      const cancelarSegurar = (): void => {
+        if (timerSegurar) {
+          clearTimeout(timerSegurar);
+          timerSegurar = null;
         }
-        render();
+      };
+
+      el.addEventListener('pointerdown', (e) => {
+        if (e.pointerType !== 'touch' || !cardId) return;
+        abriuPorSegurar = false;
+        timerSegurar = setTimeout(() => {
+          timerSegurar = null;
+          const found = deck.cards.find((c) => c.id === cardId);
+          if (found) {
+            abriuPorSegurar = true;
+            openCardZoomModal(found, { handIdx: idx });
+          }
+        }, 380);
+      });
+      el.addEventListener('pointerup', cancelarSegurar);
+      el.addEventListener('pointercancel', cancelarSegurar);
+      el.addEventListener('pointermove', cancelarSegurar);
+
+      el.addEventListener('click', () => {
+        if (abriuPorSegurar) {
+          abriuPorSegurar = false;
+          return;
+        }
+        alternarSelecaoCartaMao(idx);
+      });
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          alternarSelecaoCartaMao(idx);
+        }
       });
     });
 
@@ -733,6 +975,19 @@ export function mountHorizonteApp(root: HTMLElement): void {
       btn.addEventListener('click', () => {
         const acao = acaoDoBotao(btn);
         if (!acao || !state.partida) return;
+
+        if (state.salaOnlineId) {
+          if (state.meuAssento === null || state.partida.turnoDe !== state.meuAssento) {
+            showToast('Aguarde a sua vez para jogar.');
+            return;
+          }
+          if (!state.ehHostDaSala) {
+            const enviado = enviarParaHost({ tipo: 'acao', acao });
+            if (!enviado) showToast('Conexão com o anfitrião perdida.');
+            return;
+          }
+        }
+
         const proxima = agir(state.partida, acao);
         if (proxima === state.partida) {
           showToast('Jogada inválida para este momento ou seleção.');
@@ -747,6 +1002,7 @@ export function mountHorizonteApp(root: HTMLElement): void {
   }
 
   function acaoDeMesa(nome: string): void {
+    if (state.salaOnlineId && !state.ehHostDaSala && nome !== 'copiar') return;
     const jogadores = state.preparo.jogadores;
     if (nome === 'maisPessoa' && jogadores.length < REGRA.maxPessoas) {
       const usadas = new Set(jogadores.map((j) => j.classe));
@@ -788,12 +1044,7 @@ export function mountHorizonteApp(root: HTMLElement): void {
       if (state.ehHostDaSala) avisarSalaEncerrada();
       else avisarSaidaDaSala();
       desconectarP2P();
-      state.salaOnlineId = null;
-      state.ehHostDaSala = false;
-      state.parceiroOnline = false;
-      state.versaoSala = 0;
-      saveSalaOnlineId(null);
-      limparParametroUrlSala();
+      limparEstadoOnlineLocal();
       setPartida(null, false);
       showToast('Você saiu da sala.');
       return;

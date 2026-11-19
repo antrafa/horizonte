@@ -65,6 +65,11 @@ describe('Integração das views HTML de HORIZONTE', () => {
     expect(soloHtml).toContain('Modo Solo');
     expect(soloHtml).toContain('Abater no Horizonte');
     expect(soloHtml).toContain('🤝 Recrutar');
+    expect(soloHtml).toContain('hand-card-wrap is-selected');
+    expect(soloHtml).toContain('data-selecionar-carta="0"');
+    expect(soloHtml).toContain('hand-card-zoom');
+    expect(soloHtml).toContain('data-zoom-card-id=');
+    expect(soloHtml).not.toContain('pcard-pip');
 
     // Avança para janela de bloqueio jogando carta baixa na Ameaça
     const pBloqueio = agir(partidaSolo, { tipo: 'jogarCartas', quem: 0, indicesMao: [0], alvo: 'horizonte_abater' });

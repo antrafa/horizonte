@@ -20,6 +20,7 @@ export interface RenderCardOptions {
   qr?: string;
   artOnly?: boolean;
   textOnly?: boolean;
+  title?: string;
 }
 
 export function escapeHtml(str: string): string {
@@ -311,8 +312,10 @@ export function renderMagicCardHtml(card: GameCard, options: RenderCardOptions =
 
   const indiceCanto = renderCornerIndexHtml(card);
 
+  const cardTitle = options.title ?? 'Clique para ampliar';
+
   return `
-    <article class="${classes}" data-card-id="${escapeHtml(card.id)}" title="Clique para ampliar">
+    <article class="${classes}" data-card-id="${escapeHtml(card.id)}" title="${escapeHtml(cardTitle)}">
       <span class="mtg-corner-badge mtg-corner-badge--tl" aria-hidden="true">${indiceCanto}</span>
       <span class="mtg-corner-badge mtg-corner-badge--br" aria-hidden="true"><span class="mtg-corner-index">${indiceCanto}</span>${options.qr ? `<span class="mtg-corner-qr">${options.qr}</span>` : ''}</span>
       <header class="mtg-titlebar">
@@ -341,11 +344,16 @@ export function renderMagicCardHtml(card: GameCard, options: RenderCardOptions =
 export interface RenderCardModalOptions {
   showDetails?: boolean;
   fromScanner?: boolean;
+  handSelect?: {
+    selecionada: boolean;
+    podeSelecionar: boolean;
+  };
 }
 
 export function renderCardModalContentHtml(card: GameCard, options: RenderCardModalOptions = {}): string {
   const showDetails = Boolean(options.showDetails);
   const fromScanner = Boolean(options.fromScanner);
+  const handSelect = options.handSelect;
   const regra = regraDaCarta(card);
   const figure = isFigure(card);
 
@@ -383,6 +391,13 @@ export function renderCardModalContentHtml(card: GameCard, options: RenderCardMo
           <h2 id="zoom-dialog-title">${escapeHtml(card.title)}</h2>
         </div>
         <div class="zoom-modal-actions">
+          ${
+            handSelect?.podeSelecionar
+              ? `<button type="button" class="${handSelect.selecionada ? 'btn-secondary' : 'btn-primary'} btn-sm" data-zoom-toggle-select>
+                  ${handSelect.selecionada ? '✕ Desmarcar carta' : '✓ Selecionar carta'}
+                </button>`
+              : ''
+          }
           ${fromScanner ? `<button type="button" class="btn-ghost btn-sm" data-zoom-voltar-escaneador>Outra carta</button>` : ''}
           <button type="button" class="btn-secondary btn-sm" data-zoom-toggle-details aria-expanded="${showDetails}">
             ${showDetails ? 'Só a carta' : 'Detalhes'}

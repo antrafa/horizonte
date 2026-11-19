@@ -1,7 +1,7 @@
 import { Peer, type DataConnection } from 'peerjs';
 import { DEFAULT_THEME_ID } from '../data/index';
 import type { ThemeId } from '../types/card';
-import type { ModoDeJogo, Naipe, Nivel, Partida } from './partida';
+import type { Acao, CartaAcao, FiguraHorizonte, ModoDeJogo, Naipe, Nivel, Partida } from './partida';
 
 export interface PreparoSala {
   modo: ModoDeJogo;
@@ -9,19 +9,66 @@ export interface PreparoSala {
   jogadores: Array<{ nome: string; classe: Naipe }>;
 }
 
-export interface MensagemP2P {
-  tipo: 'sync' | 'pedirSync' | 'salaEncerrada' | 'parceiroSaiu';
+export interface EstadoSalaRecebido {
   temaId: ThemeId;
-  preparo: PreparoSala | null;
+  preparo: PreparoSala;
   partida: Partida | null;
+  meuAssento: number | null;
+  assentosConectados: boolean[];
+  totalConectados: number;
   versao: number;
-  enviadoEm: number;
+  aviso?: string;
+}
+
+export type MensagemClienteParaHost =
+  | { tipo: 'pedirSync' }
+  | { tipo: 'ocuparAssento'; assento: number }
+  | { tipo: 'atualizarJogador'; assento: number; nome?: string; classe?: Naipe }
+  | { tipo: 'acao'; acao: Acao }
+  | { tipo: 'parceiroSaiu' };
+
+export type MensagemHostParaCliente =
+  | ({ tipo: 'estado' } & EstadoSalaRecebido)
+  | { tipo: 'salaEncerrada' };
+
+export interface CallbacksP2P {
+  onEstadoRecebido: (estado: EstadoSalaRecebido) => void;
+  onSalaEncerrada: () => void;
+  onMensagemClienteNoHost: (peerId: string, msg: MensagemClienteParaHost) => void;
+  onPeersMudaram: (peerIdsConectados: string[]) => void;
+  onStatusConexao: (online: boolean) => void;
+}
+
+const CARTA_OCULTA: CartaAcao = { valor: 0, naipe: 'spades' };
+const FIGURA_OCULTA: FiguraHorizonte = { posto: 'J', naipe: 'spades' };
+
+export function ehCartaOculta(carta: CartaAcao): boolean {
+  return 'valor' in carta && carta.valor === 0;
+}
+
+/**
+ * Projeta a partida para a visão de um jogador específico na sala online.
+ * Nunca vaza a ordem do baralho de compra, do deck do Horizonte nem a mão de outros jogadores.
+ */
+export function mascararPartidaParaJogador(partida: Partida, meuAssento: number | null): Partida {
+  return {
+    ...partida,
+    baralhoCompra: partida.baralhoCompra.map(() => CARTA_OCULTA),
+    horizonteDeck: partida.horizonteDeck.map(() => FIGURA_OCULTA),
+    jogadores: partida.jogadores.map((j, idx) => {
+      if (meuAssento !== null && idx === meuAssento) return j;
+      return {
+        ...j,
+        mao: j.mao.map(() => CARTA_OCULTA),
+      };
+    }),
+  };
 }
 
 let peerInstancia: Peer | null = null;
-const conexoesAtivas: Set<DataConnection> = new Set();
-let onReceberMensagemCallback: ((msg: MensagemP2P) => void) | null = null;
-let onStatusConexaoCallback: ((online: boolean) => void) | null = null;
+const conexoesPorPeer: Map<string, DataConnection> = new Map();
+let conexaoParaHost: DataConnection | null = null;
+let callbacks: CallbacksP2P | null = null;
 
 function gerarPrefixoSala(codigo: string): string {
   const limpo = codigo.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -37,19 +84,26 @@ export function gerarCodigoSalaAleatorio(): string {
   return res;
 }
 
-export function registrarCallbacksP2P(
-  onMsg: (msg: MensagemP2P) => void,
-  onStatus: (online: boolean) => void,
-): void {
-  onReceberMensagemCallback = onMsg;
-  onStatusConexaoCallback = onStatus;
+export function registrarCallbacksP2P(cb: CallbacksP2P): void {
+  callbacks = cb;
+}
+
+export function listarPeersConectados(): string[] {
+  const abertos: string[] = [];
+  for (const [peerId, conn] of conexoesPorPeer.entries()) {
+    if (conn.open) abertos.push(peerId);
+  }
+  return abertos;
 }
 
 export function temParceiroConectado(): boolean {
-  for (const conn of conexoesAtivas) {
-    if (conn.open) return true;
-  }
-  return false;
+  if (conexaoParaHost?.open) return true;
+  return listarPeersConectados().length > 0;
+}
+
+function notificarMudancaDePeers(): void {
+  callbacks?.onPeersMudaram(listarPeersConectados());
+  callbacks?.onStatusConexao(temParceiroConectado());
 }
 
 export function criarSalaHost(
@@ -72,7 +126,7 @@ export function criarSalaHost(
     });
 
     peer.on('connection', (conn) => {
-      configurarConexao(conn, true);
+      configurarConexaoNoHost(conn);
     });
 
     peer.on('error', (err: { type?: string; message?: string }) => {
@@ -119,8 +173,8 @@ export function entrarSalaCliente(
     peerInstancia = peerCliente;
 
     timeout = setTimeout(() => {
-      falhar('A sala não respondeu. Verifique se o código está correto e se o anfitrião está com a mesa aberta.');
-    }, 8000);
+      falhar('A sala não respondeu. Verifique o código, se o anfitrião está com a mesa aberta ou teste no Wi-Fi.');
+    }, 9000);
 
     peerCliente.on('open', () => {
       const conn = peerCliente.connect(idPeerAlvo, { reliable: true });
@@ -129,16 +183,10 @@ export function entrarSalaCliente(
         if (finalizado) return;
         finalizado = true;
         if (timeout) clearTimeout(timeout);
-        configurarConexao(conn, false);
+        conexaoParaHost = conn;
+        configurarConexaoNoCliente(conn);
         onSucesso(limpo);
-        conn.send({
-          tipo: 'pedirSync',
-          temaId: DEFAULT_THEME_ID,
-          preparo: null,
-          partida: null,
-          versao: 0,
-          enviadoEm: Date.now(),
-        } satisfies MensagemP2P);
+        enviarParaHost({ tipo: 'pedirSync' });
       });
 
       conn.on('error', () => {
@@ -159,77 +207,88 @@ export function entrarSalaCliente(
   }
 }
 
-function configurarConexao(conn: DataConnection, retransmitirComoHost: boolean): void {
-  conexoesAtivas.add(conn);
-  onStatusConexaoCallback?.(temParceiroConectado());
+function configurarConexaoNoHost(conn: DataConnection): void {
+  const peerId = conn.peer;
+  conexoesPorPeer.set(peerId, conn);
 
   conn.on('open', () => {
-    onStatusConexaoCallback?.(temParceiroConectado());
+    notificarMudancaDePeers();
   });
 
   conn.on('data', (dados: unknown) => {
     if (!dados || typeof dados !== 'object') return;
-    const msg = dados as MensagemP2P;
+    const msg = dados as MensagemClienteParaHost;
+    callbacks?.onMensagemClienteNoHost(peerId, msg);
+  });
 
-    if (retransmitirComoHost && msg.tipo === 'sync') {
-      for (const outra of conexoesAtivas) {
-        if (outra !== conn && outra.open) {
-          try {
-            outra.send(msg);
-          } catch {}
-        }
-      }
+  const remover = (): void => {
+    if (conexoesPorPeer.get(peerId) === conn) {
+      conexoesPorPeer.delete(peerId);
     }
-
-    onReceberMensagemCallback?.(msg);
-  });
-
-  conn.on('close', () => {
-    conexoesAtivas.delete(conn);
-    onStatusConexaoCallback?.(temParceiroConectado());
-  });
-
-  conn.on('error', () => {
-    conexoesAtivas.delete(conn);
-    onStatusConexaoCallback?.(temParceiroConectado());
-  });
-}
-
-export function enviarEstadoParaSala(
-  temaId: ThemeId,
-  preparo: PreparoSala,
-  partida: Partida | null,
-  versao: number,
-): void {
-  const msg: MensagemP2P = {
-    tipo: 'sync',
-    temaId,
-    preparo,
-    partida,
-    versao,
-    enviadoEm: Date.now(),
+    notificarMudancaDePeers();
   };
 
-  for (const conn of conexoesAtivas) {
-    if (conn.open) {
-      try {
-        conn.send(msg);
-      } catch {}
+  conn.on('close', remover);
+  conn.on('error', remover);
+}
+
+function configurarConexaoNoCliente(conn: DataConnection): void {
+  callbacks?.onStatusConexao(true);
+
+  conn.on('data', (dados: unknown) => {
+    if (!dados || typeof dados !== 'object') return;
+    const msg = dados as MensagemHostParaCliente;
+    if (msg.tipo === 'salaEncerrada') {
+      callbacks?.onSalaEncerrada();
+      return;
     }
+    if (msg.tipo === 'estado') {
+      callbacks?.onEstadoRecebido({
+        temaId: msg.temaId ?? DEFAULT_THEME_ID,
+        preparo: msg.preparo,
+        partida: msg.partida,
+        meuAssento: msg.meuAssento ?? null,
+        assentosConectados: Array.isArray(msg.assentosConectados) ? msg.assentosConectados : [],
+        totalConectados: msg.totalConectados ?? 1,
+        versao: msg.versao ?? 0,
+        aviso: msg.aviso,
+      });
+    }
+  });
+
+  const aoFechar = (): void => {
+    if (conexaoParaHost === conn) {
+      conexaoParaHost = null;
+    }
+    callbacks?.onStatusConexao(false);
+  };
+
+  conn.on('close', aoFechar);
+  conn.on('error', aoFechar);
+}
+
+export function enviarParaHost(msg: MensagemClienteParaHost): boolean {
+  if (!conexaoParaHost?.open) return false;
+  try {
+    conexaoParaHost.send(msg);
+    return true;
+  } catch {
+    return false;
   }
 }
 
-export function avisarSalaEncerrada(): void {
-  const msg: MensagemP2P = {
-    tipo: 'salaEncerrada',
-    temaId: DEFAULT_THEME_ID,
-    preparo: null,
-    partida: null,
-    versao: 0,
-    enviadoEm: Date.now(),
-  };
+export function enviarEstadoParaPeer(peerId: string, estado: EstadoSalaRecebido): void {
+  const conn = conexoesPorPeer.get(peerId);
+  if (!conn?.open) return;
+  const msg: MensagemHostParaCliente = { tipo: 'estado', ...estado };
+  try {
+    conn.send(msg);
+  } catch {}
+}
 
-  for (const conn of conexoesAtivas) {
+export function avisarSalaEncerrada(): void {
+  const msg: MensagemHostParaCliente = { tipo: 'salaEncerrada' };
+  for (const conn of conexoesPorPeer.values()) {
     if (conn.open) {
       try {
         conn.send(msg);
@@ -239,31 +298,23 @@ export function avisarSalaEncerrada(): void {
 }
 
 export function avisarSaidaDaSala(): void {
-  const msg: MensagemP2P = {
-    tipo: 'parceiroSaiu',
-    temaId: DEFAULT_THEME_ID,
-    preparo: null,
-    partida: null,
-    versao: 0,
-    enviadoEm: Date.now(),
-  };
-
-  for (const conn of conexoesAtivas) {
-    if (conn.open) {
-      try {
-        conn.send(msg);
-      } catch {}
-    }
-  }
+  enviarParaHost({ tipo: 'parceiroSaiu' });
 }
 
 export function desconectarP2P(): void {
-  for (const conn of conexoesAtivas) {
+  for (const conn of conexoesPorPeer.values()) {
     try {
       conn.close();
     } catch {}
   }
-  conexoesAtivas.clear();
+  conexoesPorPeer.clear();
+
+  if (conexaoParaHost) {
+    try {
+      conexaoParaHost.close();
+    } catch {}
+    conexaoParaHost = null;
+  }
 
   if (peerInstancia) {
     try {
@@ -271,5 +322,5 @@ export function desconectarP2P(): void {
     } catch {}
     peerInstancia = null;
   }
-  onStatusConexaoCallback?.(false);
+  callbacks?.onStatusConexao(false);
 }

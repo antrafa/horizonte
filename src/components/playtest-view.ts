@@ -26,7 +26,7 @@ import {
   STATUS_FIGURA,
   valorBloqueioCarta,
 } from '../core/partida';
-import type { PreparoSala } from '../core/online-sync';
+import { ehCartaOculta, type PreparoSala } from '../core/online-sync';
 import { lerRecordeSolo, syncEstadoDoMundo } from '../core/storage';
 import type { ThemeDeck } from '../types/card';
 import { cartaDoTemaPorAcao, cartaDoTemaPorFigura, escapeHtml, renderMagicCardHtml } from './card-renderer';
@@ -60,67 +60,99 @@ const MODOS: Array<{ id: ModoDeJogo; titulo: string; resumo: string }> = [
   },
 ];
 
+export interface ContextoOnlineMesa {
+  salaId: string | null;
+  conectando: boolean;
+  ehHost: boolean;
+  meuAssento: number | null;
+  assentosConectados: boolean[];
+  totalConectados: number;
+}
+
+const CONTEXTO_OFFLINE: ContextoOnlineMesa = {
+  salaId: null,
+  conectando: false,
+  ehHost: false,
+  meuAssento: null,
+  assentosConectados: [],
+  totalConectados: 0,
+};
+
 export function renderPlaytestTableHtml(
   deck: ThemeDeck,
   partida: Partida | null,
   preparo: PreparacaoMesa,
   selectedIndices: number[] = [],
-  salaOnlineId: string | null = null,
-  conectandoOnline: boolean = false,
-  parceiroOnline: boolean = false,
+  online: ContextoOnlineMesa = CONTEXTO_OFFLINE,
 ): string {
   if (partida) {
-    return renderPartida(deck, partida, selectedIndices, salaOnlineId, parceiroOnline);
+    return renderPartida(deck, partida, selectedIndices, online);
   }
-  return renderPreparacao(deck, preparo, salaOnlineId, conectandoOnline, parceiroOnline);
+  return renderPreparacao(deck, preparo, online);
 }
 
-// ---------- Barra Online Opcional ----------
+// ---------- Barra Online ----------
 
-function renderBarraOnline(
-  salaOnlineId: string | null,
-  conectandoOnline: boolean,
-  parceiroOnline: boolean,
-): string {
-  if (salaOnlineId) {
+function renderBarraOnline(online: ContextoOnlineMesa, totalAssentos: number): string {
+  if (online.salaId) {
+    const papel = online.ehHost ? 'Anfitrião' : 'Convidado';
+    const prontos = online.totalConectados >= 2;
     return `
       <div class="online-sync-bar">
-        <span class="chip chip-ok">● Sala online ativa</span>
-        <span>Código: <strong>${escapeHtml(salaOnlineId)}</strong></span>
-        <span class="chip ${parceiroOnline ? 'chip-ok' : 'chip-warn'}">${parceiroOnline ? '● Parceiro conectado' : '○ Aguardando conexão...'}</span>
+        <span class="chip chip-ok">● Sala online · ${papel}</span>
+        <span>Código: <strong class="num">${escapeHtml(online.salaId)}</strong></span>
+        <span class="chip ${prontos ? 'chip-ok' : 'chip-warn'}">${online.totalConectados}/${totalAssentos} conectado${online.totalConectados === 1 ? '' : 's'}</span>
         <button type="button" class="btn-secondary btn-sm" data-acao-online="copiarLink">Copiar link da mesa</button>
         <button type="button" class="btn-ghost btn-sm danger" data-acao-online="desconectar">Sair da sala</button>
       </div>`;
   }
 
   return `
-    <details class="online-room-card">
-      <summary class="online-room-head">
+    <section class="online-room-card" aria-label="Modo local ou sala online">
+      <div class="online-room-head">
         <span class="chip">Mesa local pronta</span>
-        <strong>Jogue direto aqui no navegador — ou abra uma Sala Online P2P (opcional)</strong>
-      </summary>
+        <strong>Jogue aqui no navegador ou crie uma Sala Online P2P com mão privada</strong>
+      </div>
       <div class="room-gate-grid spaced-sm">
         <div class="inline wrap">
-          <button type="button" class="btn-secondary btn-sm" data-acao-online="criar" ${conectandoOnline ? 'disabled' : ''}>
-            ${conectandoOnline ? 'Criando sala...' : 'Criar sala online P2P'}
+          <button type="button" class="btn-secondary btn-sm" data-acao-online="criar" ${online.conectando ? 'disabled' : ''}>
+            ${online.conectando ? 'Criando sala...' : 'Criar sala online P2P'}
           </button>
         </div>
         <div class="inline wrap">
-          <input type="text" maxlength="120" placeholder="Código ou link da sala" data-campo-sala aria-label="Código ou link da sala" ${conectandoOnline ? 'disabled' : ''} />
-          <button type="button" class="btn-secondary btn-sm" data-acao-online="entrar" ${conectandoOnline ? 'disabled' : ''}>
-            ${conectandoOnline ? 'Conectando...' : 'Entrar em sala'}
+          <input type="text" maxlength="120" placeholder="Código ou link da sala" data-campo-sala aria-label="Código ou link da sala" ${online.conectando ? 'disabled' : ''} />
+          <button type="button" class="btn-secondary btn-sm" data-acao-online="entrar" ${online.conectando ? 'disabled' : ''}>
+            ${online.conectando ? 'Conectando...' : 'Entrar em sala'}
           </button>
         </div>
       </div>
-    </details>`;
+    </section>`;
 }
 
 // ---------- Preparação ----------
 
-function renderEscolhaDeJogador(j: { nome: string; classe: Naipe }, i: number): string {
+function renderEscolhaDeJogador(
+  j: { nome: string; classe: Naipe },
+  i: number,
+  online: ContextoOnlineMesa,
+): string {
+  const emSala = Boolean(online.salaId);
+  const ehMeu = emSala && online.meuAssento === i;
+  const ocupado = emSala && Boolean(online.assentosConectados[i]);
+  const podeEditar = !emSala || ehMeu || (online.ehHost && !ocupado);
+  const podeAssumir = emSala && !online.ehHost && !ehMeu && !ocupado;
+
+  const badgeAssento = !emSala
+    ? ''
+    : ehMeu
+      ? `<span class="chip chip-ok">${online.ehHost ? 'Você · Anfitrião' : 'Você'}</span>`
+      : ocupado
+        ? `<span class="chip chip-ok">● Conectado</span>`
+        : `<span class="chip">Vaga livre</span>`;
+
   const tiles = NAIPES.map(
     (n) => `
-      <button type="button" class="class-tile suit-${n} ${j.classe === n ? 'is-active' : ''}" data-classe="${n}" data-jogador="${i}">
+      <button type="button" class="class-tile suit-${n} ${j.classe === n ? 'is-active' : ''}" data-classe="${n}" data-jogador="${i}" ${podeEditar ? '' : 'disabled'}>
         <span class="class-suit">${SIMBOLO[n]}</span>
         <span class="class-name">${CLASSES[n].nome}</span>
         <span class="class-vocation">${FUNCAO_DO_NAIPE[n].pilar}</span>
@@ -129,28 +161,30 @@ function renderEscolhaDeJogador(j: { nome: string; classe: Naipe }, i: number): 
   ).join('');
 
   return `
-    <div class="setup-player">
-      <label class="field">
+    <div class="setup-player ${ehMeu ? 'is-my-seat' : ''}">
+      <div class="setup-player-head">
         <span class="field-label">Jogador ${i + 1}</span>
-        <input type="text" maxlength="28" value="${escapeHtml(j.nome)}" data-nome-jogador="${i}" placeholder="Nome do sobrevivente" />
+        <div class="inline wrap">
+          ${badgeAssento}
+          ${podeAssumir ? `<button type="button" class="btn-secondary btn-sm" data-ocupar-assento="${i}">Assumir vaga</button>` : ''}
+        </div>
+      </div>
+      <label class="field">
+        <input type="text" maxlength="28" value="${escapeHtml(j.nome)}" data-nome-jogador="${i}" placeholder="Nome do sobrevivente" ${podeEditar ? '' : 'disabled'} />
       </label>
       <div class="class-grid">${tiles}</div>
     </div>`;
 }
 
-function renderPreparacao(
-  deck: ThemeDeck,
-  preparo: PreparacaoMesa,
-  salaOnlineId: string | null,
-  conectandoOnline: boolean,
-  parceiroOnline: boolean,
-): string {
+function renderPreparacao(deck: ThemeDeck, preparo: PreparacaoMesa, online: ContextoOnlineMesa): string {
   const nuance = NUANCES_DO_TEMA[deck.id] ?? NUANCES_DO_TEMA.wasteland;
   const estadoSalvo = syncEstadoDoMundo(deck.id, null);
-  const jogadoresHtml = preparo.jogadores.map((j, i) => renderEscolhaDeJogador(j, i)).join('');
+  const emSala = Boolean(online.salaId);
+  const podeControlarSala = !emSala || online.ehHost;
+  const jogadoresHtml = preparo.jogadores.map((j, i) => renderEscolhaDeJogador(j, i, online)).join('');
   const modosHtml = MODOS.map(
     (m) => `
-      <button type="button" class="mode-tile ${preparo.modo === m.id ? 'is-active' : ''}" data-modo-mesa="${m.id}">
+      <button type="button" class="mode-tile ${preparo.modo === m.id ? 'is-active' : ''}" data-modo-mesa="${m.id}" ${podeControlarSala && !(emSala && m.id === 'solo') ? '' : 'disabled'}>
         <strong>${m.titulo}</strong>
         <span class="muted">${m.resumo}</span>
       </button>`,
@@ -158,7 +192,7 @@ function renderPreparacao(
 
   return `
     <section class="setup">
-      ${renderBarraOnline(salaOnlineId, conectandoOnline, parceiroOnline)}
+      ${renderBarraOnline(online, preparo.jogadores.length)}
 
       <header class="section-head">
         <span class="eyebrow">Preparar Mesa · ${escapeHtml(deck.name)}</span>
@@ -186,7 +220,7 @@ function renderPreparacao(
         ${(Object.keys(NIVEIS) as Nivel[])
           .map(
             (n) => `
-          <button type="button" class="mode-tile ${preparo.nivel === n ? 'is-active' : ''}" data-nivel-mesa="${n}">
+          <button type="button" class="mode-tile ${preparo.nivel === n ? 'is-active' : ''}" data-nivel-mesa="${n}" ${podeControlarSala ? '' : 'disabled'}>
             <strong>${NIVEIS[n].nome} · ${NIVEIS[n].vida} PV</strong>
             <span class="muted">${NIVEIS[n].resumo}</span>
           </button>`,
@@ -200,8 +234,8 @@ function renderPreparacao(
           <div class="setup-controls-bar">
             <div class="setup-count">
               <span>Jogadores na mesa: <strong class="num">${preparo.jogadores.length}</strong></span>
-              <button type="button" class="btn-ghost btn-sm" data-acao-mesa="menosPessoa" ${preparo.jogadores.length <= 2 ? 'disabled' : ''}>Remover</button>
-              <button type="button" class="btn-secondary btn-sm" data-acao-mesa="maisPessoa" ${preparo.jogadores.length >= REGRA.maxPessoas ? 'disabled' : ''}>+ Adicionar jogador</button>
+              <button type="button" class="btn-ghost btn-sm" data-acao-mesa="menosPessoa" ${!podeControlarSala || preparo.jogadores.length <= 2 ? 'disabled' : ''}>Remover</button>
+              <button type="button" class="btn-secondary btn-sm" data-acao-mesa="maisPessoa" ${!podeControlarSala || preparo.jogadores.length >= REGRA.maxPessoas ? 'disabled' : ''}>+ Adicionar jogador</button>
             </div>
           </div>`
           : ''
@@ -219,7 +253,11 @@ function renderPreparacao(
       <div class="setup-players">${jogadoresHtml}</div>
 
       <div class="setup-actions">
-        <button type="button" class="btn-primary btn-lg" data-acao-mesa="comecar">Embaralhar e começar partida</button>
+        ${
+          podeControlarSala
+            ? `<button type="button" class="btn-primary btn-lg" data-acao-mesa="comecar">Embaralhar e começar partida</button>`
+            : `<p class="muted">Escolha seu nome e classe acima. Aguardando o anfitrião iniciar a partida...</p>`
+        }
       </div>
     </section>
   `;
@@ -321,12 +359,15 @@ function rotuloUsoAliado(posto: PostoFigura, naipe: Naipe): string {
   }
 }
 
-function renderPainelJogadores(deck: ThemeDeck, partida: Partida): string {
+function renderPainelJogadores(deck: ThemeDeck, partida: Partida, online: ContextoOnlineMesa): string {
+  const emSala = Boolean(online.salaId);
   const podeUsarAliado = partida.fase === 'acao' && !partida.aliadoUsadoNoTurno && partida.resultado === null;
 
   const cards = partida.jogadores
     .map((j, idx) => {
       const ativo = idx === partida.turnoDe && partida.resultado === null;
+      const ehMeu = emSala && online.meuAssento === idx;
+      const podeControlar = ativo && (!emSala || ehMeu);
       const pctVida = Math.max(0, Math.min(100, Math.round((j.vida / j.vidaMax) * 100)));
       const aliadosHtml =
         j.aliados.length === 0
@@ -338,7 +379,7 @@ function renderPainelJogadores(deck: ThemeDeck, partida: Partida): string {
                 const fn = FUNCAO_DO_NAIPE[a.figura.naipe];
                 const cargasBolinhas = '●'.repeat(a.cargas) + '○'.repeat(Math.max(0, a.maxCargas - a.cargas));
                 let acoesAliado = '';
-                if (ativo && podeUsarAliado && a.cargas > 0) {
+                if (podeControlar && podeUsarAliado && a.cargas > 0) {
                   if (a.figura.naipe === 'spades' && partida.modo === 'pvp' && partida.rodada >= 2) {
                     const rivais = partida.jogadores
                       .map((r, rIdx) => ({ r, rIdx }))
@@ -373,7 +414,12 @@ function renderPainelJogadores(deck: ThemeDeck, partida: Partida): string {
         <article class="front ${ativo ? 'has-threat' : ''} ${j.eliminado ? 'is-down' : ''}">
           <header class="front-head">
             <div>
-              <h3>${escapeHtml(j.nome)} ${ativo ? '<span class="chip chip-ok">Sua vez</span>' : ''} ${j.eliminado ? '<span class="chip chip-off">Eliminado</span>' : ''}</h3>
+              <h3>
+                ${escapeHtml(j.nome)}
+                ${ehMeu ? '<span class="chip">Você</span>' : ''}
+                ${ativo ? `<span class="chip chip-ok">${ehMeu || !emSala ? 'Sua vez' : 'Jogando'}</span>` : ''}
+                ${j.eliminado ? '<span class="chip chip-off">Eliminado</span>' : ''}
+              </h3>
               <span class="front-class suit-${j.classe}">${SIMBOLO[j.classe]} ${CLASSES[j.classe].nome}</span>
             </div>
             <div class="chips">
@@ -402,11 +448,52 @@ function renderCartaNaMao(
   carta: Partida['jogadores'][number]['mao'][number],
   idx: number,
   selecionada: boolean,
+  podeSelecionar: boolean,
 ): string {
+  if (ehCartaOculta(carta)) {
+    return `<div class="hand-card-wrap is-hidden"><div class="hand-card-back" aria-label="Carta oculta">HORIZONTE</div></div>`;
+  }
+
+  const cartaTema = cartaDoTemaPorAcao(deck.cards, carta);
+  const codigo = codigoCarta(carta);
+
+  if (cartaTema) {
+    return `
+      <div class="hand-card-wrap ${selecionada ? 'is-selected' : ''} ${podeSelecionar ? '' : 'is-locked'}">
+        <div
+          class="hand-card-trigger"
+          role="button"
+          tabindex="0"
+          ${podeSelecionar ? `data-selecionar-carta="${idx}"` : `data-zoom-card-id="${escapeHtml(cartaTema.id)}"`}
+          data-hand-card-id="${escapeHtml(cartaTema.id)}"
+          data-hand-idx="${idx}"
+          aria-pressed="${selecionada}"
+          aria-label="${podeSelecionar ? 'Selecionar' : 'Ampliar'} ${escapeHtml(cartaTema.title)} (${escapeHtml(codigo)})"
+        >
+          ${renderMagicCardHtml(cartaTema, {
+            interactive: true,
+            selected: selecionada,
+            title: podeSelecionar
+              ? selecionada
+                ? 'Clique para desmarcar (ou segure para ampliar)'
+                : 'Clique para selecionar (ou segure para ampliar)'
+              : 'Clique para ampliar',
+          })}
+        </div>
+        <button
+          type="button"
+          class="hand-card-zoom"
+          data-zoom-card-id="${escapeHtml(cartaTema.id)}"
+          data-zoom-hand-idx="${idx}"
+          title="Ampliar carta"
+          aria-label="Ampliar ${escapeHtml(cartaTema.title)}"
+        >?</button>
+      </div>`;
+  }
+
   const coringa = ehCoringa(carta);
   const vermelha = !coringa && (carta.naipe === 'hearts' || carta.naipe === 'diamonds');
   const valor = valorBloqueioCarta(carta);
-  const cartaTema = cartaDoTemaPorAcao(deck.cards, carta);
   const rotulo = coringa
     ? carta.coringa === 'estrela'
       ? 'Virada ★'
@@ -415,33 +502,66 @@ function renderCartaNaMao(
 
   return `
     <div class="pcard-wrap ${selecionada ? 'is-selected' : ''}">
-      <button type="button" class="pcard ${vermelha ? 'is-red' : ''} ${coringa ? 'is-joker' : ''} ${selecionada ? 'wins' : ''}" data-selecionar-carta="${idx}" aria-pressed="${selecionada}">
-        <span class="pcard-corner num">${escapeHtml(codigoCarta(carta))}</span>
+      <button type="button" class="pcard ${vermelha ? 'is-red' : ''} ${coringa ? 'is-joker' : ''} ${selecionada ? 'wins' : ''}" data-selecionar-carta="${idx}" aria-pressed="${selecionada}" ${podeSelecionar ? '' : 'disabled'}>
+        <span class="pcard-corner num">${escapeHtml(codigo)}</span>
         <span class="pcard-pip">${coringa ? (carta.coringa === 'estrela' ? '★' : '💀') : SIMBOLO[carta.naipe]}</span>
         <span class="pcard-meta">${escapeHtml(rotulo)} · ${valor}</span>
       </button>
-      ${
-        cartaTema
-          ? `<button type="button" class="pcard-zoom-btn" data-zoom-card-id="${escapeHtml(cartaTema.id)}" title="Ver detalhes da carta">?</button>`
-          : ''
-      }
     </div>`;
 }
 
-function renderAreaDeAcao(deck: ThemeDeck, partida: Partida, selectedIndices: number[]): string {
+function renderAreaDeAcao(
+  deck: ThemeDeck,
+  partida: Partida,
+  selectedIndices: number[],
+  online: ContextoOnlineMesa,
+): string {
   if (partida.resultado !== null) return '';
 
-  const quem = partida.turnoDe;
-  const jogador = partida.jogadores[quem];
-  if (!jogador || jogador.eliminado) return '';
+  const emSala = Boolean(online.salaId);
+  const jogadorDaVez = partida.jogadores[partida.turnoDe];
+  if (emSala && online.meuAssento === null) {
+    return `
+      <section class="action-zone is-waiting" aria-label="Modo espectador">
+        <span class="eyebrow">Sala online · Espectador</span>
+        <h3>Acompanhando o turno de ${escapeHtml(jogadorDaVez?.nome ?? '—')}</h3>
+        <p class="muted">As mãos ficam ocultas para espectadores. Aguarde a próxima partida para assumir uma vaga.</p>
+      </section>`;
+  }
 
+  const quemMao = emSala && online.meuAssento !== null ? online.meuAssento : partida.turnoDe;
+  const ehMinhaVez = !emSala || online.meuAssento === partida.turnoDe;
+  const jogador = partida.jogadores[quemMao];
+  if (!jogador || jogador.eliminado) {
+    return emSala
+      ? `<section class="action-zone is-waiting"><span class="eyebrow">Eliminado</span><h3>Você foi eliminado · Turno de ${escapeHtml(jogadorDaVez?.nome ?? '—')}</h3></section>`
+      : '';
+  }
+
+  const indicesAtivos = ehMinhaVez ? selectedIndices : [];
   const maoHtml =
     jogador.mao.length === 0
       ? `<p class="muted">Sua mão está vazia.</p>`
-      : `<div class="hand">${jogador.mao.map((c, idx) => renderCartaNaMao(deck, c, idx, selectedIndices.includes(idx))).join('')}</div>`;
+      : `<div class="hand">${jogador.mao.map((c, idx) => renderCartaNaMao(deck, c, idx, indicesAtivos.includes(idx), ehMinhaVez)).join('')}</div>`;
+
+  if (!ehMinhaVez) {
+    return `
+      <section class="action-zone is-waiting" aria-label="Sua mão (aguardando turno)">
+        <header class="action-zone-head">
+          <div>
+            <span class="eyebrow">Sua mão privada · Aguardando ${escapeHtml(jogadorDaVez?.nome ?? 'outro jogador')}</span>
+            <h3>${partida.fase === 'bloqueio' ? `${escapeHtml(jogadorDaVez?.nome ?? '')} está defendendo ${partida.danoPendente} de dano` : `Aguardando turno de ${escapeHtml(jogadorDaVez?.nome ?? '')}...`}</h3>
+          </div>
+          <span class="chip">Toque em uma carta para ler</span>
+        </header>
+        ${maoHtml}
+      </section>`;
+  }
+
+  const quem = partida.turnoDe;
 
   if (partida.fase === 'bloqueio') {
-    const bloqueioCartas = selectedIndices
+    const bloqueioCartas = indicesAtivos
       .filter((i) => i >= 0 && i < jogador.mao.length)
       .reduce((acc, i) => acc + valorBloqueioCarta(jogador.mao[i]), 0);
     const danoFinal = Math.max(0, partida.danoPendente - bloqueioCartas);
@@ -465,7 +585,7 @@ function renderAreaDeAcao(deck: ThemeDeck, partida: Partida, selectedIndices: nu
           </div>
           <span class="chip chip-warn num">Pendente: ${partida.danoPendente} · Bloqueado: ${bloqueioCartas} · Vai perder: ${danoFinal} PV</span>
         </header>
-        <p class="muted">Clique nas cartas abaixo para descartar como bloqueio (cada carta reduz o dano pelo seu valor) ou confirme sem cartas para receber o golpe nos PV.</p>
+        <p class="muted">Toque nas cartas para descartar como bloqueio (ou em <strong>?</strong> / segure para ampliar).</p>
         ${maoHtml}
         <div class="threat-actions">
           <button type="button" class="btn-primary" data-acao="bloquear" data-quem="${quem}">
@@ -477,12 +597,12 @@ function renderAreaDeAcao(deck: ThemeDeck, partida: Partida, selectedIndices: nu
   }
 
   // Fase de Ação
-  const previa = simularJogada(partida, quem, selectedIndices);
+  const previa = simularJogada(partida, quem, indicesAtivos);
   const ameaca = partida.ameacaAtiva;
   const podeAbater = previa.valida && !!ameaca;
   const danoNoHorizonte = ameaca ? danoNaAmeaca(ameaca, previa.poderTotal) : 0;
   const podeRecrutar = previa.valida && !!ameaca && previa.habilitaRecrutar && golpeDerruba(ameaca, previa.poderTotal);
-  const podeCiclar = selectedIndices.length <= REGRA.maxDescarteCiclo;
+  const podeCiclar = indicesAtivos.length <= REGRA.maxDescarteCiclo;
 
   const efeitos: string[] = [];
   if (previa.valida) {
@@ -513,18 +633,18 @@ function renderAreaDeAcao(deck: ThemeDeck, partida: Partida, selectedIndices: nu
     <section class="action-zone" aria-label="Mão e Jogada do Turno">
       <header class="action-zone-head">
         <div>
-          <span class="eyebrow">Fase de Ação · Turno de ${escapeHtml(jogador.nome)}</span>
+          <span class="eyebrow">Fase de Ação · ${emSala ? 'Sua vez' : `Turno de ${escapeHtml(jogador.nome)}`}</span>
           <h3>Selecione 1 carta, 2–4 iguais ou Carta + Ás</h3>
         </div>
-        <button type="button" class="btn-ghost btn-sm" data-limpar-selecao ${selectedIndices.length === 0 ? 'disabled' : ''}>Limpar seleção</button>
+        <button type="button" class="btn-ghost btn-sm" data-limpar-selecao ${indicesAtivos.length === 0 ? 'disabled' : ''}>Limpar seleção</button>
       </header>
 
       ${maoHtml}
 
       <div class="play-preview ${previa.valida ? 'is-valid' : ''}">
         ${
-          selectedIndices.length === 0
-            ? `<span class="muted">Selecione cartas da sua mão para ver a prévia de poder e efeitos.</span>`
+          indicesAtivos.length === 0
+            ? `<span class="muted">Toque nas cartas para selecionar · toque em <strong>?</strong> ou segure para ampliar.</span>`
             : previa.valida
               ? `<strong>${escapeHtml(previa.tipoCombo)}</strong> · <span>${escapeHtml(efeitos.join(' · '))}</span>`
               : `<span class="outcome-derrota">${escapeHtml(previa.motivoInvalida ?? 'Combinação inválida.')}</span>`
@@ -540,7 +660,7 @@ function renderAreaDeAcao(deck: ThemeDeck, partida: Partida, selectedIndices: nu
         </button>
         ${botoesPvp}
         <button type="button" class="btn-ghost" data-acao="passarTurno" data-quem="${quem}" ${podeCiclar ? '' : 'disabled'}>
-          ⏭ ${selectedIndices.length > 0 && podeCiclar ? `Reciclar ${selectedIndices.length} carta(s) e passar` : 'Passar turno'}
+          ⏭ ${indicesAtivos.length > 0 && podeCiclar ? `Reciclar ${indicesAtivos.length} carta(s) e passar` : 'Passar turno'}
         </button>
       </div>
     </section>`;
@@ -558,9 +678,10 @@ function renderPartida(
   deck: ThemeDeck,
   partida: Partida,
   selectedIndices: number[],
-  salaOnlineId: string | null,
-  parceiroOnline: boolean,
+  online: ContextoOnlineMesa,
 ): string {
+  const emSala = Boolean(online.salaId);
+  const podeControlarSala = !emSala || online.ehHost;
   const modoLabel = partida.modo === 'solo' ? 'Solo' : partida.modo === 'coop' ? 'Cooperativo' : 'Competitivo PvP';
   const jogadorDaVez = partida.jogadores[partida.turnoDe];
   const figurasRestantes = partida.horizonteDeck.length + (partida.ameacaAtiva ? 1 : 0);
@@ -574,15 +695,15 @@ function renderPartida(
         <h2>${escapeHtml(partida.motivoFim)}</h2>
         ${partida.modo === 'solo' ? renderRecordeSolo(partida) : ''}
         <div class="inline wrap">
-          <button type="button" class="btn-primary" data-acao-mesa="novaMesa">Jogar novamente</button>
-          <button type="button" class="btn-secondary" data-acao-mesa="encerrarMesa">Voltar à preparação</button>
+          ${podeControlarSala ? `<button type="button" class="btn-primary" data-acao-mesa="novaMesa">Jogar novamente</button>` : ''}
+          ${podeControlarSala ? `<button type="button" class="btn-secondary" data-acao-mesa="encerrarMesa">Voltar à preparação</button>` : '<span class="muted">Aguardando o anfitrião iniciar uma nova partida...</span>'}
         </div>
       </div>`
       : '';
 
   return `
     <div class="table">
-      ${salaOnlineId ? renderBarraOnline(salaOnlineId, false, parceiroOnline) : ''}
+      ${emSala ? renderBarraOnline(online, partida.jogadores.length) : ''}
 
       <section class="scoreboard">
         <div>
@@ -598,15 +719,15 @@ function renderPartida(
           <div>Deck de Ação: <strong class="num">${partida.baralhoCompra.length}</strong> compra · <strong class="num">${partida.descarte.length}</strong> descarte</div>
           <div class="inline wrap">
             <button type="button" class="btn-ghost btn-sm" data-acao-mesa="copiar">Copiar status</button>
-            <button type="button" class="btn-ghost btn-sm danger" data-acao-mesa="encerrarMesa">Encerrar mesa</button>
+            ${podeControlarSala ? `<button type="button" class="btn-ghost btn-sm danger" data-acao-mesa="encerrarMesa">Encerrar mesa</button>` : ''}
           </div>
         </div>
       </section>
 
       ${bannerFim}
       ${renderPainelHorizonte(deck, partida)}
-      ${renderAreaDeAcao(deck, partida, selectedIndices)}
-      ${renderPainelJogadores(deck, partida)}
+      ${renderAreaDeAcao(deck, partida, selectedIndices, online)}
+      ${renderPainelJogadores(deck, partida, online)}
 
       <div class="status-line">
         <span class="field-label">Resumo</span>

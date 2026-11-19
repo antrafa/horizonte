@@ -3234,6 +3234,196 @@ dialog::backdrop {
   color: var(--accent-ink);
 }
 
+.setup-player-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.setup-player.is-my-seat {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent-line);
+}
+
+.action-zone.is-waiting {
+  border-style: dashed;
+}
+
+.action-zone .hand {
+  gap: 14px;
+  padding-top: 10px;
+}
+
+.hand-card-wrap {
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 auto;
+  transition: transform 0.16s ease;
+}
+
+.hand-card-wrap.is-selected {
+  transform: translateY(-8px);
+}
+
+.hand-card-wrap.is-selected::after {
+  content: '✓';
+  position: absolute;
+  top: -7px;
+  left: -7px;
+  z-index: 6;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 0.78rem;
+  font-weight: 800;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.3);
+  pointer-events: none;
+}
+
+.hand-card-wrap.is-locked .hand-card-trigger .mtg-card {
+  opacity: 0.92;
+}
+
+.hand-card-back {
+  width: 171px;
+  height: 239px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: linear-gradient(135deg, var(--sunken), var(--surface));
+  color: var(--muted);
+  font-family: var(--font-display, 'Cinzel', Georgia, serif);
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+}
+
+.hand-card-trigger {
+  display: inline-flex;
+  border-radius: 11px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.hand-card-trigger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.hand-card-trigger .mtg-card {
+  zoom: 0.76;
+}
+
+.hand-card-zoom {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 5;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgb(250 249 245 / 0.95);
+  color: #18181b;
+  font-size: 0.8rem;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.28);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.hand-card-zoom:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+  transform: scale(1.08);
+}
+
+@media (max-width: 640px) {
+  .app {
+    padding: 0 12px 48px;
+  }
+
+  .table {
+    gap: 12px;
+  }
+
+  .scoreboard,
+  .horizon-panel,
+  .action-zone {
+    padding: 12px;
+  }
+
+  .horizon-card-slot .mtg-card {
+    zoom: 0.74;
+  }
+
+  .action-zone .hand {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    gap: 10px;
+    padding: 14px 4px 10px;
+    margin: 0 -4px;
+  }
+
+  .hand-card-wrap {
+    scroll-snap-align: start;
+  }
+
+  .hand-card-trigger .mtg-card {
+    zoom: 0.68;
+  }
+
+  .hand-card-zoom {
+    width: 30px;
+    height: 30px;
+    font-size: 0.82rem;
+  }
+
+  .threat-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .threat-actions > button {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+  }
+
+  .online-sync-bar {
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  .zoom-modal-header {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .zoom-modal-actions {
+    width: 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+}
+
 .action-zone {
   display: grid;
   gap: 12px;
