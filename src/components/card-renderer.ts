@@ -121,10 +121,13 @@ function efeitoDeAtaque(naipe: Naipe, base: number): { rotulo: string; texto: st
     case 'hearts':
       return {
         rotulo: '♥ Ataque · cura e recruta',
-        texto: `Causa ${base} de dano e você cura ${metade} PV (metade do valor jogado). ${recruta}`,
+        texto: `Sozinha: causa ${base} de dano e cura ${metade} PV (em combo, cure metade do valor total jogado, arredondado para cima). ${recruta}`,
       };
     case 'diamonds': {
-      const compra = base >= 7 ? 'compra 2 cartas' : 'compra 1 carta (2 se o valor jogado for 7 ou mais)';
+      const compra =
+        base >= 7
+          ? 'compra 2 cartas nesta jogada'
+          : 'compra 1 carta (ou 2 se o valor jogado em combo for 7 ou mais)';
       return {
         rotulo: '♦ Ataque · compra e recruta',
         texto: `Causa ${base} de dano e você ${compra}. ${recruta}`,
@@ -137,7 +140,7 @@ function efeitoDeAtaque(naipe: Naipe, base: number): { rotulo: string; texto: st
           : `No PvP, se a jogada causar ${REGRA.minGolpeDescartePvp}+ de dano, puxe às cegas 1 carta da mão do rival e descarte-a.`;
       return {
         rotulo: '♣ Ataque · enfraquece a Ameaça',
-        texto: `Causa ${base} de dano e a Ameaça perde ${metade} de ataque neste turno (metade do valor jogado). ${pvp}`,
+        texto: `Sozinha: causa ${base} de dano e a Ameaça perde ${metade} de ataque neste turno (em combo, metade do valor total jogado, arredondado para cima). ${pvp}`,
       };
     }
   }
@@ -178,7 +181,7 @@ export function regraDaCarta(card: GameCard): RegraDaCarta {
         },
         {
           rotulo: 'Recrutar · golpe final com ♥, ♦ ou Coringa',
-          texto: `Em vez de Troféu, vira seu Aliado com ${st.cargas} usos (máx. ${REGRA.maxAliados}). 1 uso/turno (ou Escudo): ${efeitoDoUsoDoAliado(posto, naipe)}; na defesa, bloqueia ${REGRA.escudoAliado}.`,
+          texto: `Em vez de Troféu, vira seu Aliado com ${st.cargas} usos (máx. ${REGRA.maxAliados}). 1 uso/turno: ${efeitoDoUsoDoAliado(posto, naipe)} ou bloqueia ${REGRA.escudoAliado} na defesa.`,
         },
       ],
     };
@@ -202,7 +205,7 @@ export function regraDaCarta(card: GameCard): RegraDaCarta {
         },
         {
           rotulo: 'Regras do Coringa',
-          texto: `Jogue sempre sozinho, sem combo. Se este golpe derrotar a Ameaça, você pode recrutá-la como Aliado. Na defesa, bloqueia ${valor}.`,
+          texto: 'Jogue sempre sozinho, sem combo. Se este golpe derrotar a Ameaça, você pode recrutá-la como Aliado.',
         },
       ],
     };
@@ -221,8 +224,8 @@ export function regraDaCarta(card: GameCard): RegraDaCarta {
       {
         rotulo: ehAs ? 'Ás · Combo de Comando' : 'Defesa e Combo',
         texto: ehAs
-          ? `Sozinho vale ${REGRA.valorAsSolo}. Jogado com 1 carta numérica, soma +${REGRA.bonusAsCombo} a ela (ex.: 7 + Ás = 11). No bloqueio, absorve ${valor} de dano (valor da carta).`
-          : `No bloqueio, descarte para absorver ${valor} de dano (vale o número, não 1 ponto). No ataque, junte 2–4 cartas de valor ${card.rank} (soma tudo) ou 1 Ás (+${REGRA.bonusAsCombo}).`,
+          ? `Sozinho vale ${REGRA.valorAsSolo}. Jogado com 1 carta numérica, soma +${REGRA.bonusAsCombo} a ela (ex.: 7 + Ás = 11). No bloqueio, descarte para absorver ${valor} de dano.`
+          : `No bloqueio, descarte para absorver ${valor} de dano. No ataque, junte 2–4 cartas de valor ${card.rank} (soma tudo) ou 1 Ás (+${REGRA.bonusAsCombo}).`,
       },
     ],
   };

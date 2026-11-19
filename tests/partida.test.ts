@@ -288,19 +288,19 @@ describe('Motor PvPvE de HORIZONTE — Zona de Conflito', () => {
     expect(pDerrota.resultado).toBe('derrota');
   });
 
-  it('no Competitivo PvP permite tiro direto no rival, descarte forçado por ♣ (6+) e vitória por eliminação', () => {
+  it('no Competitivo PvP impõe Trégua na Rodada 1, Fogo Cruzado (50/50) na Rodada 2+, descarte por ♣ (6+) e abate colateral', () => {
     const p0 = criarPartida({
       modo: 'pvp',
       jogadores: [
         { nome: 'Mara', classe: 'spades' },
         { nome: 'Kael', classe: 'clubs' },
       ],
-      horizonteDeck: [figura('J', 'diamonds')],
+      horizonteDeck: [figura('J', 'diamonds'), figura('Q', 'clubs')],
       maosIniciais: [
         [
-          { valor: 10, naipe: 'clubs' }, // 0: poder 10 >= 6, força descarte 1 no rival + 10 dano no rival
-          { valor: 10, naipe: 'spades' }, // 1: poder 10 + 2 + 1 = 13 -> finaliza rival
-          { valor: 2, naipe: 'hearts' },
+          { valor: 10, naipe: 'clubs' }, // 0: poder 10 >= 6, força descarte 1 no rival + Fogo Cruzado (5 rival, 5-1=4 em J♦)
+          { valor: 10, naipe: 'spades' }, // 1: poder 14 (10+2+2)
+          { valor: 10, naipe: 'hearts' }, // 2: par 10♠+10♥ = 24 poder (12 rival, 12 Ameaça)
           { valor: 3, naipe: 'diamonds' },
           { valor: 4, naipe: 'hearts' },
         ],
@@ -310,24 +310,35 @@ describe('Motor PvPvE de HORIZONTE — Zona de Conflito', () => {
       embaralhar: false,
     });
 
-    const p1 = agir(p0, { tipo: 'jogarCartas', quem: 0, indicesMao: [0], alvo: { rival: 1 } });
-    // Rival levou 10 dano + descartou 1 carta, mas como é PvP o Horizonte ainda contra-ataca Mara
-    expect(p1.jogadores[1].vida).toBe(REGRA.vidaInicial - 10);
-    expect(p1.jogadores[1].mao).toHaveLength(4);
+    // Na Rodada 1 há trégua: tentar atacar o rival falha
+    expect(p0.rodada).toBe(1);
+    expect(agir(p0, { tipo: 'jogarCartas', quem: 0, indicesMao: [0], alvo: { rival: 1 } })).toBe(p0);
+
+    // Rodada 1 passa para ambos os jogadores
+    const r1a = agir(p0, { tipo: 'passarTurno', quem: 0, descartarIndices: [] });
+    const r1b = agir(r1a, { tipo: 'bloquear', quem: 0, indicesMao: [] });
+    const r1c = agir(r1b, { tipo: 'passarTurno', quem: 1, descartarIndices: [] });
+    const pRodada2 = agir(r1c, { tipo: 'bloquear', quem: 1, indicesMao: [] });
+    expect(pRodada2.rodada).toBe(2);
+    expect(pRodada2.turnoDe).toBe(0);
+
+    // Na Rodada 2, Mara joga 10♣ (poder 10) em Kael: Kael sofre 5 (metade p/ cima) + descarta 1 carta (tinha 6 cartas após a Rodada 1 -> fica com 5); J♦ (Blindada -1) sofre 5-1 = 4 (12 -> 8 PV)
+    const p1 = agir(pRodada2, { tipo: 'jogarCartas', quem: 0, indicesMao: [0], alvo: { rival: 1 } });
+    expect(p1.jogadores[1].vida).toBe(REGRA.vidaInicial - 4 - 5); // Kael já tinha tomado 4 na Rodada 1
+    expect(p1.jogadores[1].mao).toHaveLength(5);
+    expect(p1.ameacaAtiva?.vidaAtual).toBe(STATUS_FIGURA.J.vida - 4);
     expect(p1.fase).toBe('bloqueio');
 
-    // Mara aceita o bloqueio (dano 3) e passa a vez para Kael
+    // Mara aceita o bloqueio e Kael passa a vez
     const p2 = agir(p1, { tipo: 'bloquear', quem: 0, indicesMao: [] });
-    expect(p2.turnoDe).toBe(1);
-
-    // Kael passa e bloqueia para voltar para Mara
     const p3 = agir(p2, { tipo: 'passarTurno', quem: 1, descartarIndices: [] });
     const p4 = agir(p3, { tipo: 'bloquear', quem: 1, indicesMao: [] });
     expect(p4.turnoDe).toBe(0);
 
-    // Mara atira 10♠ no rival (poder 13 >= PV restantes de Kael) -> vitória imediata!
-    const idxEspadas = p4.jogadores[0].mao.findIndex((c) => 'valor' in c && c.valor === 10 && c.naipe === 'spades');
-    const p5 = agir(p4, { tipo: 'jogarCartas', quem: 0, indicesMao: [idxEspadas], alvo: { rival: 1 } });
+    // Mara joga Par de 10♠ + 10♥ (poder 24) em Kael: 12 de dano em Kael (elimina Kael!) e 12 na Ameaça
+    const idx10S = p4.jogadores[0].mao.findIndex((c) => 'valor' in c && c.valor === 10 && c.naipe === 'spades');
+    const idx10H = p4.jogadores[0].mao.findIndex((c) => 'valor' in c && c.valor === 10 && c.naipe === 'hearts');
+    const p5 = agir(p4, { tipo: 'jogarCartas', quem: 0, indicesMao: [idx10S, idx10H], alvo: { rival: 1 } });
     expect(p5.jogadores[1].eliminado).toBe(true);
     expect(p5.fase).toBe('fim');
     expect(p5.resultado).toBe('vitoria');
@@ -411,8 +422,8 @@ describe('Motor PvPvE de HORIZONTE — Zona de Conflito', () => {
       ],
       embaralhar: false,
     });
-    // Jogador A usa ★ no rival B: Q♠ (Feroz) tem ataque reduzido em 3
-    const aposEstrelaPvp = agir(pvp3, { tipo: 'jogarCartas', quem: 0, indicesMao: [0], alvo: { rival: 1 } });
+    // Jogador A usa ★ no rival B (na Rodada 2, após a trégua): Q♠ (Feroz) tem ataque reduzido em 3 e sofre floor(5/2)=2 de dano
+    const aposEstrelaPvp = agir({ ...pvp3, rodada: 2 }, { tipo: 'jogarCartas', quem: 0, indicesMao: [0], alvo: { rival: 1 } });
     expect(aposEstrelaPvp.fase).toBe('bloqueio');
     expect(aposEstrelaPvp.danoPendente).toBe(STATUS_FIGURA.Q.ataque + STATUS_FIGURA.Q.ferocidade - 3);
     const vezDeB = agir(aposEstrelaPvp, { tipo: 'bloquear', quem: 0, indicesMao: [] });

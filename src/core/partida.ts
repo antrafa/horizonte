@@ -130,10 +130,13 @@ export const STATUS_FIGURA: Record<
  * a sequência de problemas a resolver também muda — é a principal fonte de variedade do jogo.
  */
 export const TRACO_AMEACA: Record<Naipe, { nome: string; descricao: (posto: PostoFigura) => string }> = {
-  spades: { nome: 'Feroz', descricao: (p) => `Ataca com +${STATUS_FIGURA[p].ferocidade} de força (já somado ao Ataque).` },
+  spades: {
+    nome: 'Feroz',
+    descricao: (p) => `Seu Ataque de ${STATUS_FIGURA[p].ataque + STATUS_FIGURA[p].ferocidade} já inclui +${STATUS_FIGURA[p].ferocidade} de força deste traço (base ${STATUS_FIGURA[p].ataque}).`,
+  },
   hearts: { nome: 'Regenera', descricao: (p) => `Recupera ${STATUS_FIGURA[p].regeneracao} PV no fim de cada turno em que sobreviver.` },
   diamonds: { nome: 'Blindada', descricao: (p) => `Cada golpe que ela recebe causa ${STATUS_FIGURA[p].blindagem} de dano a menos.` },
-  clubs: { nome: 'Imune a armadilhas', descricao: () => 'Nada reduz o ataque dela: ♣, ★ e Aliados de ♣ não funcionam.' },
+  clubs: { nome: 'Imune a armadilhas', descricao: () => 'Nada reduz o ataque dela: ♣, ★ e Figuras de ♣ recrutadas não funcionam.' },
 };
 
 export type RegraChefe =
@@ -164,7 +167,7 @@ export const REGRA_CHEFE: Record<RegraChefe, { nome: string; descricao: string }
   fome: { nome: 'Fome Crescente', descricao: `Ganha +${CHEFE.fome} de Ataque no fim de cada turno.` },
   pulsa: { nome: 'A Trilha Se Fecha', descricao: `Recupera ${CHEFE.pulsa} PV no fim de cada turno (soma com o traço ♥).` },
   geada: { nome: 'Geada', descricao: `Ninguém cura, e cada carta de bloqueio absorve ${CHEFE.geadaPorCarta} a menos.` },
-  colossal: { nome: 'Colossal', descricao: `Tem +${CHEFE.colossalVida} PV.` },
+  colossal: { nome: 'Colossal', descricao: `Some +${CHEFE.colossalVida} PV à Vida impressa do Chefe (o Rei passa a ter ${STATUS_FIGURA.K.vida + CHEFE.colossalVida} PV no Solo).` },
   firewall: { nome: 'Firewall', descricao: `Golpes de ${CHEFE.firewall} ou menos de dano não passam.` },
   sombra: { nome: 'Sem Retrato', descricao: 'Golpe de dano ímpar não acerta: só dano par passa.' },
   portas: { nome: 'Portas Seladas', descricao: `Só dá para bloquear com ${CHEFE.portas} carta por ataque (o Escudo de Aliado vale).` },
@@ -890,7 +893,7 @@ export function agir(partida: Partida, acao: Acao): Partida {
 
     const ehContraRival = typeof acao.alvo === 'object' && 'rival' in acao.alvo;
     if (ehContraRival) {
-      if (partida.modo !== 'pvp') return partida;
+      if (partida.modo !== 'pvp' || partida.rodada < 2) return partida;
       const rIdx = (acao.alvo as { rival: number }).rival;
       if (rIdx === acao.quem || !estaEmJogo(partida.jogadores[rIdx])) return partida;
     } else {
@@ -945,11 +948,13 @@ export function agir(partida: Partida, acao: Acao): Partida {
 
     const nomesCartas = removidos.map(codigoCarta).join(' + ');
 
-    // Caso 1: Ataque direto contra Rival no PvP
+    // Caso 1: Ataque contra Rival no PvP (Fogo Cruzado: metade p/ cima no rival, metade p/ baixo na Ameaça)
     if (ehContraRival) {
       const rIdx = (acao.alvo as { rival: number }).rival;
       const rival = { ...jogadores[rIdx], mao: [...jogadores[rIdx].mao] };
-      rival.vida = Math.max(0, rival.vida - previa.poderTotal);
+      const danoNoRival = Math.ceil(previa.poderTotal / 2);
+      const poderNaAmeaca = Math.floor(previa.poderTotal / 2);
+      rival.vida = Math.max(0, rival.vida - danoNoRival);
       let msgDescarte = '';
       if (previa.forcarDescartePvp > 0 && rival.mao.length > 0) {
         const [descartada] = rival.mao.splice(Math.floor(Math.random() * rival.mao.length), 1);
@@ -957,21 +962,42 @@ export function agir(partida: Partida, acao: Acao): Partida {
         msgDescarte = ` e descartou ${codigoCarta(descartada)}`;
       }
       jogadores[rIdx] = rival;
-      diario.push(`${j.nome} jogou [${nomesCartas}] (${previa.tipoCombo}) em ${rival.nome}: ${previa.poderTotal} de dano${msgDescarte}.`);
 
       // Coringa Claro (★) mantém redução de ataque da Ameaça mesmo ao mirar rival; ♣ só reduz ao mirar a Ameaça
       const jogouEstrela = removidos.some((c) => ehCoringa(c) && c.coringa === 'estrela');
-      const ameaca =
-        partida.ameacaAtiva && jogouEstrela
-          ? {
-              ...partida.ameacaAtiva,
-              reducaoAtaqueTurno: partida.ameacaAtiva.reducaoAtaqueTurno + previa.reducaoAtaque,
-            }
-          : partida.ameacaAtiva;
+      const ameaca = partida.ameacaAtiva
+        ? {
+            ...partida.ameacaAtiva,
+            reducaoAtaqueTurno: partida.ameacaAtiva.reducaoAtaqueTurno + (jogouEstrela ? previa.reducaoAtaque : 0),
+          }
+        : null;
+
+      const danoAmeaca = ameaca && poderNaAmeaca > 0 ? danoNaAmeaca(ameaca, poderNaAmeaca) : 0;
+      diario.push(
+        `${j.nome} jogou [${nomesCartas}] (${previa.tipoCombo}) em Fogo Cruzado contra ${rival.nome}: ${danoNoRival} de dano no rival${msgDescarte}${ameaca ? ` e ${danoAmeaca} em ${codigoFigura(ameaca.figura)}` : ''}.`,
+      );
+      if (ameaca && poderNaAmeaca > 0) {
+        golpearAmeaca(ameaca, poderNaAmeaca, diario);
+      }
 
       // Se jogador atual morreu de recuo ou rival caiu e só sobrou 1
       if (j.vida <= 0 || jogadores.filter((p) => p.vida > 0 && !p.eliminado).length <= 1) {
         return verificarEliminacoesEAvancar(partida, jogadores, compra, desc, ameaca, acao.quem, diario);
+      }
+
+      // Se a Ameaça caiu com a metade do Fogo Cruzado, quem jogou a Abate (ganha Troféu + saque, sem contra-ataque!)
+      if (ameaca && ameaca.vidaAtual <= 0) {
+        return resolverDerrotaDeAmeaca(
+          partida,
+          jogadores,
+          compra,
+          desc,
+          partida.horizonteDeck,
+          ameaca.figura,
+          acao.quem,
+          false,
+          diario,
+        );
       }
 
       // Se a Ameaça do Horizonte ainda está ativa, ela contra-ataca o jogador da vez
@@ -1064,7 +1090,7 @@ export function agir(partida: Partida, acao: Acao): Partida {
 
     if (aliado.figura.naipe === 'spades') {
       if (acao.alvoRival !== undefined) {
-        if (partida.modo !== 'pvp' || acao.alvoRival === acao.quem) return partida;
+        if (partida.modo !== 'pvp' || partida.rodada < 2 || acao.alvoRival === acao.quem) return partida;
         const rival = jogadores[acao.alvoRival];
         if (!estaEmJogo(rival)) return partida;
         rival.vida = Math.max(0, rival.vida - stats.bonusAliado);

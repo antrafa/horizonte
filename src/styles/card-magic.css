@@ -269,10 +269,6 @@
   letter-spacing: -0.015em;
   line-height: 1.12;
   color: #18181b;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
 }
 
 /* Selo discreto dessaturado na tela; QR Code contrastado na impressão */
@@ -380,10 +376,6 @@
 .mtg-card.kind-journey .mtg-narration {
   font-size: 7.4px;
   line-height: 1.16;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
 }
 
 .mtg-card.kind-journey .mtg-rule p {
@@ -405,9 +397,9 @@
 .mtg-typebar {
   margin-top: auto;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5px;
 }
 
 .kind-journey .mtg-art-box {
@@ -424,11 +416,9 @@
   font-weight: 600;
   letter-spacing: 0.01em;
   line-height: 1.15;
-  color: var(--card-accent);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-align: right;
+  color: #44403c;
+  white-space: normal;
+  text-align: left;
 }
 
 .mtg-art-idea {
@@ -566,10 +556,6 @@
   font-style: italic;
   line-height: 1.16;
   color: #57534e;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
 }
 
 /* ---------- Rodapé ---------- */

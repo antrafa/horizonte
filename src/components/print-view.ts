@@ -171,7 +171,7 @@ export function gerarCartasDeDinamismo(deck: ThemeDeck): GameCard[] {
       'Figuras: Traço (Ameaça) & Aliados',
       '⚔️',
       `J: ${STATUS_FIGURA.J.vida}/${STATUS_FIGURA.J.ataque} · Q: ${STATUS_FIGURA.Q.vida}/${STATUS_FIGURA.Q.ataque} · K: ${STATUS_FIGURA.K.vida}/${STATUS_FIGURA.K.ataque}`,
-      `Traço J/Q/K: ♠ Feroz +${STATUS_FIGURA.J.ferocidade}/${STATUS_FIGURA.Q.ferocidade}/${STATUS_FIGURA.K.ferocidade} Atq · ♥ Regenera ${STATUS_FIGURA.J.regeneracao}/${STATUS_FIGURA.Q.regeneracao}/${STATUS_FIGURA.K.regeneracao} · ♦ Blindada −${STATUS_FIGURA.J.blindagem}/${STATUS_FIGURA.Q.blindagem}/${STATUS_FIGURA.K.blindagem} dano · ♣ Imune a redução. Qualquer naipe abate.`,
+      `Traço J/Q/K: ♠ Feroz +${STATUS_FIGURA.J.ferocidade}/${STATUS_FIGURA.Q.ferocidade}/${STATUS_FIGURA.K.ferocidade} Atq (♠ bate ${STATUS_FIGURA.J.ataque + STATUS_FIGURA.J.ferocidade}/${STATUS_FIGURA.Q.ataque + STATUS_FIGURA.Q.ferocidade}/${STATUS_FIGURA.K.ataque + STATUS_FIGURA.K.ferocidade}) · ♥ Regenera ${STATUS_FIGURA.J.regeneracao}/${STATUS_FIGURA.Q.regeneracao}/${STATUS_FIGURA.K.regeneracao} · ♦ Blindada −${STATUS_FIGURA.J.blindagem}/${STATUS_FIGURA.Q.blindagem}/${STATUS_FIGURA.K.blindagem} dano · ♣ Imune a redução. Qualquer naipe abate.`,
       `Recrutar (♥♦★💀): ${STATUS_FIGURA.J.cargas}/${STATUS_FIGURA.Q.cargas}/${STATUS_FIGURA.K.cargas} usos (máx. ${REGRA.maxAliados}). 1 uso/turno (poder do naipe OU Escudo +${REGRA.escudoAliado}).`,
     ),
     base(
@@ -200,9 +200,9 @@ export function gerarCartasDeDinamismo(deck: ThemeDeck): GameCard[] {
       'spades',
       'Regras de Competitivo PvP',
       '👑',
-      'Último sobrevivente ou Domínio',
-      `Atire nos rivais (sem bloqueio; ♣ com ${REGRA.minGolpeDescartePvp}+ dano arranca 1 carta), mas a Ameaça central contra-ataca você.`,
-      `${deck.name} · Chefe ${deck.chefe.nome} · Troféus + PV + ½ Aliados`,
+      'Trégua (Rodada 1) & Fogo Cruzado',
+      `Rodada 1: trégua. Rodada 2+: mirar rival divide o golpe (½ p/ cima no rival sem bloqueio + ½ p/ baixo na Ameaça; ♣ ${REGRA.minGolpeDescartePvp}+ arranca 1 carta).`,
+      `${deck.name} · Vitória: Último sobrevivente ou Domínio (Troféus + PV + ½ Aliados)`,
     ),
   ];
 }

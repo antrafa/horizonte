@@ -102,12 +102,12 @@ export const ROTEIRO_EXEMPLO: PassoDoExemplo[] = [
   },
   {
     hora: 'Turno 3 · Ataque PvP',
-    titulo: 'Mara monta um Combo de Comando e atira em Kael!',
+    titulo: 'Mara monta um Combo de Comando e atira em Kael em Fogo Cruzado!',
     quem: 'Mara',
     narrativa:
-      'Com Kael armado com um Aliado, Mara combina 4♣ + A♠ contra o rival! Kael leva 12 de dano direto nos PV (sem direito a bloqueio) e perde 1 carta aleatória pelo golpe pesado de ♣. Porém, o novo Rastejador (J♣) no centro contra-ataca Mara por 4.',
+      'Na Rodada 2 (fim da trégua inicial), Mara combina 4♣ + A♠ mirando em Kael! Com o Fogo Cruzado (12 de poder total), Kael leva metade do dano direto nos PV (6 de dano, sem direito a bloqueio) e perde 1 carta aleatória pelo golpe pesado de ♣, enquanto o Rastejador (J♣) no centro recebe a outra metade (6 de dano: 12 → 6 PV) e contra-ataca Mara por 4.',
     notaMecanica:
-      'Combo de Comando: 4 + 4 (Ás em combo) = 8 base + 2 (♠) + 2 (Atirador) = 12 de dano em Kael (15 → 3 PV) + descarte de 1 carta (♣ ≥ 6). Como atacou o rival e J♣ tem Imune a armadilhas, o 4♣ não reduz o contra-ataque de 4 do Rastejador.',
+      'Combo de Comando: 4 + 4 (Ás em combo) = 8 base + 2 (♠) + 2 (Atirador) = 12 de poder. No Fogo Cruzado (Rodada 2+), metade vai no rival (6 em Kael: 15 → 9 PV) + descarte de 1 carta (♣ ≥ 6) e metade vai na Ameaça (6 no J♣: 12 → 6 PV). Como o J♣ sobreviveu, contra-ataca Mara por 4.',
     acao: { tipo: 'jogarCartas', quem: 0, indicesMao: [0, 1], alvo: { rival: 1 } },
   },
   {
@@ -125,7 +125,7 @@ export const ROTEIRO_EXEMPLO: PassoDoExemplo[] = [
     titulo: 'Kael aciona o Batedor recrutado (J♠) no Passo 1 do turno',
     quem: 'Kael',
     narrativa:
-      'Antes de jogar cartas da mão, Kael gasta 1 uso do seu Aliado J♠ (2 → 1 uso) para causar 2 de dano no Rastejador Ácido (J♣: 12 → 10 PV) e segue para sua ação principal!',
+      'Antes de jogar cartas da mão, Kael gasta 1 uso do seu Aliado J♠ (2 → 1 uso) para causar 2 de dano no Rastejador Ácido (J♣: 6 → 4 PV) e segue para sua ação principal!',
     notaMecanica:
       'Regra de Aliado: 1 único uso de Aliado por turno! Como Kael ativou o poder de ♠ no Passo 1 (que agora funciona pelo naipe do Aliado, 2 de dano no Valete), ele não poderá usar o Escudo +4 desse Aliado no Passo 3 deste mesmo turno.',
     acao: { tipo: 'usarAliado', quem: 1, indiceAliado: 0 },

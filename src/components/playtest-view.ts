@@ -339,7 +339,7 @@ function renderPainelJogadores(deck: ThemeDeck, partida: Partida): string {
                 const cargasBolinhas = '●'.repeat(a.cargas) + '○'.repeat(Math.max(0, a.maxCargas - a.cargas));
                 let acoesAliado = '';
                 if (ativo && podeUsarAliado && a.cargas > 0) {
-                  if (a.figura.naipe === 'spades' && partida.modo === 'pvp') {
+                  if (a.figura.naipe === 'spades' && partida.modo === 'pvp' && partida.rodada >= 2) {
                     const rivais = partida.jogadores
                       .map((r, rIdx) => ({ r, rIdx }))
                       .filter((x) => x.rIdx !== idx && !x.r.eliminado);
@@ -493,12 +493,18 @@ function renderAreaDeAcao(deck: ThemeDeck, partida: Partida, selectedIndices: nu
     if (previa.danoRecuo > 0) efeitos.push(`-${previa.danoRecuo} PV recuo (💀)`);
   }
 
+  const treguaPvp = partida.modo === 'pvp' && partida.rodada < 2;
+  const danoRivalPvp = previa.valida ? Math.ceil(previa.poderTotal / 2) : 0;
+  const danoAmeacaPvp = previa.valida && ameaca ? danoNaAmeaca(ameaca, Math.floor(previa.poderTotal / 2)) : 0;
   const botoesPvp =
     partida.modo === 'pvp'
       ? partida.jogadores
           .map((r, rIdx) => {
             if (rIdx === quem || r.eliminado) return '';
-            return `<button type="button" class="btn-secondary" data-acao="jogarCartas" data-quem="${quem}" data-alvo-rival="${rIdx}" ${previa.valida ? '' : 'disabled'}>🎯 Atacar ${escapeHtml(r.nome)} (${previa.valida ? previa.poderTotal : 0} dano)</button>`;
+            if (treguaPvp) {
+              return `<button type="button" class="btn-secondary" data-acao="jogarCartas" data-quem="${quem}" data-alvo-rival="${rIdx}" disabled title="Trégua na Rodada 1: ataques a rivais liberam na Rodada 2">🕊️ Atacar ${escapeHtml(r.nome)} (Trégua na Rodada 1)</button>`;
+            }
+            return `<button type="button" class="btn-secondary" data-acao="jogarCartas" data-quem="${quem}" data-alvo-rival="${rIdx}" ${previa.valida ? '' : 'disabled'}>🎯 Atacar ${escapeHtml(r.nome)} (${danoRivalPvp} rival + ${danoAmeacaPvp} Ameaça)</button>`;
           })
           .join('')
       : '';

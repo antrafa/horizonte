@@ -15,12 +15,12 @@ describe('Turno de exemplo encenado pelo motor real', () => {
       expect(cena.statusDepois.trim().length).toBeGreaterThan(0);
     }
 
-    // Turno 1 (-3 PV) e Turno 3 (-4 PV) reduzem Mara de 15 para 8 PV; Kael sofreu 12 de dano (3 PV)
+    // Turno 1 (-3 PV) e Turno 3 (-4 PV) reduzem Mara de 15 para 8 PV; Kael sofreu 6 de dano em Fogo Cruzado (9 PV) e J♣ caiu para 4 PV
     expect(encenado.final.jogadores[0].vida).toBe(8);
-    expect(encenado.final.jogadores[1].vida).toBe(3);
+    expect(encenado.final.jogadores[1].vida).toBe(9);
     expect(encenado.final.jogadores[1].aliados).toHaveLength(1);
     expect(encenado.final.jogadores[1].aliados[0].cargas).toBe(1);
-    expect(encenado.final.ameacaAtiva?.vidaAtual).toBe(10);
+    expect(encenado.final.ameacaAtiva?.vidaAtual).toBe(4);
     expect(encenado.statusFinal).toContain('PVP');
   });
 
@@ -52,7 +52,8 @@ describe('Turno de exemplo encenado pelo motor real', () => {
 
     const p4 = renderExemploHtml(wasteland, 4);
     expect(p4).toContain('Lance 4 de 6');
-    expect(p4).toContain('15 → 3 PV (-12)');
+    expect(p4).toContain('15 → 9 PV (-6)');
+    expect(p4).toContain('12 → 6 PV (-6)');
 
     const p5 = renderExemploHtml(wasteland, 5);
     expect(p5).toContain('Lance 5 de 6');
@@ -62,7 +63,7 @@ describe('Turno de exemplo encenado pelo motor real', () => {
     const p6 = renderExemploHtml(wasteland, 6);
     expect(p6).toContain('Lance 6 de 6');
     expect(p6).toContain('2 → 1 uso');
-    expect(p6).toContain('12 → 10 PV (-2)');
+    expect(p6).toContain('6 → 4 PV (-2)');
     expect(p6).toContain('Continua na vez (Passo 2)');
 
     // Clamp para valores fora da faixa
